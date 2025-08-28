@@ -10,6 +10,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
+    "db:seed": "tsx --env-file=.env src/server/db/seed.ts",
     "db:studio": "drizzle-kit studio",
     "dev": "next dev --turbo",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
@@ -18,8 +19,7 @@
     "lint:fix": "next lint --fix",
     "preview": "next build && next start",
     "start": "next start",
-    "typecheck": "tsc --noEmit",
-    "db:seed": "tsx --env-file=.env src/server/db/seed.ts"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.12.0",

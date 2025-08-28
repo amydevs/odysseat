@@ -1,8 +1,9 @@
 import type { BetterAuthOptions } from "better-auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { genericOAuth, oAuthProxy } from "better-auth/plugins";
+import { oAuthProxy, username } from "better-auth/plugins";
 
+import * as authSchema from "~/server/db/schema/auth-schema";
 import { db } from "~/server/db";
 
 export function initAuth(options: {
@@ -13,23 +14,16 @@ export function initAuth(options: {
   const config = {
     database: drizzleAdapter(db, {
       provider: "pg",
+      schema: authSchema,
+      camelCase: true,
     }),
     baseURL: options.baseUrl,
     secret: options.secret,
+    emailAndPassword: {
+      enabled: true,
+    },
     plugins: [
-      genericOAuth({
-        config: [
-          {
-            providerId: "cognito",
-            clientId: "",
-            clientSecret: "",
-            discoveryUrl: "https://cognito-idp.ap-southeast-2.amazonaws.com/ap-southeast-2_/.well-known/openid-configuration",
-            authorizationUrl: "https://ap-southeast-2.auth.ap-southeast-2.amazoncognito.com/authorize",
-            responseType: 'code',
-            scopes: ['email', 'phone', 'openid', 'profile'],
-          }
-        ]
-      }),
+      username(),
       oAuthProxy({
         /**
          * Auto-inference blocked by https://github.com/better-auth/better-auth/pull/2891

@@ -16,7 +16,7 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    npm install
+    npm ci
     npm run lint
     npm run typecheck
-  displayName: 'npm install and build'
+  displayName: 'npm install lint and typecheck'

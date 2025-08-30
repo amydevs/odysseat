@@ -1,12 +1,14 @@
 "use client";
 import * as React from "react";
-import Map, { Marker, Popup } from 'react-map-gl/maplibre';
+import Map, { Marker, Popup, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css' // Required CSS for MapLibre GL to render marker positions correctly
 import { api } from "~/trpc/react";
+import MapMarker from "./marker";
 
 export default function HomeMap() {
     const { data: markers, isLoading } = api.recipe.getAll.useQuery({});
     const [popupInfo, setPopupInfo] = React.useState<NonNullable<typeof markers>[number] | null>(null);
+    const mapRef = React.useRef<MapRef>(null);
 
     if (isLoading) {
         return <div>Wait up a sec...</div>;
@@ -14,6 +16,7 @@ export default function HomeMap() {
 
     return (
         <Map
+            ref={mapRef}
             style={{ width: '50vw', height: '50vh' }}
             initialViewState={{
                 longitude: 151.19930,
@@ -23,13 +26,10 @@ export default function HomeMap() {
             mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
         >
             {markers?.map((marker) => (
-                <Marker
-                    key={marker.id}
-                    longitude={(marker.position[0])}
-                    latitude={(marker.position[1])}
-                    onClick={(e) => {
-                        e.originalEvent.stopPropagation();
-                        setPopupInfo(marker);
+                <MapMarker
+                    marker={marker}
+                    onClick={(e, markerData) => {
+                        setPopupInfo(markerData)
                     }}
                 />
             ))}

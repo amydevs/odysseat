@@ -8,5 +8,6 @@ export default {
   dbCredentials: {
     url: env.DATABASE_URL,
   },
+  casing: "camelCase",
   tablesFilter: ["odysseat_*"],
 } satisfies Config;

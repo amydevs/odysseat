@@ -11,7 +11,8 @@ pool:
 
 variables:
 - group: production
-  npm_config_cache: $(Pipeline.Workspace)/.npm
+- name: npm_config_cache
+  value: $(Pipeline.Workspace)/.npm
 
 steps:
 - task: NodeTool@0
@@ -26,6 +27,12 @@ steps:
        npm | "$(Agent.OS)"
     path: $(npm_config_cache)
   displayName: Cache npm
+
+- task: Cache@2
+  displayName: 'Cache .next/cache'
+  inputs:
+    key: next | $(Agent.OS) | package-lock.json
+    path: '$(System.DefaultWorkingDirectory)/.next/cache'
 
 - script: |
     npm ci

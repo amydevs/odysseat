@@ -20,10 +20,12 @@ next-env.d.ts
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
 *.pem
+Thumbs.db
 
 # debug
 npm-debug.log*
@@ -41,6 +43,8 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+/temp
 
 # idea files
 .idea
+.vscode/settings.json

@@ -17,6 +17,5 @@ steps:
 
 - script: |
     npm ci
-    npm run lint
-    npm run typecheck
-  displayName: 'npm install lint and typecheck'
+    npm run check
+  displayName: 'npm install and check'

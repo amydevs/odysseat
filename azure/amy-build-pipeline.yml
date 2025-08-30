@@ -9,8 +9,8 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-# variables:
-# - group: production
+variables:
+- group: production
 
 steps:
 - task: NodeTool@0
@@ -23,4 +23,5 @@ steps:
     npm run build
   displayName: 'npm install and build'
   env:
-    # AUTH_SECRET: $(AUTH_SECRET)
+    AUTH_SECRET: $(AUTH_SECRET)
+    DATABASE_URL: $(DATABASE_URL)

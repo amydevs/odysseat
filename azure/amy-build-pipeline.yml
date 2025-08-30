@@ -28,6 +28,12 @@ steps:
     path: $(npm_config_cache)
   displayName: Cache npm
 
+- task: Cache@2
+  displayName: 'Cache .next/cache'
+  inputs:
+    key: next | $(Agent.OS) | yarn.lock
+    path: '$(System.DefaultWorkingDirectory)/.next/cache'
+
 - script: |
     npm ci
     npm run build

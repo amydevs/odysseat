@@ -4,6 +4,7 @@ import Map, { Marker, Popup, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css' // Required CSS for MapLibre GL to render marker positions correctly
 import { api } from "~/trpc/react";
 import MapMarker from "./marker";
+import Link from "next/link";
 
 export default function HomeMap() {
     const { data: markers, isLoading } = api.recipe.getAll.useQuery({});
@@ -41,7 +42,9 @@ export default function HomeMap() {
                     onClose={() => setPopupInfo(null)}
                 >
                     <img width="100%" src={popupInfo.thumbnailUrl!} />
-                    <div className="text-foreground">{popupInfo.title}</div>
+                    <Link href={`/recipe/${popupInfo.id}`} className="text-foreground">
+                        {popupInfo.title}
+                    </Link>
                 </Popup>
             }
         </Map>

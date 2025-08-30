@@ -1,10 +1,24 @@
-import { z } from "zod";
-import { and, gte, ilike, lte, sql } from "drizzle-orm";
+import { z } from "zod/v4";
+import { and, eq, gte, ilike, lte, sql } from "drizzle-orm";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { recipe } from "~/server/db/schema";
+import { TRPCError } from "@trpc/server";
+import { createUpdateSchema, createInsertSchema } from "drizzle-zod";
 
 export const recipeRouter = createTRPCRouter({
+  getById: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const recipes = await ctx.db
+        .select()
+        .from(recipe)
+        .where(eq(recipe.id, input.id))
+      if (recipes.length === 0) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      return recipes[0]!;
+    }),
   getAll: publicProcedure
   .input(z.object({
     bounds: z.object({ // Bounding box for filtering markers
@@ -32,4 +46,12 @@ export const recipeRouter = createTRPCRouter({
       )
       .orderBy(recipe.createdAt);
   }),
+  update: publicProcedure
+    .input(createUpdateSchema(recipe).and(z.object({ id: z.number() })))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db
+        .update(recipe)
+        .set(input)
+        .where(eq(recipe.id, input.id));
+    })
 });

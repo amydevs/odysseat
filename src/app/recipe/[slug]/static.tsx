@@ -11,6 +11,7 @@ export default function StaticRecipe({
 }) {
     const editor = createSlateEditor({
         plugins: BaseEditorKit,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         value: (editor) => editor.getApi(MarkdownPlugin).markdown.deserialize(recipe.content)
     });
     return <main className='auto-limit-w'>

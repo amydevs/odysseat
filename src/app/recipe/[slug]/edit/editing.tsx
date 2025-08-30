@@ -1,7 +1,7 @@
 'use client'
 import * as React from 'react'
 import { MarkdownPlugin } from '@platejs/markdown';
-import { Plate, PlateContent, usePlateEditor } from 'platejs/react'
+import { Plate, usePlateEditor } from 'platejs/react'
 import { CustomBaseKit } from '~/components/editor/custom/custom-base-kit';
 import { EditorContainer, Editor } from '~/components/ui/editor';
 import { TRPCError, type inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
@@ -11,12 +11,12 @@ import { useForm } from 'react-hook-form';
 import { Button } from '~/components/ui/button';
 import { api } from '~/trpc/react';
 import { Input } from '~/components/ui/input';
-import Map, { Marker, Popup, type MapRef } from 'react-map-gl/maplibre';
+import Map, { Marker, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { cn } from '~/lib/utils';
 import { GlobeIcon } from 'lucide-react';
 
- 
+
 export default function EditingRecipe({
   value,
 }: {
@@ -29,6 +29,7 @@ export default function EditingRecipe({
   });
   const editor = usePlateEditor({
     plugins: CustomBaseKit,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     value: (editor) => editor.getApi(MarkdownPlugin).markdown.deserialize(value.content)
   });
   const mapRef = React.useRef<MapRef>(null);
@@ -36,7 +37,7 @@ export default function EditingRecipe({
     try {
       await recipeUpdateMutation.mutateAsync(data);
     }
-    catch(e: unknown) {
+    catch (e: unknown) {
       if (e instanceof TRPCError) {
         form.setError("root", { message: e.message });
       }
@@ -45,87 +46,90 @@ export default function EditingRecipe({
   return (
     <Form {...form}>
       <form className='flex justify-center' onSubmit={form.handleSubmit(onSubmit)}>
-          <div className='max-w-7xl'>
-            <div className='space-y-3 p-3'>
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="thumbnailUrl"
-                render={({ field: { value, ...field } }) => (
-                  <FormItem>
-                    <FormLabel>Thumbnail URL</FormLabel>
-                    <FormControl>
-                      <Input value={value ?? ""} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+        <div className='max-w-7xl'>
+          <div className='space-y-3 p-3'>
             <FormField
               control={form.control}
-              name="content"
+              name="title"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Plate editor={editor} onChange={() => { field.onChange(editor.getApi(MarkdownPlugin).markdown.serialize(editor.children)) }}>
-                      <EditorContainer>         {/* Styles the editor area */}
-                        <Editor placeholder="Type your amazing content here..." />
-                      </EditorContainer>
-                    </Plate>
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
-            <Button type='submit'>Save</Button>
-          </div>
-          <div className='fixed bottom-0 left-0 right-0 lg:sticky lg:top-0 lg:bottom-auto lg:max-h-[100vh]'>
-            <div className='lg:hidden absolute right-3 -top-12 h-12'>
-              <Button type='button' size="icon" onClick={() => setIsMapOpen(!isMapOpen)}>
-                <GlobeIcon />
-              </Button>
-            </div>
             <FormField
               control={form.control}
-              name="position"
-              render={({ field }) => (
-                <FormItem className={cn("transition-all h-0 lg:h-full", isMapOpen && "h-80")}>
+              name="thumbnailUrl"
+              render={({ field: { value, ...field } }) => (
+                <FormItem>
+                  <FormLabel>Thumbnail URL</FormLabel>
                   <FormControl>
-                    <Map
-                      style={{ width: '36rem', height: '100%' }}
-                      ref={mapRef}
-                      initialViewState={{
-                        longitude: field.value?.[0],
-                        latitude: field.value?.[1],
-                        zoom: 5
-                      }}
-                      onClick={(e) => field.onChange([e.lngLat.lng, e.lngLat.lat])}
-                      mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
-                    >
-                      {
-                        field.value && <Marker longitude={field.value[0]} latitude={field.value[1]}  />
-                      }
-                    </Map>
+                    <Input value={value ?? ""} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
+          <FormField
+            control={form.control}
+            name="content"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Plate editor={editor} onChange={() => {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                    field.onChange(editor.getApi(MarkdownPlugin).markdown.serialize(editor.children))
+                  }}>
+                    <EditorContainer>         {/* Styles the editor area */}
+                      <Editor placeholder="Type your amazing content here..." />
+                    </EditorContainer>
+                  </Plate>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button type='submit'>Save</Button>
+        </div>
+        <div className='fixed bottom-0 left-0 right-0 lg:sticky lg:top-0 lg:bottom-auto lg:max-h-[100vh]'>
+          <div className='lg:hidden absolute right-3 -top-12 h-12'>
+            <Button type='button' size="icon" onClick={() => setIsMapOpen(!isMapOpen)}>
+              <GlobeIcon />
+            </Button>
+          </div>
+          <FormField
+            control={form.control}
+            name="position"
+            render={({ field }) => (
+              <FormItem className={cn("transition-all h-0 lg:h-full", isMapOpen && "h-80")}>
+                <FormControl>
+                  <Map
+                    style={{ width: '36rem', height: '100%' }}
+                    ref={mapRef}
+                    initialViewState={{
+                      longitude: field.value?.[0],
+                      latitude: field.value?.[1],
+                      zoom: 5
+                    }}
+                    onClick={(e) => field.onChange([e.lngLat.lng, e.lngLat.lat])}
+                    mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
+                  >
+                    {
+                      field.value && <Marker longitude={field.value[0]} latitude={field.value[1]} />
+                    }
+                  </Map>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </form>
     </Form>
   )

@@ -16,7 +16,7 @@ interface MarkerData {
 export default function MapMarker({
     marker,
     onClick,
-    isSelected = false,
+    // isSelected = false,
 }: {
     marker: MarkerData;
     onClick?: (e: MarkerEvent<MouseEvent>, marker: MarkerData) => void;

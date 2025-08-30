@@ -4,7 +4,7 @@ import { and, eq, gte, ilike, lte, sql } from "drizzle-orm";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { recipe } from "~/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { createUpdateSchema, createInsertSchema } from "drizzle-zod";
+import { createUpdateSchema } from "drizzle-zod";
 
 export const recipeRouter = createTRPCRouter({
   getById: publicProcedure

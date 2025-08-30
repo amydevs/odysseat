@@ -19,7 +19,7 @@ export default function LoginPage() {
         resolver: zodResolver(formSchema),
     });
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        const res = await authClient.signIn.email(data);
+        await authClient.signIn.email(data);
     };
     return <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>

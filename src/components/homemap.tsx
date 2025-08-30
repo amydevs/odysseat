@@ -1,10 +1,11 @@
 "use client";
 import * as React from "react";
-import Map, { Marker, Popup, type MapRef } from 'react-map-gl/maplibre';
+import Map, { Popup, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css' // Required CSS for MapLibre GL to render marker positions correctly
 import { api } from "~/trpc/react";
 import MapMarker from "./marker";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function HomeMap() {
     const { data: markers, isLoading } = api.recipe.getAll.useQuery({});
@@ -26,10 +27,11 @@ export default function HomeMap() {
             }}
             mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
         >
-            {markers?.map((marker) => (
+            {markers?.map((marker, i) => (
                 <MapMarker
+                    key={i}
                     marker={marker}
-                    onClick={(e, markerData) => {
+                    onClick={(_e, markerData) => {
                         setPopupInfo(markerData)
                     }}
                 />
@@ -41,7 +43,7 @@ export default function HomeMap() {
                     latitude={(popupInfo.position[1])}
                     onClose={() => setPopupInfo(null)}
                 >
-                    <img width="100%" src={popupInfo.thumbnailUrl!} />
+                    <Image alt={popupInfo.title} height={400} width={300} className="w-full" src={popupInfo.thumbnailUrl!} />
                     <Link href={`/recipe/${popupInfo.id}`} className="text-foreground">
                         {popupInfo.title}
                     </Link>

@@ -11,7 +11,7 @@ pool:
 
 variables:
 - group: production
-  npm_config_cache: $(Pipeline.Workspace)/.npm
+- npm_config_cache: $(Pipeline.Workspace)/.npm
 
 steps:
 - task: NodeTool@0

@@ -9,6 +9,9 @@ pr:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+- npm_config_cache: $(Pipeline.Workspace)/.npm
+
 steps:
 - task: NodeTool@0
   inputs:

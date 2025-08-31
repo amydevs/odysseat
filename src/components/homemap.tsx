@@ -1,17 +1,23 @@
 "use client";
 import * as React from "react";
 import Map, { Popup, type MapRef } from 'react-map-gl/maplibre';
+import { LngLat } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css' // Required CSS for MapLibre GL to render marker positions correctly
 import { api } from "~/trpc/react";
 import MapMarker from "./marker";
 import Link from "next/link";
 import { useDebounce } from '~/hooks/use-debounce';
 import Image from "next/image";
+import { set } from "better-auth";
 
 export default function HomeMap() {
     const mapRef = React.useRef<MapRef>(null);
 
     const [popupInfo, setPopupInfo] = React.useState<NonNullable<typeof markers>[number] | null>(null);
+
+    const [currentPos, setCurrentPos] = React.useState<LngLat | null>(null);
+    const [lastPos, setLastPos] = React.useState<LngLat | null>(null);
+    const [newMarkerIds, setNewMarkerIds] = React.useState<Set<number>>(new Set());
 
     const [bounds, setBounds] = React.useState<{
         north: number;
@@ -21,19 +27,29 @@ export default function HomeMap() {
     } | null>(null);
 
     const [bufferedMarkers, setBufferedMarkers] = React.useState<typeof markers>([]);
-    const debouncedBounds = useDebounce(bounds, 100);
+    const debouncedBounds = useDebounce(bounds, 300);
     const { data: markers, isLoading, isFetching } = api.recipe.getAll.useQuery(
         { bounds: debouncedBounds ?? undefined },
         { enabled: !!debouncedBounds }
     );
     
     React.useEffect(() => {
-        if (markers && !isFetching) {
+        if (markers && !isFetching && currentPos && lastPos) {
+            setNewMarkerIds(new Set());
+            const bufferedIds = new Set(bufferedMarkers?.map(marker => marker.id))
+            for (const marker of markers) {
+                if (!bufferedIds.has(marker.id)) {
+                    setNewMarkerIds(prev => new Set(prev).add(marker.id))
+                }
+            }
             setBufferedMarkers(markers);
         }
-    }, [markers, isFetching]);
+    }, [markers, isFetching, bufferedMarkers]);
 
     const updateBounds = () => {
+        setLastPos(currentPos);
+        const center = mapRef.current?.getCenter();
+        setCurrentPos(center ?? null);
         if (mapRef.current) {
             const mapBounds = mapRef.current.getBounds();
             setBounds({
@@ -64,6 +80,9 @@ export default function HomeMap() {
                 <MapMarker
                     key={marker.id}
                     marker={marker}
+                    isNewMarker={newMarkerIds.has(marker.id)}
+                    lastPos={lastPos}
+                    zoomLevel={mapRef.current?.getZoom()}
                     onClick={(_e, markerData) => {
                         setPopupInfo(markerData)
                     }}

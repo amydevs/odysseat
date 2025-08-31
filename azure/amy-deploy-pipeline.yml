@@ -15,19 +15,17 @@ variables:
 steps:
 - script: |
     curl -L https://fly.io/install.sh | sh
-    alias fly='/home/vsts/.fly/bin/flyctl'
-    alias flyctl='/home/vsts/.fly/bin/flyctl'
   displayName: 'install fly'
 
 - script: |
-    flyctl secrets set AUTH_SECRET=$(AUTH_SECRET) --stage
-    flyctl secrets set DATABASE_URL=$(DATABASE_URL) --stage
+    /home/vsts/.fly/bin/flyctl secrets set AUTH_SECRET=$(AUTH_SECRET) --stage
+    /home/vsts/.fly/bin/flyctl secrets set DATABASE_URL=$(DATABASE_URL) --stage
   displayName: 'fly secrets set'
   env:
     FLY_API_TOKEN: $(FLY_API_TOKEN)
 
 - script: |
-    flyctl deploy --remote-only
+    /home/vsts/.fly/bin/flyctl deploy --remote-only
   displayName: 'fly deploy'
   env:
     FLY_API_TOKEN: $(FLY_API_TOKEN)

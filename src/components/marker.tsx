@@ -1,5 +1,7 @@
 import * as React from "react";
 import { Marker, type MarkerEvent } from 'react-map-gl/maplibre';
+import { LngLat } from 'maplibre-gl'; // react-map-gl/maplibre only exports LngLat as type-only
+import '../styles/marker.css';
 // import { api } from "~/trpc/react";
 
 interface MarkerData {
@@ -18,11 +20,31 @@ export default function MapMarker({
     marker,
     onClick,
     isSelected = false,
+    isNewMarker = false,
+    lastPos = null,
+    zoomLevel = 10,
 }: {
     marker: MarkerData;
     onClick?: (e: MarkerEvent<MouseEvent>, marker: MarkerData) => void;
     isSelected?: boolean;
+    isNewMarker?: boolean;
+    lastPos?: LngLat | null;
+    zoomLevel?: number;
 }) {
+    const [markerDelay, setMarkerDelay] = React.useState(0);
+    const [shouldAnimate, setShouldAnimate] = React.useState(false);
+    React.useEffect(() => {
+        let delay = 0;
+        if (isNewMarker && lastPos && zoomLevel) {
+            const markerLngLat = new LngLat(marker.position[0], marker.position[1]);
+            const distance = markerLngLat.distanceTo(lastPos);
+            delay = Math.min(1000, distance * 0.000025 * (zoomLevel ** 1.8));
+            setMarkerDelay(delay);
+            setShouldAnimate(true);
+            console.log({ delay });
+        }
+    }, [isNewMarker, lastPos, marker.position]);
+
     const handleClick = (e: MarkerEvent<MouseEvent>) => {
         e.originalEvent.stopPropagation();
         onClick?.(e, marker);
@@ -30,49 +52,27 @@ export default function MapMarker({
     return (
         <Marker
             key={marker.id}
-            longitude={(marker.position[0])}
-            latitude={(marker.position[1])}
+            longitude={marker.position[0]}
+            latitude={marker.position[1]}
             onClick={handleClick}
         >
-            <div style={{ 
-                position: 'relative', 
-                width: '3vw', 
-                height: '3vw', 
-                cursor: 'pointer',
-                transform: 'translate(0%, -50%)',
-                alignContent: 'center',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}>
+            <div 
+                className={`marker-container`}
+                style={{
+                    animationDelay: `${markerDelay}ms`,
+                    animation: shouldAnimate ? `markerAppear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${markerDelay}ms both` : undefined,
+                }}
+            >
                 <img 
                     src="/assets/Marker.svg"
                     alt="Map marker" 
-                    className={`marker`}
-                    style={{ 
-                        width: '3vw', 
-                        height: '3vw', 
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        opacity: 0.8,
-                        filter: 'invert(100%)',
-                    }}
+                    className="marker-icon"
                 />
                 {marker.thumbnailUrl && (
                     <img 
                         src={marker.thumbnailUrl}
                         alt="Thumbnail"
-                        style={{
-                            width: '2vw',
-                            height: '2vw',
-                            borderRadius: '50%',
-                            position: 'absolute',
-                            top: '4px',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
-                            objectFit: 'cover',
-                            border: '1px solid white'
-                        }}
+                        className="marker-thumbnail"
                     />
                 )}
             </div>

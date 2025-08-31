@@ -10,8 +10,7 @@ import * as React from "react";
 import { GlobeIcon } from "lucide-react";
 import Link from "next/link";
 import { cn } from "~/lib/utils";
-import MapMarker from "~/components/marker";
-import { LngLat } from 'maplibre-gl';
+import RecipeMarker from "~/components/map/recipe-marker";
 
 export default function StaticRecipe({
   recipe,
@@ -52,20 +51,8 @@ export default function StaticRecipe({
               mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
             >
               {
-                recipe.position && <MapMarker
-                  key={recipe.id}
-                  marker={{
-                    id: recipe.id,
-                    userId: recipe.userId,
-                    position: recipe.position,
-                    title: recipe.title,
-                    content: recipe.content ?? {},
-                    thumbnailUrl: recipe.thumbnailUrl,
-                    createdAt: recipe.createdAt,
-                    updatedAt: recipe.updatedAt,
-                  }}
-                  isNewMarker={true}
-                  lastPos={new LngLat(recipe.position[0], recipe.position[1])}
+                recipe.position && <RecipeMarker
+                  recipe={recipe}
                 />
               }
             </Map>

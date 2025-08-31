@@ -1,8 +1,6 @@
 'use client';
 
-import * as React from 'react'
-import { useCreateBlockNote } from "@blocknote/react";
-import { BlockNoteView } from "@blocknote/shadcn";
+import * as React from 'react';
 import { TRPCError, type inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
 import type { AppRouter } from '~/server/api/root';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
@@ -10,15 +8,14 @@ import { useForm } from 'react-hook-form';
 import { Button } from '~/components/ui/button';
 import { api } from '~/trpc/react';
 import { Input } from '~/components/ui/input';
-import Map, { Marker, type MapRef } from 'react-map-gl/maplibre';
+import Map, { type MapRef } from 'react-map-gl/maplibre';
 import { cn } from '~/lib/utils';
 import { GlobeIcon } from 'lucide-react';
 import 'maplibre-gl/dist/maplibre-gl.css'
 import "@blocknote/shadcn/style.css";
 import "@blocknote/core/fonts/inter.css";
 import { Editor } from './dynamic-editor';
-import MapMarker from '~/components/marker';
-import { LngLat } from 'maplibre-gl';
+import RecipeMarker from '~/components/map/recipe-marker';
 
 
 export default function EditingRecipe({
@@ -98,7 +95,7 @@ export default function EditingRecipe({
           <FormField
             control={form.control}
             name="position"
-            render={({ field }) => (
+            render={({ field, formState }) => (
               <FormItem className={cn("transition-all h-0 lg:h-full", isMapOpen && "h-80")}>
                 <FormControl>
                   <Map
@@ -116,20 +113,11 @@ export default function EditingRecipe({
                     mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
                     >
                     {
-                      field.value && <MapMarker
-                      key={`${field.value[0]}-${field.value[1]}`}
-                      marker={{
-                        id: 0,
-                        userId: "0",
-                        position: field.value,
-                        title: form.getValues("title") ?? "",
-                        content: {},
-                        thumbnailUrl: form.getValues("thumbnailUrl") ?? null,
-                        createdAt: new Date(Date.UTC(0)),
-                        updatedAt: new Date(Date.UTC(0)),
-                      }}
-                      isNewMarker={true}
-                      lastPos={new LngLat(field.value[0], field.value[1])}
+                      form.getValues().position != null && <RecipeMarker
+                        recipe={{
+                          position: form.getValues().position!,
+                          thumbnailUrl: form.getValues().thumbnailUrl ?? null
+                        }}
                       />
                     }
                   </Map>

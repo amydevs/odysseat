@@ -12,6 +12,7 @@ pool:
 variables:
 - group: production
 
+steps:
 - script: |
     curl -L https://fly.io/install.sh | sh
   displayName: 'install fly'

@@ -28,7 +28,7 @@ export const recipe = createTable(
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
     userId: d.text().notNull().references(() => user.id),
     title: d.text().notNull(),
-    content: d.text().notNull(),
+    content: d.jsonb().notNull(),
     thumbnailUrl: d.varchar({ length: 1024 }),
     position: d.point().notNull(),
     createdAt: d.timestamp({ withTimezone: true })

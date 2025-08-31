@@ -1,9 +1,8 @@
-'use client'
+'use client';
+
 import * as React from 'react'
-import { MarkdownPlugin } from '@platejs/markdown';
-import { Plate, usePlateEditor } from 'platejs/react'
-import { CustomBaseKit } from '~/components/editor/custom/custom-base-kit';
-import { EditorContainer, Editor } from '~/components/ui/editor';
+import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/shadcn";
 import { TRPCError, type inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
 import type { AppRouter } from '~/server/api/root';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
@@ -12,9 +11,12 @@ import { Button } from '~/components/ui/button';
 import { api } from '~/trpc/react';
 import { Input } from '~/components/ui/input';
 import Map, { Marker, type MapRef } from 'react-map-gl/maplibre';
-import 'maplibre-gl/dist/maplibre-gl.css'
 import { cn } from '~/lib/utils';
 import { GlobeIcon } from 'lucide-react';
+import 'maplibre-gl/dist/maplibre-gl.css'
+import "@blocknote/shadcn/style.css";
+import "@blocknote/core/fonts/inter.css";
+import { Editor } from './dynamic-editor';
 
 
 export default function EditingRecipe({
@@ -26,11 +28,6 @@ export default function EditingRecipe({
   const recipeUpdateMutation = api.recipe.update.useMutation();
   const form = useForm<inferRouterInputs<AppRouter>['recipe']['update']>({
     defaultValues: value,
-  });
-  const editor = usePlateEditor({
-    plugins: CustomBaseKit,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    value: (editor) => editor.getApi(MarkdownPlugin).markdown.deserialize(value.content)
   });
   const mapRef = React.useRef<MapRef>(null);
   const onSubmit = async (data: inferRouterInputs<AppRouter>['recipe']['update']) => {
@@ -45,8 +42,8 @@ export default function EditingRecipe({
   }
   return (
     <Form {...form}>
-      <form className='flex justify-center' onSubmit={form.handleSubmit(onSubmit)}>
-        <div className='max-w-7xl'>
+      <form className='flex justify-center min-h-[100vh]' onSubmit={form.handleSubmit(onSubmit)}>
+        <div className='w-7xl flex flex-col'>
           <div className='space-y-3 p-3'>
             <FormField
               control={form.control}
@@ -79,16 +76,9 @@ export default function EditingRecipe({
             control={form.control}
             name="content"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className='flex-1'>
                 <FormControl>
-                  <Plate editor={editor} onChange={() => {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                    field.onChange(editor.getApi(MarkdownPlugin).markdown.serialize(editor.children))
-                  }}>
-                    <EditorContainer>         {/* Styles the editor area */}
-                      <Editor placeholder="Type your amazing content here..." />
-                    </EditorContainer>
-                  </Plate>
+                  <Editor initialValue={field.value} onValueChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

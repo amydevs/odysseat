@@ -26,6 +26,7 @@
     "@ariakit/react": "^0.4.18",
     "@emoji-mart/data": "^1.2.1",
     "@hookform/resolvers": "^5.2.1",
+    "@opennextjs/cloudflare": "^1.6.5",
     "@platejs/ai": "^49.2.15",
     "@platejs/autoformat": "^49.0.0",
     "@platejs/basic-nodes": "^49.0.0",

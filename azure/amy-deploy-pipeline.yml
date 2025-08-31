@@ -20,6 +20,8 @@ jobs:
     runOnce:
       deploy:
         steps:
+        - checkout: self
+        
         - script: |
             curl -L https://fly.io/install.sh | sh
           displayName: 'install fly'

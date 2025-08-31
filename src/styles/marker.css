@@ -29,7 +29,6 @@
     left: 50%;
     transform: translateX(-50%);
     object-fit: cover;
-    border: 1px solid white;
 }
 
 @keyframes markerAppear {

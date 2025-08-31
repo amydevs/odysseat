@@ -38,7 +38,7 @@ export default function MapMarker({
         if (isNewMarker && lastPos && zoomLevel) {
             const markerLngLat = new LngLat(marker.position[0], marker.position[1]);
             const distance = markerLngLat.distanceTo(lastPos);
-            delay = Math.min(1000, distance * 0.000025 * (zoomLevel ** 1.8));
+            delay = Math.min(1000, (distance * 0.000005 * (zoomLevel ** 2) - 50));
             setMarkerDelay(delay);
             setShouldAnimate(true);
             console.log({ delay });

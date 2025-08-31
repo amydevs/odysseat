@@ -47,7 +47,6 @@ export default function HomeMap() {
     }, [markers, isFetching, bufferedMarkers]);
 
     const updateBounds = () => {
-        setLastPos(currentPos);
         const center = mapRef.current?.getCenter();
         setCurrentPos(center ?? null);
         if (mapRef.current) {
@@ -59,6 +58,11 @@ export default function HomeMap() {
                 west: mapBounds.getWest(),
             });
         }
+    };
+
+    const handleMoveStart = () => {
+        const start = mapRef.current?.getCenter() ?? null;
+        setLastPos(start);
     };
 
     const displayMarkers = markers ?? bufferedMarkers;
@@ -74,6 +78,7 @@ export default function HomeMap() {
             }}
             mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
             onLoad={updateBounds}
+            onMoveStart={handleMoveStart}
             onMove={updateBounds}
         >
             {displayMarkers?.map((marker, i) => (

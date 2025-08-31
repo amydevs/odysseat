@@ -48,3 +48,5 @@ yarn-error.log*
 # idea files
 .idea
 .vscode/settings.json
+
+.open-next/

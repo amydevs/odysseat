@@ -7,6 +7,8 @@
     "auth:generate": "npx @better-auth/cli generate --config ./scripts/auth-config.ts --output ./src/server/db/schema/auth-schema.ts",
     "build": "next build",
     "check": "cross-env SKIP_ENV_VALIDATION=true next lint && tsc --noEmit",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -20,7 +22,8 @@
     "lint:fix": "cross-env SKIP_ENV_VALIDATION=true next lint --fix",
     "preview": "next build && next start",
     "start": "next start",
-    "typecheck": "cross-env SKIP_ENV_VALIDATION=true tsc --noEmit"
+    "typecheck": "cross-env SKIP_ENV_VALIDATION=true tsc --noEmit",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload"
   },
   "dependencies": {
     "@ariakit/react": "^0.4.18",
@@ -128,7 +131,8 @@
     "tsx": "^4.20.5",
     "tw-animate-css": "^1.3.7",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.27.0"
+    "typescript-eslint": "^8.27.0",
+    "wrangler": "^4.33.1"
   },
   "overrides": {
     "drizzle-zod": {

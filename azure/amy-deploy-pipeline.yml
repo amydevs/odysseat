@@ -12,31 +12,22 @@ pool:
 variables:
 - group: production
 
-jobs:
-- deployment: deploy_production
-  displayName: 'Deploy to Production'
-  environment: production
-  strategy:
-    runOnce:
-      deploy:
-        steps:
-        - checkout: self
-        
-        - script: |
-            curl -L https://fly.io/install.sh | sh
-          displayName: 'install fly'
+steps:
+- script: |
+    curl -L https://fly.io/install.sh | sh
+  displayName: 'install fly'
 
-        - script: |
-            /home/vsts/.fly/bin/flyctl secrets set AUTH_SECRET=$(AUTH_SECRET) --stage
-            /home/vsts/.fly/bin/flyctl secrets set DATABASE_URL=$(DATABASE_URL) --stage
-          displayName: 'fly secrets set'
-          env:
-            FLY_API_TOKEN: $(FLY_API_TOKEN)
+- script: |
+    /home/vsts/.fly/bin/flyctl secrets set AUTH_SECRET=$(AUTH_SECRET) --stage
+    /home/vsts/.fly/bin/flyctl secrets set DATABASE_URL=$(DATABASE_URL) --stage
+  displayName: 'fly secrets set'
+  env:
+    FLY_API_TOKEN: $(FLY_API_TOKEN)
 
-        - script: |
-            /home/vsts/.fly/bin/flyctl deploy --remote-only
-          displayName: 'fly deploy'
-          env:
-            FLY_API_TOKEN: $(FLY_API_TOKEN)
-            AUTH_SECRET: $(AUTH_SECRET)
-            DATABASE_URL: $(DATABASE_URL)
+- script: |
+    /home/vsts/.fly/bin/flyctl deploy --remote-only --detach
+  displayName: 'fly deploy'
+  env:
+    FLY_API_TOKEN: $(FLY_API_TOKEN)
+    AUTH_SECRET: $(AUTH_SECRET)
+    DATABASE_URL: $(DATABASE_URL)

@@ -20,8 +20,8 @@ steps:
   displayName: 'install fly'
 
 - script: |
-    fly secrets set AUTH_SECRET=$(AUTH_SECRET)
-    fly secrets set DATABASE_URL=$(DATABASE_URL)
+    flyctl secrets set AUTH_SECRET=$(AUTH_SECRET)
+    flyctl secrets set DATABASE_URL=$(DATABASE_URL)
   displayName: 'fly secrets set'
   env:
     FLY_API_TOKEN: $(FLY_API_TOKEN)

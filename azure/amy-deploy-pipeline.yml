@@ -17,10 +17,10 @@ steps:
     curl -L https://fly.io/install.sh | sh
     echo "export PATH=$FLYCTL_INSTALL/bin:$PATH" >> ~/.profile
     echo "export FLYCTL_INSTALL=/home/vsts/.fly" >> ~/.profile
-    source ~/.profile
   displayName: 'install fly'
 
 - script: |
+    source ~/.profile
     flyctl secrets set AUTH_SECRET=$(AUTH_SECRET)
     flyctl secrets set DATABASE_URL=$(DATABASE_URL)
   displayName: 'fly secrets set'
@@ -28,6 +28,7 @@ steps:
     FLY_API_TOKEN: $(FLY_API_TOKEN)
 
 - script: |
+    source ~/.profile
     flyctl deploy --remote-only
   displayName: 'fly deploy'
   env:

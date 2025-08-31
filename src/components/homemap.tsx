@@ -4,7 +4,7 @@ import Map, { Popup, type MapRef } from 'react-map-gl/maplibre';
 import { LngLat } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css' // Required CSS for MapLibre GL to render marker positions correctly
 import { api } from "~/trpc/react";
-import MapMarker from "./marker";
+import RecipeMarker from "./map/recipe-marker";
 import Link from "next/link";
 import { useDebounce } from '~/hooks/use-debounce';
 import Image from "next/image";
@@ -82,14 +82,12 @@ export default function HomeMap() {
             onMove={updateBounds}
         >
             {displayMarkers?.map((marker, i) => (
-                <MapMarker
-                    key={marker.id}
-                    marker={marker}
-                    isNewMarker={newMarkerIds.has(marker.id)}
-                    lastPos={lastPos}
-                    zoomLevel={mapRef.current?.getZoom()}
-                    onClick={(_e, markerData) => {
-                        setPopupInfo(markerData)
+                <RecipeMarker
+                    key={i}
+                    recipe={marker}
+                    onClick={(e) => {
+                        e.originalEvent.stopPropagation();
+                        setPopupInfo(marker);
                     }}
                 />
             ))}

@@ -10,6 +10,8 @@ export default async function StaticRecipe({
   recipe: inferRouterOutputs<AppRouter>['recipe']['getById']
 }) {
     const editor = ServerBlockNoteEditor.create();
+    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
     const html = await editor.blocksToFullHTML(recipe.content as any);
     return <main className='auto-limit-w' dangerouslySetInnerHTML={{ __html: html }}>
     </main>;

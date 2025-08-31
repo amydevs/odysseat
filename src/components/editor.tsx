@@ -10,14 +10,17 @@ export default function Editor({
   initialValue,
   onValueChange
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialValue: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onValueChange?: (data: any) => void
 }) {
   // Creates a new editor instance.
   const editor = useCreateBlockNote({
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     initialContent: initialValue,
   });
 
-  // Renders the editor instance using a React component.
+   
   return <BlockNoteView theme="light" onChange={async (editor) => onValueChange?.(editor.document)} editor={editor} />;
 }

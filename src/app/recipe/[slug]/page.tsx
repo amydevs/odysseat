@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { api } from '~/trpc/server';
-import StaticRecipe from './static';
+import { ServerBlockNoteEditor } from '@blocknote/server-util';
 import { Button } from '~/components/ui/button';
+import StaticRecipe from './static';
 import Link from 'next/link';
 
  
@@ -13,15 +14,11 @@ export default async function BlogPostPage({
   const { slug } = await params;
   const id = Number.parseInt(slug);
   const recipe = await api.recipe.getById({ id });
+  const editor = ServerBlockNoteEditor.create();
+  const blocks = await editor.tryParseMarkdownToBlocks(recipe.content);
+  const html = await editor.blocksToFullHTML(blocks);
  
   return (
-    <div className='auto-limit-w'>
-      <StaticRecipe recipe={recipe} />
-      <Button asChild>
-        <Link href={`/recipe/${slug}/edit`}>
-          Edit
-        </Link>
-      </Button>
-    </div>
+    <StaticRecipe recipeContentHtml={html} recipe={recipe} />
   )
 }

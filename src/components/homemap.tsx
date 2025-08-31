@@ -66,11 +66,11 @@ export default function HomeMap() {
     return (
         <Map
             ref={mapRef}
-            style={{ width: '50vw', height: '50vh' }}
+            style={{ width: '100%', height: '100%' }}
             initialViewState={{
                 longitude: 151.19930,
                 latitude: -33.883993,
-                zoom: 10
+                zoom: 5
             }}
             mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
             onLoad={updateBounds}

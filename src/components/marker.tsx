@@ -41,7 +41,7 @@ export default function MapMarker({
             delay = Math.min(1000, (distance * 0.000005 * (zoomLevel ** 2) - 50));
             setMarkerDelay(delay);
             setShouldAnimate(true);
-            console.log({ delay });
+            // console.log({ delay });
         }
     }, [isNewMarker, lastPos, marker.position]);
 

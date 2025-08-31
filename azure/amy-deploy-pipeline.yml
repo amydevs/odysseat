@@ -11,26 +11,21 @@ pool:
 
 variables:
 - group: production
-- name: BASH_ENV
-  value: ~/.profile
 
 steps:
 - script: |
     curl -L https://fly.io/install.sh | sh
-    echo "export PATH=$FLYCTL_INSTALL/bin:$PATH" >> ~/.profile
-    echo "export FLYCTL_INSTALL=/home/vsts/.fly" >> ~/.profile
-    source ~/.profile
   displayName: 'install fly'
 
 - script: |
-    flyctl secrets set AUTH_SECRET=$(AUTH_SECRET)
-    flyctl secrets set DATABASE_URL=$(DATABASE_URL)
+    /home/vsts/.fly/bin/flyctl secrets set AUTH_SECRET=$(AUTH_SECRET)
+    /home/vsts/.fly/bin/flyctl secrets set DATABASE_URL=$(DATABASE_URL)
   displayName: 'fly secrets set'
   env:
     FLY_API_TOKEN: $(FLY_API_TOKEN)
 
 - script: |
-    flyctl deploy --remote-only
+    /home/vsts/.fly/bin/flyctl deploy --remote-only
   displayName: 'fly deploy'
   env:
     FLY_API_TOKEN: $(FLY_API_TOKEN)

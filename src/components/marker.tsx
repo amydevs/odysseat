@@ -7,7 +7,7 @@ interface MarkerData {
     userId: string;
     position: [number, number]; //[longitude, latitude]
     title: string;
-    content: string;
+    content: any;
     thumbnailUrl: string | null;
     createdAt: Date;
     updatedAt: Date;

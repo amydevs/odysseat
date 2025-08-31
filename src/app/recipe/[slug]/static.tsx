@@ -11,8 +11,8 @@ export default async function StaticRecipe({
 }) {
     const editor = ServerBlockNoteEditor.create();
     
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
-    const html = await editor.blocksToFullHTML(recipe.content as any);
+    const blocks = await editor.tryParseMarkdownToBlocks(recipe.content);
+    const html = await editor.blocksToFullHTML(blocks);
     return <main className='auto-limit-w' dangerouslySetInnerHTML={{ __html: html }}>
     </main>;
 }

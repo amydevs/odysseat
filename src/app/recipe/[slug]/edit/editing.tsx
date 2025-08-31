@@ -78,7 +78,7 @@ export default function EditingRecipe({
             render={({ field }) => (
               <FormItem className='flex-1'>
                 <FormControl>
-                  <Editor initialValue={field.value} onValueChange={field.onChange} />
+                  <Editor initialValue={field.value ?? ""} onValueChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import { and, eq, gte, ilike, lte, sql } from "drizzle-orm";
+import { and, eq, gte, ilike, lte, sql, or } from "drizzle-orm";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { recipe } from "~/server/db/schema";
@@ -30,6 +30,31 @@ export const recipeRouter = createTRPCRouter({
     title: z.string().optional(),
   }))
   .query(async ({ ctx, input }) => {
+    // Have to do this otherwise marker get cut off at the dateline
+    const normalizeLongitude = (lng: number) => {
+      return ((lng + 180) % 360 + 360) % 360 - 180;
+    };
+    const longitudeCondition = input.bounds ? 
+      (() => {
+        const normalizedWest = normalizeLongitude(input.bounds.west);
+        const normalizedEast = normalizeLongitude(input.bounds.east);
+
+        if (normalizedWest <= normalizedEast) {
+          // Normal case
+          return and(
+            gte(sql`${recipe.position}[0]`, normalizedWest.toString()),
+            lte(sql`${recipe.position}[0]`, normalizedEast.toString())
+          );
+        }
+        else {
+          // Crosses the dateline
+          return or(
+            gte(sql`${recipe.position}[0]`, normalizedWest.toString()),
+            lte(sql`${recipe.position}[0]`, normalizedEast.toString())
+          );
+        }
+      })() : sql`TRUE`;
+
     return await ctx.db
       .select()
       .from(recipe)
@@ -38,8 +63,7 @@ export const recipeRouter = createTRPCRouter({
           ...(input.bounds != null ? [
             gte(sql`${recipe.position}[1]`, input.bounds.south.toString()),
             lte(sql`${recipe.position}[1]`, input.bounds.north.toString()),
-            gte(sql`${recipe.position}[0]`, input.bounds.west.toString()),
-            lte(sql`${recipe.position}[0]`, input.bounds.east.toString())
+            longitudeCondition
           ] : []),
           (input.title != null ? ilike(recipe.title, `%${input.title}%`) : sql`TRUE`)
         )

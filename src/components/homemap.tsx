@@ -5,16 +5,47 @@ import 'maplibre-gl/dist/maplibre-gl.css' // Required CSS for MapLibre GL to ren
 import { api } from "~/trpc/react";
 import MapMarker from "./marker";
 import Link from "next/link";
+import { useDebounce } from '~/hooks/use-debounce';
 import Image from "next/image";
 
 export default function HomeMap() {
-    const { data: markers, isLoading } = api.recipe.getAll.useQuery({});
-    const [popupInfo, setPopupInfo] = React.useState<NonNullable<typeof markers>[number] | null>(null);
     const mapRef = React.useRef<MapRef>(null);
 
-    if (isLoading) {
-        return <div>Wait up a sec...</div>;
-    }
+    const [popupInfo, setPopupInfo] = React.useState<NonNullable<typeof markers>[number] | null>(null);
+
+    const [bounds, setBounds] = React.useState<{
+        north: number;
+        south: number;
+        east: number;
+        west: number;
+    } | null>(null);
+
+    const [bufferedMarkers, setBufferedMarkers] = React.useState<typeof markers>([]);
+    const debouncedBounds = useDebounce(bounds, 100);
+    const { data: markers, isLoading, isFetching } = api.recipe.getAll.useQuery(
+        { bounds: debouncedBounds ?? undefined },
+        { enabled: !!debouncedBounds }
+    );
+    
+    React.useEffect(() => {
+        if (markers && !isFetching) {
+            setBufferedMarkers(markers);
+        }
+    }, [markers, isFetching]);
+
+    const updateBounds = () => {
+        if (mapRef.current) {
+            const mapBounds = mapRef.current.getBounds();
+            setBounds({
+                north: mapBounds.getNorth(),
+                south: mapBounds.getSouth(),
+                east: mapBounds.getEast(),
+                west: mapBounds.getWest(),
+            });
+        }
+    };
+
+    const displayMarkers = markers ?? bufferedMarkers;
 
     return (
         <Map
@@ -26,10 +57,12 @@ export default function HomeMap() {
                 zoom: 10
             }}
             mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
+            onLoad={updateBounds}
+            onMove={updateBounds}
         >
-            {markers?.map((marker, i) => (
+            {displayMarkers?.map((marker, i) => (
                 <MapMarker
-                    key={i}
+                    key={marker.id}
                     marker={marker}
                     onClick={(_e, markerData) => {
                         setPopupInfo(markerData)

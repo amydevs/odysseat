@@ -7,6 +7,7 @@ interface MarkerData {
     userId: string;
     position: [number, number]; //[longitude, latitude]
     title: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     content: any;
     thumbnailUrl: string | null;
     createdAt: Date;

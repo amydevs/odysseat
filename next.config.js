@@ -14,14 +14,7 @@ const config = {
     ],
     reactStrictMode: false,
     images: {
-        remotePatterns: [
-            {
-                protocol: 'https',
-                hostname: 'img.taste.com.au',
-                port: '',
-                pathname: '/**',
-            },
-        ],
+        unoptimized: true,
     },
 };
 

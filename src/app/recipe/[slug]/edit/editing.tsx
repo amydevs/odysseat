@@ -17,6 +17,8 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import "@blocknote/shadcn/style.css";
 import "@blocknote/core/fonts/inter.css";
 import { Editor } from './dynamic-editor';
+import MapMarker from '~/components/marker';
+import { LngLat } from 'maplibre-gl';
 
 
 export default function EditingRecipe({
@@ -107,11 +109,28 @@ export default function EditingRecipe({
                       latitude: field.value?.[1],
                       zoom: 5
                     }}
-                    onClick={(e) => field.onChange([e.lngLat.lng, e.lngLat.lat])}
+                    onClick={(e) => {
+                      field.onChange([e.lngLat.lng, e.lngLat.lat]);
+                      mapRef.current?.getMap().triggerRepaint();
+                    }}
                     mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
-                  >
+                    >
                     {
-                      field.value && <Marker longitude={field.value[0]} latitude={field.value[1]} />
+                      field.value && <MapMarker
+                      key={`${field.value[0]}-${field.value[1]}`}
+                      marker={{
+                        id: 0,
+                        userId: "0",
+                        position: field.value,
+                        title: form.getValues("title") ?? "",
+                        content: {},
+                        thumbnailUrl: form.getValues("thumbnailUrl") ?? null,
+                        createdAt: new Date(Date.UTC(0)),
+                        updatedAt: new Date(Date.UTC(0)),
+                      }}
+                      isNewMarker={true}
+                      lastPos={new LngLat(field.value[0], field.value[1])}
+                      />
                     }
                   </Map>
                 </FormControl>

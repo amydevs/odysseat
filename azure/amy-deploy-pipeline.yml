@@ -1,0 +1,32 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: production
+
+- script: |
+    curl -L https://fly.io/install.sh | sh
+  displayName: 'install fly'
+
+- script: |
+    fly secrets set AUTH_SECRET=$(AUTH_SECRET)
+    fly secrets set DATABASE_URL=$(DATABASE_URL)
+  displayName: 'fly secrets set'
+  env:
+    FLY_API_TOKEN: $(FLY_API_TOKEN)
+
+- script: |
+    flyctl deploy --remote-only
+  displayName: 'fly deploy'
+  env:
+    FLY_API_TOKEN: $(FLY_API_TOKEN)
+    AUTH_SECRET: $(AUTH_SECRET)
+    DATABASE_URL: $(DATABASE_URL)

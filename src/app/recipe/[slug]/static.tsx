@@ -9,6 +9,7 @@ import { Button } from "~/components/ui/button";
 import * as React from "react";
 import { GlobeIcon } from "lucide-react";
 import Link from "next/link";
+import { cn } from "~/lib/utils";
 
 export default function StaticRecipe({
   recipe,
@@ -19,7 +20,10 @@ export default function StaticRecipe({
 }) {
     const [isMapOpen, setIsMapOpen] = React.useState(false);
     return <main className='flex justify-center min-h-[100vh]'>
-        <div className='w-7xl flex flex-col'>
+        <div className='w-7xl flex flex-col space-y-3'>
+          <div>
+            <h1 className="font-bold text-6xl">{recipe.title}</h1>
+          </div>
           <div className="flex-1" dangerouslySetInnerHTML={{ __html: recipeContentHtml }} />
           <div>
             <Button asChild>
@@ -35,19 +39,21 @@ export default function StaticRecipe({
               <GlobeIcon />
             </Button>
           </div>
-          <Map
-            style={{ width: '36rem', height: '100%' }}
-            initialViewState={{
-              longitude: recipe.position[0],
-              latitude: recipe.position[1],
-              zoom: 5
-            }}
-            mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
-          >
-            {
-              recipe.position && <Marker longitude={recipe.position[0]} latitude={recipe.position[1]} />
-            }
-          </Map>
+          <div className={cn("transition-all h-0 lg:h-full", isMapOpen && "h-80")}>
+            <Map
+              style={{ width: '36rem', height: '100%' }}
+              initialViewState={{
+                longitude: recipe.position[0],
+                latitude: recipe.position[1],
+                zoom: 5
+              }}
+              mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
+            >
+              {
+                recipe.position && <Marker longitude={recipe.position[0]} latitude={recipe.position[1]} />
+              }
+            </Map>
+          </div>
         </div>
       </main>;
 }

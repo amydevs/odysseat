@@ -10,17 +10,19 @@ export default function Editor({
   initialValue,
   onValueChange
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  initialValue: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onValueChange?: (data: any) => void
+  initialValue: string;
+  onValueChange?: (data: string) => void
 }) {
   // Creates a new editor instance.
   const editor = useCreateBlockNote({
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    initialContent: initialValue,
   });
 
+  React.useEffect(() => {
+    (async () => {
+      editor.replaceBlocks(editor.document, await editor.tryParseMarkdownToBlocks(initialValue))
+    })()
+  }, [])
+
    
-  return <BlockNoteView theme="light" onChange={async (editor) => onValueChange?.(editor.document)} editor={editor} />;
+  return <BlockNoteView theme="light" onChange={async (editor) => onValueChange?.(await editor.blocksToMarkdownLossy(editor.document))} editor={editor} />;
 }

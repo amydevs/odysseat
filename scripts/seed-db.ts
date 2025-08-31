@@ -20,7 +20,7 @@ await db.insert(recipe).values(
         scrapedData.map(async (r) => ({
             userId: u[0]!.id,
             title: r.title,
-            content: await editor.tryParseMarkdownToBlocks(
+            content: (
                 "# Ingredients\n" +
                 r.ingredients.map((e) => `- ${e}`).join("\n\n") +
                 "\n# Steps\n" +

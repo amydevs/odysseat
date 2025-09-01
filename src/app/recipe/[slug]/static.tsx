@@ -41,7 +41,7 @@ export default function StaticRecipe({
               <GlobeIcon />
             </Button>
           </div>
-          <div className={cn("transition-all h-0 lg:h-full", isMapOpen && "h-80")}>
+          <div className={cn("transition-all h-0 lg:w-xl lg:h-full", isMapOpen && "h-80")}>
             <Map
               style={{ width: '36rem', height: '100%' }}
               initialViewState={{

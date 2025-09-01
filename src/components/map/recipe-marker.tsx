@@ -4,6 +4,7 @@ import * as React from "react";
 import { Marker, useMap } from 'react-map-gl/maplibre';
 import { LngLat } from 'maplibre-gl';
 import { cn } from "~/lib/utils";
+import markerIcon from "./marker-icon.svg";
 // import { api } from "~/trpc/react";
 
 export default function RecipeMarker({
@@ -51,11 +52,8 @@ export default function RecipeMarker({
                 }}
             >
                 <Image 
-                    src="/assets/marker-icon.svg"
                     alt="Map marker" 
-                    className=""
-                    width={909}
-                    height={994}
+                    {...markerIcon}
                 />
                 {recipe.thumbnailUrl && (
                     <Image

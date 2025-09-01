@@ -95,11 +95,11 @@ export default function EditingRecipe({
           <FormField
             control={form.control}
             name="position"
-            render={({ field, formState }) => (
-              <FormItem className={cn("transition-all h-0 lg:h-full", isMapOpen && "h-80")}>
+            render={({ field }) => (
+              <FormItem className={cn("transition-all h-0 lg:w-xl lg:h-full", isMapOpen && "h-80")}>
                 <FormControl>
                   <Map
-                    style={{ width: '36rem', height: '100%' }}
+                    style={{ height: '100%' }}
                     ref={mapRef}
                     initialViewState={{
                       longitude: field.value?.[0],
@@ -114,6 +114,7 @@ export default function EditingRecipe({
                     >
                     {
                       form.getValues().position != null && <RecipeMarker
+                        key={form.getValues().position?.join("")}
                         recipe={{
                           position: form.getValues().position!,
                           thumbnailUrl: form.getValues().thumbnailUrl ?? null

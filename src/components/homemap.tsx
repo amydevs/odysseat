@@ -27,7 +27,7 @@ export default function HomeMap() {
     } | null>(null);
 
     const [bufferedMarkers, setBufferedMarkers] = React.useState<typeof markers>([]);
-    const debouncedBounds = useDebounce(bounds, 300);
+    const debouncedBounds = useDebounce(bounds, 200);
     const { data: markers, isLoading, isFetching } = api.recipe.getAll.useQuery(
         { bounds: debouncedBounds ?? undefined },
         { enabled: !!debouncedBounds }

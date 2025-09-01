@@ -36,7 +36,7 @@ export default function RecipeMarker({
             {...props}
         >
             <div 
-                className={`relative w-12 h-12 cursor-pointer`}
+                className={`relative w-12 h-12 cursor-pointer opacity-0`}
                 style={{
                     animationDelay: `${markerDelay}ms`,
                     animation: shouldAnimate ? `marker 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${markerDelay}ms both` : undefined,

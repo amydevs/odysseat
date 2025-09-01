@@ -64,7 +64,7 @@ export default function MapMarker({
                 }}
             >
                 <img 
-                    src="/assets/Marker.svg"
+                    src="/assets/Marker2.svg"
                     alt="Map marker" 
                     className="marker-icon"
                 />

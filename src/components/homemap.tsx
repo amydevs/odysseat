@@ -83,12 +83,15 @@ export default function HomeMap() {
         >
             {displayMarkers?.map((marker, i) => (
                 <RecipeMarker
-                    key={i}
+                    key={marker.id} // Don't touch this
                     recipe={marker}
                     onClick={(e) => {
                         e.originalEvent.stopPropagation();
                         setPopupInfo(marker);
                     }}
+                    isNewMarker={newMarkerIds.has(marker.id)}
+                    lastPos={lastPos}
+                    zoomLevel={mapRef.current?.getZoom()}
                 />
             ))}
             {

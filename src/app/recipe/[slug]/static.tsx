@@ -11,6 +11,7 @@ import { GlobeIcon } from "lucide-react";
 import Link from "next/link";
 import { cn } from "~/lib/utils";
 import RecipeMarker from "~/components/map/recipe-marker";
+import { LngLat } from 'maplibre-gl';
 
 export default function StaticRecipe({
   recipe,
@@ -53,6 +54,9 @@ export default function StaticRecipe({
               {
                 recipe.position && <RecipeMarker
                   recipe={recipe}
+                  isNewMarker={true}
+                  lastPos={new LngLat(recipe.position[0], recipe.position[1])}
+                  zoomLevel={5}
                 />
               }
             </Map>

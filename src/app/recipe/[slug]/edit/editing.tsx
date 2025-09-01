@@ -16,7 +16,7 @@ import "@blocknote/shadcn/style.css";
 import "@blocknote/core/fonts/inter.css";
 import { Editor } from './dynamic-editor';
 import RecipeMarker from '~/components/map/recipe-marker';
-
+import { LngLat } from 'maplibre-gl';
 
 export default function EditingRecipe({
   value,
@@ -118,6 +118,9 @@ export default function EditingRecipe({
                           position: form.getValues().position!,
                           thumbnailUrl: form.getValues().thumbnailUrl ?? null
                         }}
+                        isNewMarker={true}
+                        lastPos={new LngLat(form.getValues().position![0], form.getValues().position![1])}
+                        zoomLevel={mapRef.current?.getZoom()}
                       />
                     }
                   </Map>

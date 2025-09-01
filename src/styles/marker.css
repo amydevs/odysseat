@@ -10,25 +10,32 @@
     /* opacity: 0%; */
 }
 
+.marker-container:hover .marker-icon {
+    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.6)) drop-shadow(0px 1vw 15px rgba(0, 0, 0, 0.25));
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
 .marker-icon {
     width: 3vw;
-    height: 3vw;
+    height: 2.9vw;
     position: absolute;
     top: 0;
     left: 0;
-    opacity: 0.8;
-    filter: invert(100%);
+    /* opacity: 0.8; */
+    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.4)) drop-shadow(0px 1vw 15px rgba(0, 0, 0, 0.15));
 }
 
 .marker-thumbnail {
-    width: 2vw;
-    height: 2vw;
+    width: 3vw;
+    height: 3vw;
     border-radius: 50%;
     position: absolute;
-    top: 4px;
+    top: -10px;
     left: 50%;
     transform: translateX(-50%);
     object-fit: cover;
+    border: 2px solid white;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4)
 }
 
 @keyframes markerAppear {

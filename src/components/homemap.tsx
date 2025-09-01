@@ -2,13 +2,12 @@
 import * as React from "react";
 import Map, { Popup, type MapRef } from 'react-map-gl/maplibre';
 import { LngLat } from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css' // Required CSS for MapLibre GL to render marker positions correctly
 import { api } from "~/trpc/react";
+import { useDebouncedCallback } from "use-debounce";
 import RecipeMarker from "./map/recipe-marker";
 import Link from "next/link";
-import { useDebounce } from '~/hooks/use-debounce';
 import Image from "next/image";
-import { set } from "better-auth";
+import 'maplibre-gl/dist/maplibre-gl.css' // Required CSS for MapLibre GL to render marker positions correctly
 
 export default function HomeMap() {
     const mapRef = React.useRef<MapRef>(null);
@@ -26,14 +25,13 @@ export default function HomeMap() {
     } | null>(null);
 
     const [bufferedMarkers, setBufferedMarkers] = React.useState<typeof markers>([]);
-    const debouncedBounds = useDebounce(bounds, 200);
     const { data: markers, isLoading, isFetching } = api.recipe.getAll.useQuery(
-        { bounds: debouncedBounds ?? undefined },
-        { enabled: !!debouncedBounds }
+        { bounds: bounds ?? undefined },
+        { enabled: bounds != null }
     );
     
     React.useEffect(() => {
-        if (markers && !isFetching && currentPos) {
+        if (markers != null && !isFetching && currentPos != null) {
             setNewMarkerIds(new Set());
             const bufferedIds = new Set(bufferedMarkers?.map(marker => marker.id))
             for (const marker of markers) {
@@ -45,7 +43,7 @@ export default function HomeMap() {
         }
     }, [markers, isFetching, bufferedMarkers]);
 
-    const updateBounds = () => {
+    const updateBounds = useDebouncedCallback(() => {
         const center = mapRef.current?.getCenter();
         setCurrentPos(center ?? null);
         if (mapRef.current) {
@@ -57,7 +55,7 @@ export default function HomeMap() {
                 west: mapBounds.getWest(),
             });
         }
-    };
+    }, 200);
 
     const displayMarkers = markers ?? bufferedMarkers;
 

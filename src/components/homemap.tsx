@@ -16,7 +16,6 @@ export default function HomeMap() {
     const [popupInfo, setPopupInfo] = React.useState<NonNullable<typeof markers>[number] | null>(null);
 
     const [currentPos, setCurrentPos] = React.useState<LngLat | null>(null);
-    const [lastPos, setLastPos] = React.useState<LngLat | null>(null);
     const [newMarkerIds, setNewMarkerIds] = React.useState<Set<number>>(new Set());
 
     const [bounds, setBounds] = React.useState<{
@@ -34,7 +33,7 @@ export default function HomeMap() {
     );
     
     React.useEffect(() => {
-        if (markers && !isFetching && currentPos && lastPos) {
+        if (markers && !isFetching && currentPos) {
             setNewMarkerIds(new Set());
             const bufferedIds = new Set(bufferedMarkers?.map(marker => marker.id))
             for (const marker of markers) {
@@ -60,11 +59,6 @@ export default function HomeMap() {
         }
     };
 
-    const handleMoveStart = () => {
-        const start = mapRef.current?.getCenter() ?? null;
-        setLastPos(start);
-    };
-
     const displayMarkers = markers ?? bufferedMarkers;
 
     return (
@@ -78,20 +72,17 @@ export default function HomeMap() {
             }}
             mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
             onLoad={updateBounds}
-            onMoveStart={handleMoveStart}
             onMove={updateBounds}
         >
-            {displayMarkers?.map((marker, i) => (
+            {displayMarkers?.map((marker) => (
                 <RecipeMarker
-                    key={marker.id} // Don't touch this
+                    key={marker.id} // Needs to stay marker.id so that recipes with same id doesnt rerender
                     recipe={marker}
                     onClick={(e) => {
                         e.originalEvent.stopPropagation();
                         setPopupInfo(marker);
                     }}
-                    isNewMarker={newMarkerIds.has(marker.id)}
-                    lastPos={lastPos}
-                    zoomLevel={mapRef.current?.getZoom()}
+                    isNew={newMarkerIds.has(marker.id)}
                 />
             ))}
             {

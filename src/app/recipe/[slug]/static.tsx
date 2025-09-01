@@ -54,9 +54,7 @@ export default function StaticRecipe({
               {
                 recipe.position && <RecipeMarker
                   recipe={recipe}
-                  isNewMarker={true}
-                  lastPos={new LngLat(recipe.position[0], recipe.position[1])}
-                  zoomLevel={5}
+                  isNew={true}
                 />
               }
             </Map>

@@ -118,9 +118,7 @@ export default function EditingRecipe({
                           position: form.getValues().position!,
                           thumbnailUrl: form.getValues().thumbnailUrl ?? null
                         }}
-                        isNewMarker={true}
-                        lastPos={new LngLat(form.getValues().position![0], form.getValues().position![1])}
-                        zoomLevel={mapRef.current?.getZoom()}
+                        isNew={true}
                       />
                     }
                   </Map>

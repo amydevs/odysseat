@@ -1,6 +1,7 @@
+"use client";
 import Image from "next/image";
 import * as React from "react";
-import { Marker } from 'react-map-gl/maplibre';
+import { Marker, useMap } from 'react-map-gl/maplibre';
 import { LngLat } from 'maplibre-gl';
 import { cn } from "~/lib/utils";
 // import { api } from "~/trpc/react";
@@ -8,26 +9,32 @@ import { cn } from "~/lib/utils";
 export default function RecipeMarker({
     recipe,
     className,
-    isNewMarker,
-    lastPos,
-    zoomLevel,
+    isNew,
     ...props
 }: {
     recipe: {
-        position: [number, number],
-        thumbnailUrl: string | null,
+        position: [number, number];
+        thumbnailUrl: string | null;
     };
-    isNewMarker?: boolean;
-    lastPos?: LngLat | null;
-    zoomLevel?: number;
-
+    isNew?: boolean;
 } & Omit<React.ComponentProps<typeof Marker>, "longitude" | "latitude">) {
-    const { markerDelay, shouldAnimate } = markerAnimation({
-        isNewMarker,
-        lastPos,
-        zoomLevel,
-        position: recipe.position,
-    });
+    const map = useMap();
+    const [markerDelay, setMarkerDelay] = React.useState(0);
+    const [shouldAnimate, setShouldAnimate] = React.useState(false);
+    React.useEffect(() => {
+        const mapInstance = map.current;
+        if (mapInstance == null || !isNew) {
+            return;
+        }
+        const lastPos = mapInstance.getCenter();
+        const zoomLevel = mapInstance.getZoom();
+        let delay = 0;
+        const markerLngLat = new LngLat(recipe.position[0], recipe.position[1]);
+        const distance = markerLngLat.distanceTo(lastPos);
+        delay = Math.min(1000, (distance * 0.000005 * (zoomLevel ** 2) - 50));
+        setMarkerDelay(delay);
+        setShouldAnimate(true);
+    }, [isNew, recipe.position]);
     // const size = Math.floor(32 + (zoomLevel ?? 0) ** 2);
     return (
         <Marker
@@ -39,8 +46,6 @@ export default function RecipeMarker({
             <div 
                 className={`relative w-16 h-16 cursor-pointer opacity-0`}
                 style={{
-                    // width: `${size}px`,
-                    // height: `${size}px`,
                     animationDelay: `${markerDelay}ms`,
                     animation: shouldAnimate ? `marker 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${markerDelay}ms both` : undefined,
                 }}
@@ -64,32 +69,4 @@ export default function RecipeMarker({
             </div>
         </Marker>
     );
-}
-
-function markerAnimation({
-    isNewMarker,
-    lastPos,
-    zoomLevel,
-    position,
-}: {
-    isNewMarker?: boolean;
-    lastPos?: LngLat | null;
-    zoomLevel?: number;
-    position: [number, number];
-}) {
-    const [markerDelay, setMarkerDelay] = React.useState(0);
-    const [shouldAnimate, setShouldAnimate] = React.useState(false);
-    React.useEffect(() => {
-        let delay = 0;
-        if (isNewMarker && lastPos && zoomLevel) {
-            const markerLngLat = new LngLat(position[0], position[1]);
-            const distance = markerLngLat.distanceTo(lastPos);
-            delay = Math.min(1000, (distance * 0.000005 * (zoomLevel ** 2) - 50));
-            setMarkerDelay(delay);
-            setShouldAnimate(true);
-            // console.log({ delay });
-        }
-    }, [isNewMarker, lastPos, zoomLevel, position]);
-
-    return { markerDelay, shouldAnimate };
 }

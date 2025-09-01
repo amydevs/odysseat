@@ -28,6 +28,7 @@ export default function RecipeMarker({
         zoomLevel,
         position: recipe.position,
     });
+    // const size = Math.floor(32 + (zoomLevel ?? 0) ** 2);
     return (
         <Marker
             longitude={recipe.position[0]}
@@ -36,8 +37,10 @@ export default function RecipeMarker({
             {...props}
         >
             <div 
-                className={`relative w-12 h-12 cursor-pointer opacity-0`}
+                className={`relative w-16 h-16 cursor-pointer opacity-0`}
                 style={{
+                    // width: `${size}px`,
+                    // height: `${size}px`,
                     animationDelay: `${markerDelay}ms`,
                     animation: shouldAnimate ? `marker 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${markerDelay}ms both` : undefined,
                 }}
@@ -45,7 +48,7 @@ export default function RecipeMarker({
                 <Image 
                     src="/assets/marker-icon.svg"
                     alt="Map marker" 
-                    className="invert opacity-80"
+                    className=""
                     width={909}
                     height={994}
                 />
@@ -55,7 +58,7 @@ export default function RecipeMarker({
                         height={48}
                         src={recipe.thumbnailUrl}
                         alt="Thumbnail"
-                        className="rounded-full w-3/4 h-3/4 left-1/2 -translate-x-1/2 top-1/8 absolute"
+                        className="rounded-full w-15/16 h-15/16 left-1/2 -translate-x-1/2 top-1/48 absolute object-cover border-1 border-white"
                     />
                 )}
             </div>

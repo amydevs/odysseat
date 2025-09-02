@@ -2,7 +2,7 @@ import { Map, type LngLat, type MapRef } from "react-map-gl/maplibre";
 import * as React from "react";
 
 export type ExtendedMapRef = MapRef & {
-    getLastCenter: () => LngLat | undefined
+    getLastCenter: () => LngLat | undefined;
 };
 
 export type ExtendedMapProps = React.ComponentProps<typeof Map> & {
@@ -22,13 +22,11 @@ export default function ExtendedMap({ref, ...props}: ExtendedMapProps) {
         const moveStartHandler = current.on('movestart', () => {
             lastPos.current = current.getCenter();
         });
-        const cleanUpCb = () => {
+        if (ref != null) {
+            (ref as { current: ExtendedMapRef }).current = current as unknown as ExtendedMapRef;
+        }
+        return () => {
             moveStartHandler.unsubscribe();
         };
-        if (ref == null) {
-            return cleanUpCb;
-        }
-        (ref as { current: ExtendedMapRef }).current = current as unknown as ExtendedMapRef;
-        return cleanUpCb;
     }} {...props} />
 }

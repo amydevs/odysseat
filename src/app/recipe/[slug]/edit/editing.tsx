@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form';
 import { Button } from '~/components/ui/button';
 import { api } from '~/trpc/react';
 import { Input } from '~/components/ui/input';
-import Map, { type MapRef } from 'react-map-gl/maplibre';
 import { cn } from '~/lib/utils';
 import { GlobeIcon } from 'lucide-react';
 import 'maplibre-gl/dist/maplibre-gl.css'
@@ -16,7 +15,7 @@ import "@blocknote/shadcn/style.css";
 import "@blocknote/core/fonts/inter.css";
 import { Editor } from './dynamic-editor';
 import RecipeMarker from '~/components/map/recipe-marker';
-import { LngLat } from 'maplibre-gl';
+import ExtendedMap, { type ExtendedMapRef } from '~/components/map/extended-map';
 
 export default function EditingRecipe({
   value,
@@ -28,7 +27,7 @@ export default function EditingRecipe({
   const form = useForm<inferRouterInputs<AppRouter>['recipe']['update']>({
     defaultValues: value,
   });
-  const mapRef = React.useRef<MapRef>(null);
+  const mapRef = React.useRef<ExtendedMapRef>(null);
   const onSubmit = async (data: inferRouterInputs<AppRouter>['recipe']['update']) => {
     try {
       await recipeUpdateMutation.mutateAsync(data);
@@ -98,7 +97,7 @@ export default function EditingRecipe({
             render={({ field }) => (
               <FormItem className={cn("transition-all h-0 lg:w-xl lg:h-full", isMapOpen && "h-80")}>
                 <FormControl>
-                  <Map
+                  <ExtendedMap
                     style={{ height: '100%' }}
                     ref={mapRef}
                     initialViewState={{
@@ -122,7 +121,7 @@ export default function EditingRecipe({
                         isNew={true}
                       />
                     }
-                  </Map>
+                  </ExtendedMap>
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -12,6 +12,7 @@ import Link from "next/link";
 import { cn } from "~/lib/utils";
 import RecipeMarker from "~/components/map/recipe-marker";
 import { LngLat } from 'maplibre-gl';
+import ExtendedMap from "~/components/map/extended-map";
 
 export default function StaticRecipe({
   recipe,
@@ -42,7 +43,7 @@ export default function StaticRecipe({
             </Button>
           </div>
           <div className={cn("transition-all h-0 lg:w-xl lg:h-full", isMapOpen && "h-80")}>
-            <Map
+            <ExtendedMap
               style={{ width: '36rem', height: '100%' }}
               initialViewState={{
                 longitude: recipe.position[0],
@@ -57,7 +58,7 @@ export default function StaticRecipe({
                   isNew={true}
                 />
               }
-            </Map>
+            </ExtendedMap>
           </div>
         </div>
       </main>;

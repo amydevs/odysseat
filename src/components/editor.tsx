@@ -20,7 +20,7 @@ export default function Editor({
   React.useEffect(() => {
     (async () => {
       editor.replaceBlocks(editor.document, await editor.tryParseMarkdownToBlocks(initialValue))
-    })()
+    })().catch(console.error)
   }, [])
 
    

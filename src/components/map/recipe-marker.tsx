@@ -1,17 +1,16 @@
 "use client";
 import Image from "next/image";
 import * as React from "react";
-import { Marker, useMap } from 'react-map-gl/maplibre';
+import { Marker } from 'react-map-gl/maplibre';
 import { LngLat } from 'maplibre-gl';
 import { cn } from "~/lib/utils";
 import markerIcon from "./marker-icon.svg";
-// import { api } from "~/trpc/react";
+import { useExtendedMap } from "~/hooks/use-extended-map";
 
-function RecipeMarker({
+export default function RecipeMarker({
     recipe,
     className,
     isNew,
-    lastPos,
     ...props
 }: {
     recipe: {
@@ -19,20 +18,20 @@ function RecipeMarker({
         thumbnailUrl: string | null;
     };
     isNew?: boolean;
-    lastPos?: LngLat | null;
 } & Omit<React.ComponentProps<typeof Marker>, "longitude" | "latitude">) {
-    const map = useMap();
+    const map = useExtendedMap();
     const [markerDelay, setMarkerDelay] = React.useState(0);
     const [shouldAnimate, setShouldAnimate] = React.useState(false);
     React.useEffect(() => {
         const mapInstance = map.current;
-        if (mapInstance == null || !isNew || !lastPos) {
+        const lastPos = mapInstance?.getLastCenter();
+        if (mapInstance == null || !isNew) {
             return;
         }
         const zoomLevel = mapInstance.getZoom();
         let delay = 0;
         const markerLngLat = new LngLat(recipe.position[0], recipe.position[1]);
-        const distance = markerLngLat.distanceTo(lastPos);
+        const distance = lastPos != null ? markerLngLat.distanceTo(lastPos) : 0;
         delay = Math.min(1000, (distance * 0.000005 * (zoomLevel ** 2) - 50));
         setMarkerDelay(delay);
         setShouldAnimate(true);
@@ -54,7 +53,9 @@ function RecipeMarker({
             >
                 <Image 
                     alt="Map marker" 
-                    {...markerIcon}
+                    src={markerIcon.src}
+                    height={markerIcon.height}
+                    width={markerIcon.width}
                 />
                 {recipe.thumbnailUrl && (
                     <Image
@@ -69,13 +70,3 @@ function RecipeMarker({
         </Marker>
     );
 }
-
-export default React.memo(RecipeMarker, (prev, next) => {
-    return(
-        prev.isNew === next.isNew &&
-        prev.recipe.thumbnailUrl === next.recipe.thumbnailUrl &&
-        prev.recipe.position[0] === next.recipe.position[0] &&
-        prev.recipe.position[1] === next.recipe.position[1] &&
-        prev.className === next.className
-    );
-});

@@ -1,21 +1,21 @@
 "use client";
 import * as React from "react";
 import Map, { Popup, type MapRef } from 'react-map-gl/maplibre';
-import { LngLat } from 'maplibre-gl';
+import { type LngLat } from 'maplibre-gl';
 import { api } from "~/trpc/react";
 import { useDebouncedCallback } from "use-debounce";
 import RecipeMarker from "./map/recipe-marker";
 import Link from "next/link";
 import Image from "next/image";
 import 'maplibre-gl/dist/maplibre-gl.css' // Required CSS for MapLibre GL to render marker positions correctly
+import ExtendedMap, { type ExtendedMapRef } from "./map/extended-map";
 
 export default function HomeMap() {
-    const mapRef = React.useRef<MapRef>(null);
+    const mapRef = React.useRef<ExtendedMapRef>(null);
 
     const [popupInfo, setPopupInfo] = React.useState<NonNullable<typeof markers>[number] | null>(null);
 
     const [currentPos, setCurrentPos] = React.useState<LngLat | null>(null);
-    const [lastPos, setLastPos] = React.useState<LngLat | null>(null);
     const [newMarkerIds, setNewMarkerIds] = React.useState<Set<number>>(new Set());
 
     const [bounds, setBounds] = React.useState<{
@@ -32,7 +32,7 @@ export default function HomeMap() {
     );
     
     React.useEffect(() => {
-        if (markers != null && !isFetching && currentPos != null && lastPos != null) {
+        if (markers != null && !isFetching && currentPos != null) {
             setNewMarkerIds(new Set());
             const bufferedIds = new Set(bufferedMarkers?.map(marker => marker.id))
             for (const marker of markers) {
@@ -58,15 +58,10 @@ export default function HomeMap() {
         }
     }, 200);
 
-    const handleMoveStart = () => {
-        const start = mapRef.current?.getCenter() ?? null;
-        setLastPos(start);
-    };
-
     const displayMarkers = markers ?? bufferedMarkers;
 
     return (
-        <Map
+        <ExtendedMap
             ref={mapRef}
             style={{ width: '100%', height: '100%' }}
             initialViewState={{
@@ -76,7 +71,6 @@ export default function HomeMap() {
             }}
             mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
             onLoad={updateBounds}
-            onMoveStart={handleMoveStart}
             onMove={updateBounds}
         >
             {displayMarkers?.map((marker) => (
@@ -87,7 +81,6 @@ export default function HomeMap() {
                         e.originalEvent.stopPropagation();
                         setPopupInfo(marker);
                     }}
-                    lastPos={lastPos}
                     isNew={newMarkerIds.has(marker.id)}
                 />
             ))}
@@ -104,6 +97,6 @@ export default function HomeMap() {
                     </Link>
                 </Popup>
             }
-        </Map>
+        </ExtendedMap>
     );
 }

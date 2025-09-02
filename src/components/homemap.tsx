@@ -15,6 +15,7 @@ export default function HomeMap() {
     const [popupInfo, setPopupInfo] = React.useState<NonNullable<typeof markers>[number] | null>(null);
 
     const [currentPos, setCurrentPos] = React.useState<LngLat | null>(null);
+    const [lastPos, setLastPos] = React.useState<LngLat | null>(null);
     const [newMarkerIds, setNewMarkerIds] = React.useState<Set<number>>(new Set());
 
     const [bounds, setBounds] = React.useState<{
@@ -31,7 +32,7 @@ export default function HomeMap() {
     );
     
     React.useEffect(() => {
-        if (markers != null && !isFetching && currentPos != null) {
+        if (markers != null && !isFetching && currentPos != null && lastPos != null) {
             setNewMarkerIds(new Set());
             const bufferedIds = new Set(bufferedMarkers?.map(marker => marker.id))
             for (const marker of markers) {
@@ -57,6 +58,11 @@ export default function HomeMap() {
         }
     }, 200);
 
+    const handleMoveStart = () => {
+        const start = mapRef.current?.getCenter() ?? null;
+        setLastPos(start);
+    };
+
     const displayMarkers = markers ?? bufferedMarkers;
 
     return (
@@ -70,6 +76,7 @@ export default function HomeMap() {
             }}
             mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
             onLoad={updateBounds}
+            onMoveStart={handleMoveStart}
             onMove={updateBounds}
         >
             {displayMarkers?.map((marker) => (
@@ -80,6 +87,7 @@ export default function HomeMap() {
                         e.originalEvent.stopPropagation();
                         setPopupInfo(marker);
                     }}
+                    lastPos={lastPos}
                     isNew={newMarkerIds.has(marker.id)}
                 />
             ))}

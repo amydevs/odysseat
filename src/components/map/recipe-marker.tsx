@@ -7,10 +7,11 @@ import { cn } from "~/lib/utils";
 import markerIcon from "./marker-icon.svg";
 // import { api } from "~/trpc/react";
 
-export default function RecipeMarker({
+function RecipeMarker({
     recipe,
     className,
     isNew,
+    lastPos,
     ...props
 }: {
     recipe: {
@@ -18,16 +19,16 @@ export default function RecipeMarker({
         thumbnailUrl: string | null;
     };
     isNew?: boolean;
+    lastPos?: LngLat | null;
 } & Omit<React.ComponentProps<typeof Marker>, "longitude" | "latitude">) {
     const map = useMap();
     const [markerDelay, setMarkerDelay] = React.useState(0);
     const [shouldAnimate, setShouldAnimate] = React.useState(false);
     React.useEffect(() => {
         const mapInstance = map.current;
-        if (mapInstance == null || !isNew) {
+        if (mapInstance == null || !isNew || !lastPos) {
             return;
         }
-        const lastPos = mapInstance.getCenter();
         const zoomLevel = mapInstance.getZoom();
         let delay = 0;
         const markerLngLat = new LngLat(recipe.position[0], recipe.position[1]);
@@ -45,7 +46,7 @@ export default function RecipeMarker({
             {...props}
         >
             <div 
-                className={`relative w-16 h-16 cursor-pointer opacity-0`}
+                className={`relative w-16 h-16 cursor-pointer opacity-0 transition ease-in-out hover:scale-125`}
                 style={{
                     animationDelay: `${markerDelay}ms`,
                     animation: shouldAnimate ? `marker 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${markerDelay}ms both` : undefined,
@@ -68,3 +69,13 @@ export default function RecipeMarker({
         </Marker>
     );
 }
+
+export default React.memo(RecipeMarker, (prev, next) => {
+    return(
+        prev.isNew === next.isNew &&
+        prev.recipe.thumbnailUrl === next.recipe.thumbnailUrl &&
+        prev.recipe.position[0] === next.recipe.position[0] &&
+        prev.recipe.position[1] === next.recipe.position[1] &&
+        prev.className === next.className
+    );
+});

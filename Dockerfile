@@ -43,6 +43,7 @@ COPY --from=build /app/.next/standalone /app
 COPY --from=build /app/.next/static /app/.next/static
 COPY --from=build /app/public /app/public
 COPY --from=build /app/node_modules/next /app/node_modules/next
+COPY --from=build /app/docker-entrypoint.js /app/docker-entrypoint.js
 
 # Entrypoint sets up the container.
 ENTRYPOINT [ "/app/docker-entrypoint.js" ]

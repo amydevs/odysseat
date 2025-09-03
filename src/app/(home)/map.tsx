@@ -72,7 +72,7 @@ export default function HomeMap() {
             onLoad={updateBounds}
             onMove={updateBounds}
         >
-            <GeolocateControl />
+            <GeolocateControl position="bottom-right" />
             {displayMarkers?.map((marker) => (
                 <RecipeMarker
                     key={marker.id} // Needs to stay marker.id so that recipes with same id doesnt rerender

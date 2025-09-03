@@ -111,7 +111,7 @@ export default function EditingRecipe({
                         mapRef.current?.getMap().triggerRepaint();
                       }}
                     >
-                    <GeolocateControl />
+                    <GeolocateControl position="bottom-right" />
                     {
                       form.getValues().position != null && <RecipeMarker
                         key={form.getValues().position?.join("")}

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import { useRouter } from "next/navigation";
 
 
 const formSchema = z.object({
@@ -17,15 +18,20 @@ const formSchema = z.object({
 });
 
 export default function SignupPage() {
+    const router = useRouter();
     const form = useForm({
         resolver: zodResolver(formSchema),
     });
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         const res = await authClient.signUp.email(data);
-        console.log(res);
+        if (res.error != null) {
+            form.setError("root", { message: res.error.message });
+            return;
+        }
+        router.push("/");
     };
     return <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="max-w-7xl mx-auto p-6" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
                 control={form.control}
                 name="username"
@@ -91,6 +97,7 @@ export default function SignupPage() {
                 )}
             />
             <Button type="submit">Sign Up</Button>
+            <FormMessage>{form.formState.errors.root?.message}</FormMessage>
         </form>
     </Form>;
 }

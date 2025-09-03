@@ -7,6 +7,7 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, For
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string(),
@@ -15,14 +16,20 @@ const formSchema = z.object({
 })
 
 export default function LoginPage() {
+    const router = useRouter();
     const form = useForm({
         resolver: zodResolver(formSchema),
     });
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        await authClient.signIn.email(data);
+        const res = await authClient.signIn.email(data);
+        if (res.error != null) {
+            form.setError("root", { message: res.error.message });
+            return;
+        }
+        router.push("/");
     };
     return <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="max-w-7xl mx-auto p-6" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
                 control={form.control}
                 name="email"
@@ -59,19 +66,20 @@ export default function LoginPage() {
                 control={form.control}
                 name="rememeberMe"
                 render={({ field: { onChange, value, ...field } }) => (
-                <FormItem>
-                    <FormLabel>
-                        Password
-                    </FormLabel>
-                    <FormControl>
-                        <Checkbox onCheckedChange={onChange} value={`${value}`} {...field} />
-                    </FormControl>
-                    <FormDescription />
-                    <FormMessage />
-                </FormItem>
+                    <FormItem>
+                        <FormLabel>
+                            Remember Me
+                        </FormLabel>
+                        <FormControl>
+                            <Checkbox onCheckedChange={onChange} value={`${value}`} {...field} />
+                        </FormControl>
+                        <FormDescription />
+                        <FormMessage />
+                    </FormItem>
                 )}
             />
             <Button type="submit">Log In</Button>
+            <FormMessage>{form.formState.errors.root?.message}</FormMessage>
         </form>
     </Form>;
 }

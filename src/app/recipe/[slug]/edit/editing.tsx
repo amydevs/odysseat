@@ -99,18 +99,17 @@ export default function EditingRecipe({
               <FormItem className={cn("transition-all h-0 lg:w-xl lg:h-full", isMapOpen && "h-80")}>
                 <FormControl>
                   <ExtendedMap
-                    style={{ height: '100%' }}
-                    ref={mapRef}
-                    initialViewState={{
-                      longitude: field.value?.[0],
-                      latitude: field.value?.[1],
-                      zoom: 5
-                    }}
-                    onClick={(e) => {
-                      field.onChange([e.lngLat.lng, e.lngLat.lat]);
-                      mapRef.current?.getMap().triggerRepaint();
-                    }}
-                    mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
+                      style={{ height: '100%' }}
+                      ref={mapRef}
+                      initialViewState={{
+                        longitude: field.value?.[0],
+                        latitude: field.value?.[1],
+                        zoom: 5
+                      }}
+                      onClick={(e) => {
+                        field.onChange([e.lngLat.lng, e.lngLat.lat]);
+                        mapRef.current?.getMap().triggerRepaint();
+                      }}
                     >
                     <GeolocateControl />
                     {

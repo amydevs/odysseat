@@ -69,7 +69,6 @@ export default function HomeMap() {
                 latitude: -33.883993,
                 zoom: 5
             }}
-            mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
             onLoad={updateBounds}
             onMove={updateBounds}
         >

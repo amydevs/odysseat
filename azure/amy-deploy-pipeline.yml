@@ -20,6 +20,7 @@ steps:
 - script: |
     /home/vsts/.fly/bin/flyctl secrets set AUTH_SECRET=$(AUTH_SECRET) --stage
     /home/vsts/.fly/bin/flyctl secrets set DATABASE_URL=$(DATABASE_URL) --stage
+    /home/vsts/.fly/bin/flyctl secrets set NEXT_PUBLIC_MAP_STYLE=$(NEXT_PUBLIC_MAP_STYLE) --stage
   displayName: 'fly secrets set'
   env:
     FLY_API_TOKEN: $(FLY_API_TOKEN)

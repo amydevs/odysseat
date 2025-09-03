@@ -28,7 +28,7 @@ RUN npm ci --include=dev
 COPY . .
 
 # Build application
-ENV SKIP_ENV_VALIDATION=true
+# ENV SKIP_ENV_VALIDATION=true
 RUN npx next build --experimental-build-mode compile
 
 # Remove development dependencies

@@ -7,6 +7,7 @@
     "auth:generate": "npx @better-auth/cli generate --config ./scripts/auth-config.ts --output ./src/server/db/schema/auth-schema.ts",
     "build": "next build",
     "check": "cross-env SKIP_ENV_VALIDATION=true next lint && tsc --noEmit",
+    "db:dbml": "cross-env SKIP_ENV_VALIDATION=true tsx --env-file=.env ./scripts/generate-dbml",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -49,6 +50,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
+    "drizzle-dbml-generator": "^0.10.0",
     "drizzle-orm": "^1.0.0-beta.1-578e9fd",
     "drizzle-seed": "^0.3.1-578e9fd",
     "drizzle-zod": "^0.8.3-578e9fd",
@@ -95,11 +97,14 @@
     "wrangler": "^4.33.1"
   },
   "overrides": {
+    "drizzle-dbml-generator": {
+      "drizzle-orm": "^1.0.0-beta"
+    },
     "drizzle-zod": {
-      "drizzle-orm": "^1.0.0-beta.1-578e9fd"
+      "drizzle-orm": "^1.0.0-beta"
     },
     "drizzle-seed": {
-      "drizzle-orm": "^1.0.0-beta.1-578e9fd"
+      "drizzle-orm": "^1.0.0-beta"
     }
   },
   "ct3aMetadata": {

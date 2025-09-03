@@ -50,3 +50,4 @@ yarn-error.log*
 .vscode/settings.json
 
 .open-next/
+schema.dbml

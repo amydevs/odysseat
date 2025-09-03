@@ -28,15 +28,18 @@ steps:
     path: $(npm_config_cache)
   displayName: Cache npm
 
-- task: Cache@2
-  displayName: 'Cache .next/cache'
-  inputs:
-    key: next | $(Agent.OS) | package-lock.json
-    path: '$(System.DefaultWorkingDirectory)/.next/cache'
-
 - script: |
     npm ci
-    npx --yes next build --experimental-build-mode compile
-  displayName: 'npm install and build'
-  env:
-    SKIP_ENV_VALIDATION: true
+    npm run db:dbml
+  displayName: 'npm install and db:dbml'
+
+- script: |
+    npx @softwaretechnik/dbml-renderer -i schema.dbml -o schema.svg
+  displayName: 'Render SVG'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(System.DefaultWorkingDirectory)/schema.svg'
+    artifactName: 'DatabaseSchema'
+    publishLocation: 'pipeline'
+    displayName: 'Publish DBML Schema'

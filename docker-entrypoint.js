@@ -6,7 +6,7 @@ const env = { ...process.env }
 
 // If running the web server then prerender pages
 if (process.argv.slice(-2).join(' ') === 'node server.js') {
-  await exec('npx --yes next build --experimental-build-mode generate-env')
+  await exec('node_modules/.bin/next build --experimental-build-mode generate-env')
 }
 
 // launch application

@@ -1,4 +1,5 @@
 "use client";
+
 import { Map, type LngLat, type MapRef } from "react-map-gl/maplibre";
 import * as React from "react";
 import { ExtendedMapContext } from "~/contexts/extended-map-context";

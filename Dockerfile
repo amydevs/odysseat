@@ -28,11 +28,8 @@ RUN npm ci --include=dev
 COPY . .
 
 # Build application
-# ENV SKIP_ENV_VALIDATION=true
-RUN --mount=type=secret,id=AUTH_SECRET,env=AUTH_SECRET \
-    --mount=type=secret,id=DATABASE_URL,env=DATABASE_URL \
-    --mount=type=secret,id=NEXT_PUBLIC_MAP_STYLE,env=NEXT_PUBLIC_MAP_STYLE \
-    npx next build --experimental-build-mode compile
+ENV SKIP_ENV_VALIDATION=true
+RUN npx --yes next build --experimental-build-mode compile
 
 # Remove development dependencies
 RUN npm prune --omit=dev

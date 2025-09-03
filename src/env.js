@@ -25,7 +25,7 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    NEXT_PUBLIC_MAP_STYLE: z.string().url(),
+    NEXT_PUBLIC_MAP_STYLE: z.string(),
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
   },
 

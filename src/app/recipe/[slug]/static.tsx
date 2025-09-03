@@ -45,9 +45,9 @@ export default function StaticRecipe({
           <div className={cn("transition-all h-0 lg:w-xl lg:h-full", isMapOpen && "h-80")}>
             <ExtendedMap
               style={{ width: '36rem', height: '100%' }}
+              longitude={recipe.position[0]}
+              latitude={recipe.position[1]}
               initialViewState={{
-                longitude: recipe.position[0],
-                latitude: recipe.position[1],
                 zoom: 5
               }}
               mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"

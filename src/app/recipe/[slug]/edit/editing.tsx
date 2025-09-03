@@ -16,6 +16,7 @@ import "@blocknote/core/fonts/inter.css";
 import { Editor } from './dynamic-editor';
 import RecipeMarker from '~/components/map/recipe-marker';
 import ExtendedMap, { type ExtendedMapRef } from '~/components/map/extended-map';
+import { GeolocateControl } from 'react-map-gl/maplibre';
 
 export default function EditingRecipe({
   value,
@@ -111,6 +112,7 @@ export default function EditingRecipe({
                     }}
                     mapStyle="https://api.maptiler.com/maps/streets/style.json?key=Y1LHHXeWTC4l0lTXoIC4"
                     >
+                    <GeolocateControl />
                     {
                       form.getValues().position != null && <RecipeMarker
                         key={form.getValues().position?.join("")}

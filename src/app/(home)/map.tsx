@@ -1,14 +1,14 @@
 "use client";
 import * as React from "react";
-import Map, { Popup, type MapRef } from 'react-map-gl/maplibre';
+import { GeolocateControl, Popup } from 'react-map-gl/maplibre';
 import { type LngLat } from 'maplibre-gl';
 import { api } from "~/trpc/react";
 import { useDebouncedCallback } from "use-debounce";
-import RecipeMarker from "./map/recipe-marker";
+import RecipeMarker from "~/components/map/recipe-marker";
 import Link from "next/link";
 import Image from "next/image";
 import 'maplibre-gl/dist/maplibre-gl.css' // Required CSS for MapLibre GL to render marker positions correctly
-import ExtendedMap, { type ExtendedMapRef } from "./map/extended-map";
+import ExtendedMap, { type ExtendedMapRef } from "~/components/map/extended-map";
 
 export default function HomeMap() {
     const mapRef = React.useRef<ExtendedMapRef>(null);
@@ -73,10 +73,11 @@ export default function HomeMap() {
             onLoad={updateBounds}
             onMove={updateBounds}
         >
+            <GeolocateControl />
             {displayMarkers?.map((marker) => (
                 <RecipeMarker
                     key={marker.id} // Needs to stay marker.id so that recipes with same id doesnt rerender
-                    recipe={marker}
+                    recipe={marker} 
                     onClick={(e) => {
                         e.originalEvent.stopPropagation();
                         setPopupInfo(marker);

@@ -1,6 +1,8 @@
 "use client"; // this registers <Editor> as a Client Component
 import "@blocknote/core/fonts/inter.css";
-import { useCreateBlockNote } from "@blocknote/react";
+import {
+  useCreateBlockNote,
+} from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
 import "@blocknote/shadcn/style.css";
 import React from "react";
@@ -15,6 +17,7 @@ export default function Editor({
 }) {
   // Creates a new editor instance.
   const editor = useCreateBlockNote({
+    // disableExtensions: ["textColor"]
   });
 
   React.useEffect(() => {
@@ -24,5 +27,7 @@ export default function Editor({
   }, [])
 
    
-  return <BlockNoteView theme="light" onChange={async (editor) => onValueChange?.(await editor.blocksToMarkdownLossy(editor.document))} editor={editor} />;
+  return <BlockNoteView theme="light" onChange={async (editor) => onValueChange?.(await editor.blocksToMarkdownLossy(editor.document))} editor={editor}>
+    {/* <FormattingToolbarController formattingToolbar={() => <></>} /> */}
+  </BlockNoteView>;
 }

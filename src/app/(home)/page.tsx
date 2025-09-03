@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { LatestPost } from "~/components/post";
 import { api, HydrateClient } from "~/trpc/server";
 import HomeMap from "./map";
 

@@ -42,9 +42,10 @@ FROM base
 COPY --from=build /app/.next/standalone /app
 COPY --from=build /app/.next/static /app/.next/static
 COPY --from=build /app/public /app/public
+COPY --from=build /app/node_modules/next /app/node_modules/next
 
 # Entrypoint sets up the container.
-# ENTRYPOINT [ "/app/docker-entrypoint.js" ]
+ENTRYPOINT [ "/app/docker-entrypoint.js" ]
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000

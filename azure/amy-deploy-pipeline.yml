@@ -29,9 +29,9 @@ steps:
     /home/vsts/.fly/bin/flyctl deploy \
       --remote-only \
       --detach \
-      --build-secret AUTH_SECRET=$(AUTH_SECRET) \
-      --build-secret DATABASE_URL=$(DATABASE_URL) \
-      --build-secret NEXT_PUBLIC_MAP_STYLE=$(NEXT_PUBLIC_MAP_STYLE)
+      --build-arg AUTH_SECRET=$(AUTH_SECRET) \
+      --build-arg DATABASE_URL=$(DATABASE_URL) \
+      --build-arg NEXT_PUBLIC_MAP_STYLE=$(NEXT_PUBLIC_MAP_STYLE)
   displayName: 'fly deploy'
   env:
     FLY_API_TOKEN: $(FLY_API_TOKEN)

@@ -31,79 +31,83 @@ export default function SignupPage() {
         }
         router.push("/");
     };
-    return <Form {...form}>
-        <Button 
-        className="bg-red-600 m-[0.5vh]"
-        >
-            <Link href={"/"}>x</Link>
-        </Button>
-        <form className="max-w-7xl mx-auto p-6" onSubmit={form.handleSubmit(onSubmit)}>
-            <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                <FormItem>
-                    <FormLabel>
-                        Username
-                    </FormLabel>
-                    <FormControl>
-                        <Input {...field} />
-                    </FormControl>
-                    <FormDescription />
-                    <FormMessage />
-                </FormItem>
-                )}
-            />
-            <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                <FormItem>
-                    <FormLabel>
-                        Name
-                    </FormLabel>
-                    <FormControl>
-                        <Input {...field} />
-                    </FormControl>
-                    <FormDescription />
-                    <FormMessage />
-                </FormItem>
-                )}
-            />
-            <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                <FormItem>
-                    <FormLabel>
-                        Email
-                    </FormLabel>
-                    <FormControl>
-                        <Input {...field} />
-                    </FormControl>
-                    <FormDescription />
-                    <FormMessage />
-                </FormItem>
-                )}
-            />
-            <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                <FormItem>
-                    <FormLabel>
-                        Password
-                    </FormLabel>
-                    <FormControl>
-                        <Input type="password" {...field} />
-                    </FormControl>
-                    <FormDescription />
-                    <FormMessage />
-                </FormItem>
-                )}
-            />
-            <Button type="submit">Sign Up</Button>
-            <FormMessage>{form.formState.errors.root?.message}</FormMessage>
-        </form>
-    </Form>;
+    return (
+        <div className="max-w-full flex justify-center items-center h-screen">
+            <Button 
+            className="bg-red-600 m-[0.5vh] absolute top-1 right-1"
+            >
+                <Link href={"/"}>x</Link>
+            </Button>
+            <Form {...form}>
+            <form className="max-w-7xl mx-auto p-6" onSubmit={form.handleSubmit(onSubmit)}>
+                <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>
+                            Username
+                        </FormLabel>
+                        <FormControl>
+                            <Input {...field} />
+                        </FormControl>
+                        <FormDescription />
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>
+                            Name
+                        </FormLabel>
+                        <FormControl>
+                            <Input {...field} />
+                        </FormControl>
+                        <FormDescription />
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>
+                            Email
+                        </FormLabel>
+                        <FormControl>
+                            <Input {...field} />
+                        </FormControl>
+                        <FormDescription />
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>
+                            Password
+                        </FormLabel>
+                        <FormControl>
+                            <Input type="password" {...field} />
+                        </FormControl>
+                        <FormDescription />
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+                <Button type="submit">Sign Up</Button>
+                <FormMessage>{form.formState.errors.root?.message}</FormMessage>
+            </form>
+            </Form>
+        </div>
+    );
 }

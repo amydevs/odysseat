@@ -32,7 +32,7 @@ export default function LoginPage() {
     };
     return (<Form {...form}>
         <Button 
-        style={{ backgroundColor: "red"}}
+        className="bg-red-600 m-[0.5vh]"
         >
             <Link href={"/"}>x</Link>
         </Button>

@@ -51,7 +51,7 @@ export const comment = createTable(
   (t) => [
     // index("position_idx").on(t.position),
     // index("rating_idx").on(t.rating),
-    index("created_at_idx").on(t.createdAt),
+    // index("created_at_idx").on(t.createdAt),
   ],
 );
 

@@ -71,16 +71,26 @@ export const recipeRouter = createTRPCRouter({
       .orderBy(recipe.createdAt);
   }),
   create: protectedProcedure
-    .input(createInsertSchema(recipe).omit({ id: true }))
+    .input(
+      createInsertSchema(recipe)
+        .omit({ id: true, userId: true, })
+    )
     .mutation(async ({ ctx, input }) => {
       const r = await ctx.db
         .insert(recipe)
-        .values(input)
+        .values({
+          ...input,
+          userId: ctx.session.user.id,
+        })
         .returning();
       return r[0]!;
     }),
   update: publicProcedure
-    .input(createUpdateSchema(recipe).omit({ userId: true }).and(z.object({ id: z.number() })))
+    .input(
+      createUpdateSchema(recipe)
+        .omit({ userId: true })
+        .and(z.object({ id: z.number() }))
+    )
     .mutation(async ({ ctx, input }) => {
       const r = await ctx.db
         .update(recipe)

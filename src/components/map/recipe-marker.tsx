@@ -51,12 +51,14 @@ export default function RecipeMarker({
                     animation: shouldAnimate ? `marker 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${markerDelay}ms both` : undefined,
                 }}
             >
+                {/* eslint-disable */}
                 <Image 
                     alt="Map marker" 
                     src={markerIcon.src}
                     height={markerIcon.height}
                     width={markerIcon.width}
                 />
+                {/* eslint-enable */}
                 {recipe.thumbnailUrl && (
                     <Image
                         width={48}

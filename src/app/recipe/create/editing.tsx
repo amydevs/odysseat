@@ -114,7 +114,7 @@ export default function CreatingRecipe() {
                       form.getValues().position != null && <RecipeMarker
                         key={form.getValues().position?.join("")}
                         recipe={{
-                          position: form.getValues().position!,
+                          position: form.getValues().position,
                           thumbnailUrl: form.getValues().thumbnailUrl ?? null
                         }}
                         isNew={true}

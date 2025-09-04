@@ -1,4 +1,6 @@
 "use client";
+import Link from "next/link";
+
 import { z } from "zod/v4";
 import { authClient } from "~/auth/client";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,7 +30,10 @@ export default function LoginPage() {
         }
         router.push("/");
     };
-    return <Form {...form}>
+    return (<Form {...form}>
+        <Button>
+            <Link href={"/"}>Back</Link>
+        </Button>
         <form className="max-w-7xl mx-auto p-6" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
                 control={form.control}
@@ -81,5 +86,6 @@ export default function LoginPage() {
             <Button type="submit">Log In</Button>
             <FormMessage>{form.formState.errors.root?.message}</FormMessage>
         </form>
-    </Form>;
+    </Form>
+    );
 }

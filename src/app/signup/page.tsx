@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { z } from "zod/v4";
 import { authClient } from "~/auth/client";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +32,9 @@ export default function SignupPage() {
         router.push("/");
     };
     return <Form {...form}>
+        <Button>
+            <Link href={"/"}>Back</Link>
+        </Button>
         <form className="max-w-7xl mx-auto p-6" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
                 control={form.control}

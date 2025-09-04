@@ -7,7 +7,7 @@ import { auth } from "~/auth/server";
 import { headers } from "next/headers";
 import { cn } from "~/lib/utils";
 import { redirect } from "next/navigation";
-import { UserIcon } from "lucide-react";
+import { PlusIcon, UserIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 
 export default async function Home() {
@@ -27,7 +27,7 @@ export default async function Home() {
       <main className="h-screen relative">
         <HomeMap />
         <div className="absolute top-2 right-2">
-          <div className={cn("flex gap-1", session?.user != null && "hidden")}>
+          <div className={cn("flex gap-1 items-center justify-center", session?.user != null && "hidden")}>
             <Button className={cn(session?.user != null && "hidden")} asChild>
               <Link href={"/login"}>Login</Link>
             </Button>
@@ -35,7 +35,12 @@ export default async function Home() {
               <Link href={"/signup"}>Signup</Link>
             </Button>
           </div>
-          <div className={cn("flex gap-1", session?.user == null && "hidden")}>
+          <div className={cn("flex gap-1 items-center justify-center", session?.user == null && "hidden")}>
+            <Button asChild>
+              <Link href={"/recipe/create"}>
+                <PlusIcon />
+              </Link>
+            </Button>
             <Tooltip>
               <TooltipTrigger>
                 <Button size={"icon"}>

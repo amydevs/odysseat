@@ -1,10 +1,10 @@
 import { z } from "zod/v4";
 import { and, eq, gte, ilike, lte, sql, or } from "drizzle-orm";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import { recipe } from "~/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { createUpdateSchema } from "drizzle-zod";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 
 export const recipeRouter = createTRPCRouter({
   getById: publicProcedure
@@ -70,8 +70,15 @@ export const recipeRouter = createTRPCRouter({
       )
       .orderBy(recipe.createdAt);
   }),
+  create: protectedProcedure
+    .input(createInsertSchema(recipe).omit({ id: true }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db
+        .insert(recipe)
+        .values(input);
+    }),
   update: publicProcedure
-    .input(createUpdateSchema(recipe).and(z.object({ id: z.number() })))
+    .input(createUpdateSchema(recipe).omit({ userId: true }).and(z.object({ id: z.number() })))
     .mutation(async ({ ctx, input }) => {
       return ctx.db
         .update(recipe)

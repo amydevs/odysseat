@@ -10,14 +10,14 @@ export const recipeRouter = createTRPCRouter({
   getById: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
-      const recipes = await ctx.db
+      const r = await ctx.db
         .select()
         .from(recipe)
         .where(eq(recipe.id, input.id))
-      if (recipes.length === 0) {
+      if (r.length === 0) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
-      return recipes[0]!;
+      return r[0]!;
     }),
   getAll: publicProcedure
   .input(z.object({
@@ -73,16 +73,23 @@ export const recipeRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createInsertSchema(recipe).omit({ id: true }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db
+      const r = await ctx.db
         .insert(recipe)
-        .values(input);
+        .values(input)
+        .returning();
+      return r[0]!;
     }),
   update: publicProcedure
     .input(createUpdateSchema(recipe).omit({ userId: true }).and(z.object({ id: z.number() })))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db
+      const r = await ctx.db
         .update(recipe)
         .set(input)
-        .where(eq(recipe.id, input.id));
+        .where(eq(recipe.id, input.id))
+        .returning();
+      if (r.length === 0) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      return r[0]!;
     })
 });

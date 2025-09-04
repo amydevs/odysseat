@@ -3,18 +3,10 @@ import { api } from '~/trpc/server';
 import CreatingRecipe from './editing';
 
  
-export default async function BlogPostPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params;
-  const id = Number.parseInt(slug);
-  const recipe = await api.recipe.getById({ id });
- 
+export default async function BlogPostPage() { 
   return (
     <main>
-      <CreatingRecipe value={recipe} />
+      <CreatingRecipe />
     </main>
   )
 }

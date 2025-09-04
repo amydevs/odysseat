@@ -17,15 +17,18 @@ import { Editor } from './dynamic-editor';
 import RecipeMarker from '~/components/map/recipe-marker';
 import ExtendedMap, { type ExtendedMapRef } from '~/components/map/extended-map';
 import { GeolocateControl } from 'react-map-gl/maplibre';
+import { useRouter } from 'next/navigation';
 
 export default function CreatingRecipe() {
+  const router = useRouter();
   const [isMapOpen, setIsMapOpen] = React.useState(false);
   const recipeCreateMutation = api.recipe.create.useMutation();
   const form = useForm<inferRouterInputs<AppRouter>['recipe']['create']>();
   const mapRef = React.useRef<ExtendedMapRef>(null);
   const onSubmit = async (data: inferRouterInputs<AppRouter>['recipe']['create']) => {
     try {
-      await recipeCreateMutation.mutateAsync(data);
+      const recipe = await recipeCreateMutation.mutateAsync(data);
+      router.push(`/recipe/${recipe.id}`);
     }
     catch (e: unknown) {
       if (e instanceof TRPCError) {

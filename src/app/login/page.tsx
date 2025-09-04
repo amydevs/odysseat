@@ -32,8 +32,8 @@ export default function LoginPage() {
     };
     return ( 
         <div className="max-w-full flex justify-center items-center h-screen">
-            <Button className={"bg-red-600 m-[0.5vh] absolute top-1 right-1"}>
-                <Link href={"/"}> x </Link>
+            <Button className={"bg-red-600 absolute top-1 right-1"} asChild>
+                <Link href={"/"}>x</Link>
             </Button>
             <Form {...form}>
             <form className="max-w-7xl relative mx-auto" onSubmit={form.handleSubmit(onSubmit)}>

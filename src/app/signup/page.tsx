@@ -33,9 +33,7 @@ export default function SignupPage() {
     };
     return (
         <div className="max-w-full flex justify-center items-center h-screen">
-            <Button 
-            className="bg-red-600 m-[0.5vh] absolute top-1 right-1"
-            >
+            <Button className="bg-red-600 m-[0.5vh] absolute top-1 right-1" asChild>
                 <Link href={"/"}>x</Link>
             </Button>
             <Form {...form}>

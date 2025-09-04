@@ -32,8 +32,10 @@ export default function SignupPage() {
         router.push("/");
     };
     return <Form {...form}>
-        <Button>
-            <Link href={"/"}>Back</Link>
+        <Button 
+        style={{ backgroundColor: "red"}}
+        >
+            <Link href={"/"}>x</Link>
         </Button>
         <form className="max-w-7xl mx-auto p-6" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField

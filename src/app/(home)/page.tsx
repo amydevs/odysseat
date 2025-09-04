@@ -47,7 +47,9 @@ export default async function Home() {
               </TooltipContent>
             </Tooltip>
             <form action={signOutAction}>
-              <Button type="submit" />
+              <Button type="submit">
+                Logout
+              </Button>
             </form>
           </div>
         </div>

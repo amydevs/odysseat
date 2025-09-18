@@ -18,9 +18,11 @@ import RecipeMarker from '~/components/map/recipe-marker';
 import ExtendedMap, { type ExtendedMapRef } from '~/components/map/extended-map';
 import { GeolocateControl } from 'react-map-gl/maplibre';
 import { useRouter } from 'next/navigation';
+import { useUppy } from '~/hooks/use-uppy';
 
 export default function CreatingRecipe() {
   const router = useRouter();
+  const uppy = useUppy();
   const [isMapOpen, setIsMapOpen] = React.useState(false);
   const recipeCreateMutation = api.recipe.create.useMutation();
   const form = useForm<inferRouterInputs<AppRouter>['recipe']['create']>();
@@ -57,11 +59,24 @@ export default function CreatingRecipe() {
             <FormField
               control={form.control}
               name="thumbnailUrl"
-              render={({ field: { value, ...field } }) => (
+              render={({ field: { onChange } }) => (
                 <FormItem>
                   <FormLabel>Thumbnail URL</FormLabel>
                   <FormControl>
-                    <Input value={value ?? ""} {...field} />
+                    <Input type='file' onChange={async (e) => {
+                      uppy.uppy?.cancelAll();
+                      const file = e.currentTarget.files?.[0];
+                      if (file == null) {
+                        return;
+                      }
+                      const fileId = uppy.uppy?.addFile(file);
+                      const uploadResults = await uppy.uppy?.upload();
+                      const uploadedFile = uploadResults?.successful?.find((e) => e.id === fileId);
+                      if (uploadedFile?.uploadURL == null) {
+                        return;
+                      }
+                      onChange(uploadedFile.uploadURL);
+                    }} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

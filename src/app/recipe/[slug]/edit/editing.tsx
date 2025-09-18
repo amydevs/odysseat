@@ -17,6 +17,7 @@ import { Editor } from './dynamic-editor';
 import RecipeMarker from '~/components/map/recipe-marker';
 import ExtendedMap, { type ExtendedMapRef } from '~/components/map/extended-map';
 import { GeolocateControl } from 'react-map-gl/maplibre';
+import { useUppy } from '~/hooks/use-uppy';
 
 export default function EditingRecipe({
   value,
@@ -25,6 +26,7 @@ export default function EditingRecipe({
   value: inferRouterOutputs<AppRouter>['recipe']['getById'],
   className?: string;
 }) {
+  const uppy = useUppy();
   const [isMapOpen, setIsMapOpen] = React.useState(false);
   const recipeUpdateMutation = api.recipe.update.useMutation();
   const form = useForm<inferRouterInputs<AppRouter>['recipe']['update']>({
@@ -62,11 +64,24 @@ export default function EditingRecipe({
             <FormField
               control={form.control}
               name="thumbnailUrl"
-              render={({ field: { value, ...field } }) => (
+              render={({ field: { onChange } }) => (
                 <FormItem>
                   <FormLabel>Thumbnail URL</FormLabel>
                   <FormControl>
-                    <Input value={value ?? ""} {...field} />
+                    <Input type='file' onChange={async (e) => {
+                      uppy.uppy?.cancelAll();
+                      const file = e.currentTarget.files?.[0];
+                      if (file == null) {
+                        return;
+                      }
+                      const fileId = uppy.uppy?.addFile(file);
+                      const uploadResults = await uppy.uppy?.upload();
+                      const uploadedFile = uploadResults?.successful?.find((e) => e.id === fileId);
+                      if (uploadedFile?.uploadURL == null) {
+                        return;
+                      }
+                      onChange(uploadedFile.uploadURL);
+                    }} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -102,18 +117,18 @@ export default function EditingRecipe({
               <FormItem className={cn("transition-all h-0 lg:w-xl lg:h-full", isMapOpen && "h-80")}>
                 <FormControl>
                   <ExtendedMap
-                      style={{ height: '100%' }}
-                      ref={mapRef}
-                      initialViewState={{
-                        longitude: field.value?.[0],
-                        latitude: field.value?.[1],
-                        zoom: 5
-                      }}
-                      onClick={(e) => {
-                        field.onChange([e.lngLat.lng, e.lngLat.lat]);
-                        mapRef.current?.getMap().triggerRepaint();
-                      }}
-                    >
+                    style={{ height: '100%' }}
+                    ref={mapRef}
+                    initialViewState={{
+                      longitude: field.value?.[0],
+                      latitude: field.value?.[1],
+                      zoom: 5
+                    }}
+                    onClick={(e) => {
+                      field.onChange([e.lngLat.lng, e.lngLat.lat]);
+                      mapRef.current?.getMap().triggerRepaint();
+                    }}
+                  >
                     <GeolocateControl position="bottom-right" />
                     {
                       form.getValues().position != null && <RecipeMarker

@@ -2,13 +2,13 @@ import "~/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
-
 import { TRPCReactProvider } from "~/trpc/react";
 import { ThemeProvider } from "~/components/theme-provider";
 import Header from "~/components/header";
 import type { Route } from "~/lib/types";
 import { headers } from "next/headers";
 import { auth } from "~/auth/server";
+import UppyProvider from "~/components/upload/uppy-provider";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -42,10 +42,12 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <header className="sticky top-0 z-50 bg-background px-3">
-              <Header routes={routes} user={session?.user} />
-            </header>
-            {children}
+            <UppyProvider>
+              <header className="sticky top-0 z-50 bg-background px-3">
+                <Header routes={routes} user={session?.user} />
+              </header>
+              {children}
+            </UppyProvider>
           </ThemeProvider>
         </TRPCReactProvider>
       </body>

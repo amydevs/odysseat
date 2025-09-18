@@ -7,8 +7,7 @@ import { BlockNoteView } from "@blocknote/shadcn";
 import "@blocknote/shadcn/style.css";
 import React from "react";
 
-// Our <Editor> component we can reuse later
-export default function Editor({
+export default function MarkdownEditor({
   initialValue,
   onValueChange
 }: {

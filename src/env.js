@@ -17,6 +17,17 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string().min(1)
         : z.string().min(1).optional(),
+    
+    AWS_BUCKET:
+      z.string().optional(),
+    AWS_REGION:
+      z.string().optional(),
+    AWS_ENDPOINT_URL:
+      z.string().optional(),
+    AWS_ACCESS_KEY_ID:
+      z.string().optional(),
+    AWS_SECRET_ACCESS_KEY:
+      z.string().optional(),
   },
 
   /**
@@ -38,6 +49,12 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     AUTH_SECRET: process.env.AUTH_SECRET,
     NEXT_PUBLIC_MAP_STYLE: process.env.NEXT_PUBLIC_MAP_STYLE,
+
+    AWS_BUCKET: process.env.AWS_BUCKET,
+    AWS_REGION: process.env.AWS_REGION,
+    AWS_ENDPOINT_URL: process.env.AWS_ENDPOINT_URL,
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

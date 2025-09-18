@@ -18,9 +18,16 @@ steps:
   displayName: 'install fly'
 
 - script: |
-    /home/vsts/.fly/bin/flyctl secrets set AUTH_SECRET=$(AUTH_SECRET) --stage
-    /home/vsts/.fly/bin/flyctl secrets set DATABASE_URL=$(DATABASE_URL) --stage
-    /home/vsts/.fly/bin/flyctl secrets set NEXT_PUBLIC_MAP_STYLE=$(NEXT_PUBLIC_MAP_STYLE) --stage
+    /home/vsts/.fly/bin/flyctl secrets set \
+      AUTH_SECRET=$(AUTH_SECRET) \
+      DATABASE_URL=$(DATABASE_URL) \
+      NEXT_PUBLIC_MAP_STYLE=$(NEXT_PUBLIC_MAP_STYLE) \
+      AWS_BUCKET=$(AWS_BUCKET) \
+      AWS_REGION=$(AWS_REGION) \
+      AWS_ENDPOINT_URL=$(AWS_ENDPOINT_URL) \
+      AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) \
+      AWS_SECRET_ACCESS_KEY=$(AWS_ACCESS_KEY_ID) \
+      --stage
   displayName: 'fly secrets set'
   env:
     FLY_API_TOKEN: $(FLY_API_TOKEN)

@@ -47,6 +47,7 @@
     "@trpc/react-query": "^11.0.0",
     "@trpc/server": "^11.0.0",
     "@tus/file-store": "^2.0.0",
+    "@tus/s3-store": "^2.0.1",
     "@tus/server": "^2.3.0",
     "@uppy/core": "^5.0.2",
     "@uppy/react": "^5.0.3",

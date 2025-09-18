@@ -28,6 +28,7 @@ export default function RecipeForm({
   const form = useFormContext<inferRouterInputs<AppRouter>['recipe']['create'] | inferRouterInputs<AppRouter>['recipe']['update']>();
   const { uppy } = useUppy();
   const currentUploads = useUppyState(uppy!, (u) => u.currentUploads);
+  const [currentUploadId, setCurrentUploadId] = React.useState<string | null>(null);
   const [isMapOpen, setIsMapOpen] = React.useState(false);
   const mapRef = React.useRef<ExtendedMapRef>(null);
   return (
@@ -62,6 +63,8 @@ export default function RecipeForm({
                         return;
                       }
                       const fileId = uppy!.addFile(file);
+                      setCurrentUploadId(fileId);
+                      
                       const uploadResults = await uppy!.upload();
                       const uploadedFile = uploadResults?.successful?.find((e) => e.id === fileId);
                       if (uploadedFile?.uploadURL == null) {
@@ -69,7 +72,7 @@ export default function RecipeForm({
                       }
                       onChange(uploadedFile.uploadURL);
                     }} />
-                    <LoaderIcon className={cn("animate-spin", Object.keys(currentUploads).length === 0 && "hidden")} />
+                    <LoaderIcon className={cn("animate-spin", currentUploads[currentUploadId ?? ""] == null && "hidden")} />
                   </div>
                 </FormControl>
                 <FormMessage />

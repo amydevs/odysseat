@@ -8,7 +8,7 @@ import { useFormContext } from 'react-hook-form';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { cn } from '~/lib/utils';
-import { GlobeIcon } from 'lucide-react';
+import { GlobeIcon, LoaderIcon } from 'lucide-react';
 import 'maplibre-gl/dist/maplibre-gl.css'
 import "@blocknote/shadcn/style.css";
 import "@blocknote/core/fonts/inter.css";
@@ -17,6 +17,7 @@ import ExtendedMap, { type ExtendedMapRef } from '~/components/map/extended-map'
 import { GeolocateControl } from 'react-map-gl/maplibre';
 import { useUppy } from '~/hooks/use-uppy';
 import dynamic from 'next/dynamic';
+import { useUppyState } from '@uppy/react';
 
 const MarkdownEditor = dynamic(() => import("./markdown-editor"), { ssr: false });
 
@@ -25,7 +26,8 @@ export default function RecipeForm({
   ...props
 }: React.ComponentProps<"form">) {
   const form = useFormContext<inferRouterInputs<AppRouter>['recipe']['create'] | inferRouterInputs<AppRouter>['recipe']['update']>();
-  const uppy = useUppy();
+  const { uppy } = useUppy();
+  const currentUploads = useUppyState(uppy!, (u) => u.currentUploads);
   const [isMapOpen, setIsMapOpen] = React.useState(false);
   const mapRef = React.useRef<ExtendedMapRef>(null);
   return (
@@ -50,22 +52,25 @@ export default function RecipeForm({
             name="thumbnailUrl"
             render={({ field: { onChange } }) => (
               <FormItem>
-                <FormLabel>Thumbnail URL</FormLabel>
+                <FormLabel>Replace Thumbnail</FormLabel>
                 <FormControl>
-                  <Input type='file' onChange={async (e) => {
-                    uppy.uppy?.cancelAll();
-                    const file = e.currentTarget.files?.[0];
-                    if (file == null) {
-                      return;
-                    }
-                    const fileId = uppy.uppy?.addFile(file);
-                    const uploadResults = await uppy.uppy?.upload();
-                    const uploadedFile = uploadResults?.successful?.find((e) => e.id === fileId);
-                    if (uploadedFile?.uploadURL == null) {
-                      return;
-                    }
-                    onChange(uploadedFile.uploadURL);
-                  }} />
+                  <div className='flex gap-2 items-center'>
+                    <Input type='file' onChange={async (e) => {
+                      uppy!.cancelAll();
+                      const file = e.currentTarget.files?.[0];
+                      if (file == null) {
+                        return;
+                      }
+                      const fileId = uppy!.addFile(file);
+                      const uploadResults = await uppy!.upload();
+                      const uploadedFile = uploadResults?.successful?.find((e) => e.id === fileId);
+                      if (uploadedFile?.uploadURL == null) {
+                        return;
+                      }
+                      onChange(uploadedFile.uploadURL);
+                    }} />
+                    <LoaderIcon className={cn("animate-spin", Object.keys(currentUploads).length === 0 && "hidden")} />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

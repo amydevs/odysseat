@@ -19,6 +19,8 @@ export default async function BlogPostPage({
   const html = await editor.blocksToFullHTML(blocks);
  
   return (
-    <StaticRecipe recipeContentHtml={html} recipe={recipe} />
+    <main className='min-h-[100vh-5rem]'>
+      <StaticRecipe recipeContentHtml={html} recipe={recipe} />
+    </main>
   )
 }

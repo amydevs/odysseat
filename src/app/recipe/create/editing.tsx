@@ -38,7 +38,7 @@ export default function CreatingRecipe() {
   }
   return (
     <Form {...form}>
-      <form className='flex justify-center min-h-[100vh]' onSubmit={form.handleSubmit(onSubmit)}>
+      <form className='flex justify-center min-h-full' onSubmit={form.handleSubmit(onSubmit)}>
         <div className='w-7xl flex flex-col'>
           <div className='space-y-3 p-3'>
             <FormField

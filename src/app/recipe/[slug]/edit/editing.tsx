@@ -20,8 +20,10 @@ import { GeolocateControl } from 'react-map-gl/maplibre';
 
 export default function EditingRecipe({
   value,
+  className
 }: {
-  value: inferRouterOutputs<AppRouter>['recipe']['getById']
+  value: inferRouterOutputs<AppRouter>['recipe']['getById'],
+  className?: string;
 }) {
   const [isMapOpen, setIsMapOpen] = React.useState(false);
   const recipeUpdateMutation = api.recipe.update.useMutation();
@@ -41,7 +43,7 @@ export default function EditingRecipe({
   }
   return (
     <Form {...form}>
-      <form className='flex justify-center min-h-[100vh]' onSubmit={form.handleSubmit(onSubmit)}>
+      <form className={cn('flex justify-center', className)} onSubmit={form.handleSubmit(onSubmit)}>
         <div className='w-7xl flex flex-col'>
           <div className='space-y-3 p-3'>
             <FormField

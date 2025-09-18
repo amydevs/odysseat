@@ -13,8 +13,8 @@ export default async function BlogPostPage({
   const recipe = await api.recipe.getById({ id });
  
   return (
-    <main>
-      <EditingRecipe value={recipe} />
+    <main className='min-h-[calc(100vh-5rem)] flex flex-col'>
+      <EditingRecipe className='flex-1' value={recipe} />
     </main>
   )
 }

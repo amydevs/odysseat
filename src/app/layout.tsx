@@ -4,6 +4,11 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import { ThemeProvider } from "~/components/theme-provider";
+import Header from "~/components/header";
+import type { Route } from "~/lib/types";
+import { headers } from "next/headers";
+import { auth } from "~/auth/server";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -16,13 +21,33 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
-export default function RootLayout({
+const routes: Route[] = [
+  {
+    name: "Home",
+    path: "/",
+  }
+];
+
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth.api.getSession({ headers: await headers() });
   return (
-    <html lang="en" className={`${geist.variable}`}>
+    <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <header className="sticky top-0 z-50 bg-background px-3">
+              <Header routes={routes} user={session?.user} />
+            </header>
+            {children}
+          </ThemeProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   );

@@ -1,0 +1,116 @@
+"use client";
+
+import Link from "next/link";
+import * as React from "react";
+import { cn } from "~/lib/utils";
+import MobileNavbar from "./mobile-navbar";
+import { type Route } from "~/lib/types";
+import { Menu, PlusIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
+import type { User } from "better-auth";
+import UserDropdown from "./user-dropdown";
+import { Button } from "~/components/ui/button";
+import { Toggle } from "./ui/toggle";
+
+const Header = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & {
+    routes: Array<Route>;
+    user?: User;
+    onThemeChange?: (theme: string) => void;
+  }
+>(({ routes, user, className, onThemeChange, ...props }, ref) => {
+  const [mobileEnable, setMobileEnable] = React.useState(false);
+  const pathname = usePathname();
+
+  const processedRoutes = React.useMemo(() => routes
+    .map((e) => {
+      let current = e.path === pathname;
+      if (e.currentPathRegex != null) {
+        current = new RegExp(e.currentPathRegex).test(pathname);
+      }
+      return {
+        ...e,
+        current,
+      };
+    }),
+    [routes, pathname],
+  )
+
+  React.useEffect(() => {
+    setMobileEnable(false);
+  }, [pathname]);
+
+  return (
+    <>
+      <div
+        ref={ref}
+        className={cn(
+          `z-50 flex h-20 bg-background py-6 text-lg
+          font-medium transition-all gap-3`,
+          className,
+          mobileEnable && "shadow-none bg-background dark:bg-background",
+        )}
+        {...props}
+      >
+        <div>
+          <Link className="transition-all hover:text-primary" href="/">
+            <span className="text-primary">
+              Odysseat
+            </span>
+          </Link>
+        </div>
+
+        <nav className="ml-auto hidden gap-6 md:flex">
+          {processedRoutes.map((route, i) => (
+            <Link
+              className={cn(
+                "transition-all hover:text-primary",
+                route.current && "text-primary",
+              )}
+              href={route.path}
+              key={i}
+            >
+              {route.name}
+            </Link>
+          ))}
+        </nav>
+        <div className="ml-auto md:ml-0 flex gap-1 -translate-1">
+            <Button variant={"ghost"} size={"icon"} asChild>
+              <Link href={"/recipe/create"}>
+                <PlusIcon />
+              </Link>
+            </Button>
+            <UserDropdown user={user} />
+            <Toggle
+              className={cn(
+                `transition-all md:hidden`,
+                mobileEnable && "rotate-90",
+              )}
+              pressed={mobileEnable}
+              onPressedChange={setMobileEnable}
+              title="Toggle Nav Menu"
+            >
+              <Menu />
+            </Toggle>
+        </div>
+      </div>
+
+      <MobileNavbar
+        routes={routes}
+        onThemeChange={(theme) => {
+          onThemeChange?.(theme);
+          setMobileEnable(false);
+        }}
+        className={cn(
+          `auto-limit-w fixed inset-0 top-20 -z-10 max-h-screen transition-all
+            md:hidden`,
+          !mobileEnable && "-top-full",
+        )}
+      />
+    </>
+  );
+});
+Header.displayName = "Header";
+
+export default Header;

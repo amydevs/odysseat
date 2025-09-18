@@ -17,12 +17,14 @@ import ExtendedMap from "~/components/map/extended-map";
 export default function StaticRecipe({
   recipe,
   recipeContentHtml,
+  className,
 }: {
   recipe: inferRouterOutputs<AppRouter>['recipe']['getById'];
-  recipeContentHtml: string,
+  recipeContentHtml: string;
+  className?: string;
 }) {
     const [isMapOpen, setIsMapOpen] = React.useState(false);
-    return <main className='flex justify-center min-h-[100vh]'>
+    return <div className={cn('flex justify-center', className)}>
         <div className='w-7xl flex flex-col space-y-3'>
           <div>
             <h1 className="font-bold text-6xl">{recipe.title}</h1>
@@ -60,5 +62,5 @@ export default function StaticRecipe({
             </ExtendedMap>
           </div>
         </div>
-      </main>;
+      </div>;
 }

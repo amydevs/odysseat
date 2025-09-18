@@ -30,9 +30,10 @@ export default function SignupPage() {
             return;
         }
         router.push("/");
+        router.refresh();
     };
     return (
-        <div className="max-w-full flex justify-center items-center h-screen">
+        <main className="max-w-full flex justify-center items-center h-[calc(100vh-5rem)]">
             <Button className="bg-red-600 m-[0.5vh] absolute top-1 right-1" asChild>
                 <Link href={"/"}>x</Link>
             </Button>
@@ -106,6 +107,6 @@ export default function SignupPage() {
                 <FormMessage>{form.formState.errors.root?.message}</FormMessage>
             </form>
             </Form>
-        </div>
+        </main>
     );
 }

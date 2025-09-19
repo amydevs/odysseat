@@ -9,9 +9,11 @@ import { useTheme } from "next-themes";
 import React from "react";
 
 export default function MarkdownEditor({
+  className,
   initialValue,
   onValueChange
 }: {
+  className?: string;
   initialValue: string;
   onValueChange?: (data: string) => void
 }) {
@@ -28,7 +30,7 @@ export default function MarkdownEditor({
   }, [])
 
    
-  return <BlockNoteView style={{ "--bn-colors-editor-background": "var(--background)" } as object} theme={theme === "dark" ? "dark" : "light"} onChange={async (editor) => onValueChange?.(await editor.blocksToMarkdownLossy(editor.document))} editor={editor}>
+  return <BlockNoteView className={className} style={{ "--bn-colors-editor-background": "var(--background)" } as object} theme={theme === "dark" ? "dark" : "light"} onChange={async (editor) => onValueChange?.(await editor.blocksToMarkdownLossy(editor.document))} editor={editor}>
     {/* <FormattingToolbarController formattingToolbar={() => <></>} /> */}
   </BlockNoteView>;
 }

@@ -84,9 +84,9 @@ export default function RecipeForm({
           control={form.control}
           name="content"
           render={({ field }) => (
-            <FormItem className='flex-1 -mx-3'>
+            <FormItem className='flex-1 -mx-3 relative'>
               <FormControl>
-                <MarkdownEditor initialValue={field.value ?? ""} onValueChange={field.onChange} />
+                <MarkdownEditor className='absolute inset-0' initialValue={field.value ?? ""} onValueChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>

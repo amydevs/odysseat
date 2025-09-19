@@ -42,7 +42,7 @@ export default function RecipeForm({
               <FormItem>
                 <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <input className='text-4xl lg:text-7xl font-bold w-full appearance-none outline-none focus:ring-0' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -11,11 +11,9 @@ import { PlusIcon, UserIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 
 export default async function Home() {
-  const session = await auth.api.getSession({ headers: await headers() });
-
   return (
     <HydrateClient>
-      <main className="h-[calc(100vh-5rem)]">
+      <main className="h-screen-minus-navbar">
         <HomeMap />
       </main>
     </HydrateClient>

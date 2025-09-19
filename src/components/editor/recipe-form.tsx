@@ -96,7 +96,7 @@ export default function RecipeForm({
         <Button type='submit'>Save</Button>
         <FormMessage>{form.formState.errors.root?.message}</FormMessage>
       </div>
-      <div className='fixed bottom-0 left-0 right-0 lg:sticky lg:top-0 lg:bottom-auto lg:max-h-[100vh]'>
+      <div className='fixed bottom-0 left-0 right-0 lg:sticky lg:top-[var(--navbar-height)] lg:bottom-auto lg:max-h-screen-minus-navbar'>
         <div className='lg:hidden absolute right-3 -top-12 h-12'>
           <Button type='button' size="icon" onClick={() => setIsMapOpen(!isMapOpen)}>
             <GlobeIcon />

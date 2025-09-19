@@ -33,7 +33,7 @@ export default function SignupPage() {
         router.refresh();
     };
     return (
-        <main className="max-w-full flex justify-center items-center h-[calc(100vh-5rem)]">
+        <main className="max-w-full flex justify-center items-center h-screen-minus-navbar">
             <Button className="bg-red-600 m-[0.5vh] absolute top-1 right-1" asChild>
                 <Link href={"/"}>x</Link>
             </Button>

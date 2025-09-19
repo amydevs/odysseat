@@ -46,7 +46,7 @@ const Header = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          `z-50 flex h-20 bg-background py-6 text-lg
+          `z-50 flex h-navbar bg-background py-6 text-lg
           font-medium transition-all gap-3`,
           className,
           mobileEnable && "shadow-none bg-background dark:bg-background",

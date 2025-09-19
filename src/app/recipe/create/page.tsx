@@ -4,7 +4,7 @@ import CreatingRecipe from './editing';
  
 export default async function BlogPostPage() { 
   return (
-    <main className='h-[calc(100vh-5rem)]'>
+    <main className='h-screen-minus-navbar'>
       <CreatingRecipe />
     </main>
   )

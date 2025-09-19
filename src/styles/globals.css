@@ -140,6 +140,10 @@
 }
 
 @layer base {
+  :root {
+    --navbar-height: 5rem;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
@@ -150,4 +154,9 @@
   .auto-limit-w {
     @apply mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8;
   }
+}
+
+@theme {
+  --height-screen-minus-navbar: calc(100vh - var(--navbar-height));
+  --height-navbar: var(--navbar-height);
 }

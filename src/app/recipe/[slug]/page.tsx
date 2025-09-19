@@ -19,7 +19,7 @@ export default async function BlogPostPage({
   const html = await editor.blocksToFullHTML(blocks);
  
   return (
-    <main className='min-h-[100vh-5rem] flex flex-col'>
+    <main className='min-h-screen-minus-navbar flex flex-col'>
       <StaticRecipe className='flex-1' recipeContentHtml={html} recipe={recipe} />
     </main>
   )

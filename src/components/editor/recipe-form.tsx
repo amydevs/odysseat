@@ -33,8 +33,8 @@ export default function RecipeForm({
   const mapRef = React.useRef<ExtendedMapRef>(null);
   return (
     <form className={cn('flex justify-center', className)} {...props}>
-      <div className='w-7xl flex flex-col'>
-        <div className='space-y-3 p-3'>
+      <div className='w-7xl flex flex-col gap-3 p-3'>
+        <div className='space-y-3'>
           <FormField
             control={form.control}
             name="title"
@@ -84,7 +84,7 @@ export default function RecipeForm({
           control={form.control}
           name="content"
           render={({ field }) => (
-            <FormItem className='flex-1'>
+            <FormItem className='flex-1 -mx-3'>
               <FormControl>
                 <MarkdownEditor initialValue={field.value ?? ""} onValueChange={field.onChange} />
               </FormControl>
@@ -97,7 +97,7 @@ export default function RecipeForm({
         <FormMessage>{form.formState.errors.root?.message}</FormMessage>
       </div>
       <div className='fixed bottom-0 left-0 right-0 lg:sticky lg:top-[var(--navbar-height)] lg:bottom-auto lg:max-h-screen-minus-navbar'>
-        <div className='lg:hidden absolute right-3 -top-12 h-12'>
+        <div className='lg:hidden absolute right-3 -top-24 h-12'>
           <Button type='button' size="icon" onClick={() => setIsMapOpen(!isMapOpen)}>
             <GlobeIcon />
           </Button>

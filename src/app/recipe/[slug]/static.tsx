@@ -56,7 +56,6 @@ export default function StaticRecipe({
               {
                 recipe.position && <RecipeMarker
                   recipe={recipe}
-                  isNew={true}
                 />
               }
             </ExtendedMap>

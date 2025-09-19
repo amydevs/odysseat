@@ -1,7 +1,6 @@
 "use client";
 import * as React from "react";
 import { GeolocateControl, Popup } from 'react-map-gl/maplibre';
-import { type LngLat } from 'maplibre-gl';
 import { api } from "~/trpc/react";
 import { useDebouncedCallback } from "use-debounce";
 import RecipeMarker from "~/components/map/recipe-marker";
@@ -15,9 +14,6 @@ export default function HomeMap() {
 
     const [popupInfo, setPopupInfo] = React.useState<NonNullable<typeof markers>[number] | null>(null);
 
-    const [currentPos, setCurrentPos] = React.useState<LngLat | null>(null);
-    const [newMarkerIds, setNewMarkerIds] = React.useState<Set<number>>(new Set());
-
     const [bounds, setBounds] = React.useState<{
         north: number;
         south: number;
@@ -25,28 +21,12 @@ export default function HomeMap() {
         west: number;
     } | null>(null);
 
-    const [bufferedMarkers, setBufferedMarkers] = React.useState<typeof markers>([]);
-    const { data: markers, isLoading, isFetching } = api.recipe.getAll.useQuery(
+    const { data: markers } = api.recipe.getAll.useQuery(
         { bounds: bounds ?? undefined },
-        { enabled: bounds != null }
+        { enabled: bounds != null, placeholderData: (prev) => prev }
     );
-    
-    React.useEffect(() => {
-        if (markers != null && !isFetching && currentPos != null) {
-            setNewMarkerIds(new Set());
-            const bufferedIds = new Set(bufferedMarkers?.map(marker => marker.id))
-            for (const marker of markers) {
-                if (!bufferedIds.has(marker.id)) {
-                    setNewMarkerIds(prev => new Set(prev).add(marker.id))
-                }
-            }
-            setBufferedMarkers(markers);
-        }
-    }, [markers, isFetching, bufferedMarkers]);
 
     const updateBounds = useDebouncedCallback(() => {
-        const center = mapRef.current?.getCenter();
-        setCurrentPos(center ?? null);
         if (mapRef.current) {
             const mapBounds = mapRef.current.getBounds();
             setBounds({
@@ -57,8 +37,6 @@ export default function HomeMap() {
             });
         }
     }, 200);
-
-    const displayMarkers = markers ?? bufferedMarkers;
 
     return (
         <ExtendedMap
@@ -73,7 +51,7 @@ export default function HomeMap() {
             onMove={updateBounds}
         >
             <GeolocateControl position="bottom-right" />
-            {displayMarkers?.map((marker) => (
+            {markers?.map((marker) => (
                 <RecipeMarker
                     key={marker.id} // Needs to stay marker.id so that recipes with same id doesnt rerender
                     recipe={marker} 
@@ -81,7 +59,6 @@ export default function HomeMap() {
                         e.originalEvent.stopPropagation();
                         setPopupInfo(marker);
                     }}
-                    isNew={newMarkerIds.has(marker.id)}
                 />
             ))}
             {

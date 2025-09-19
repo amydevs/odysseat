@@ -10,14 +10,14 @@ import { useExtendedMap } from "~/hooks/use-extended-map";
 export default function RecipeMarker({
     recipe,
     className,
-    isNew,
+    animate = true,
     ...props
 }: {
     recipe: {
         position: [number, number];
         thumbnailUrl: string | null;
     };
-    isNew?: boolean;
+    animate?: boolean;
 } & Omit<React.ComponentProps<typeof Marker>, "longitude" | "latitude">) {
     const map = useExtendedMap();
     const [markerDelay, setMarkerDelay] = React.useState(0);
@@ -25,7 +25,7 @@ export default function RecipeMarker({
     React.useEffect(() => {
         const mapInstance = map.current;
         const lastPos = mapInstance?.getLastCenter();
-        if (mapInstance == null || !isNew) {
+        if (mapInstance == null || !animate) {
             return;
         }
         const zoomLevel = mapInstance.getZoom();
@@ -35,8 +35,7 @@ export default function RecipeMarker({
         delay = Math.min(1000, (distance * 0.000005 * (zoomLevel ** 2) - 50));
         setMarkerDelay(delay);
         setShouldAnimate(true);
-    }, [isNew, recipe.position]);
-    // const size = Math.floor(32 + (zoomLevel ?? 0) ** 2);
+    }, [animate, recipe.position]);
     return (
         <Marker
             longitude={recipe.position[0]}

@@ -129,7 +129,6 @@ export default function RecipeForm({
                         position: form.getValues().position!,
                         thumbnailUrl: form.getValues().thumbnailUrl ?? null
                       }}
-                      isNew={true}
                     />
                   }
                 </ExtendedMap>

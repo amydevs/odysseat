@@ -33,7 +33,7 @@ export default function RecipeForm({
   const mapRef = React.useRef<ExtendedMapRef>(null);
   return (
     <form className={cn('flex justify-center', className)} {...props}>
-      <div className='w-7xl flex flex-col gap-3 p-3'>
+      <div className='w-full max-w-full lg:max-w-7xl flex flex-col gap-3 p-3'>
         <div className='space-y-3'>
           <FormField
             control={form.control}
@@ -84,9 +84,9 @@ export default function RecipeForm({
           control={form.control}
           name="content"
           render={({ field }) => (
-            <FormItem className='flex-1 -mx-3 relative'>
+            <FormItem className='w-full grid grid-cols-1 flex-1'>
               <FormControl>
-                <MarkdownEditor className='absolute inset-0' initialValue={field.value ?? ""} onValueChange={field.onChange} />
+                <MarkdownEditor initialValue={field.value ?? ""} onValueChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>

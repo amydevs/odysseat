@@ -4,14 +4,12 @@ import type { AppRouter } from "~/server/api/root";
 import 'maplibre-gl/dist/maplibre-gl.css'
 import "@blocknote/shadcn/style.css";
 import "@blocknote/core/fonts/inter.css";
-import Map, { Marker, type MapRef } from 'react-map-gl/maplibre';
 import { Button } from "~/components/ui/button";
 import * as React from "react";
 import { GlobeIcon } from "lucide-react";
 import Link from "next/link";
 import { cn } from "~/lib/utils";
 import RecipeMarker from "~/components/map/recipe-marker";
-import { LngLat } from 'maplibre-gl';
 import ExtendedMap from "~/components/map/extended-map";
 
 export default function StaticRecipe({
@@ -25,7 +23,7 @@ export default function StaticRecipe({
 }) {
     const [isMapOpen, setIsMapOpen] = React.useState(false);
     return <div className={cn('flex justify-center', className)}>
-        <div className='w-7xl flex flex-col space-y-3'>
+        <div className='w-full max-w-full lg:max-w-7xl flex flex-col space-y-3'>
           <div>
             <h1 className="font-bold text-6xl">{recipe.title}</h1>
           </div>

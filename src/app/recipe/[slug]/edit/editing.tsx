@@ -1,29 +1,30 @@
 'use client';
 
+import * as z from "zod/v4";
 import * as React from 'react';
-import { TRPCError, type inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
-import type { AppRouter } from '~/server/api/root';
-import { Form } from '~/components/ui/form';
-import { useForm } from 'react-hook-form';
-import { api } from '~/trpc/react';
+import { TRPCError } from '@trpc/server';
+import { useForm, Form } from '~/components/ui/form';
+import { api, type RouterOutputs } from '~/trpc/react';
 import { cn } from '~/lib/utils';
 import 'maplibre-gl/dist/maplibre-gl.css'
 import "@blocknote/shadcn/style.css";
 import "@blocknote/core/fonts/inter.css";
 import RecipeForm from '~/components/editor/recipe-form';
+import { zRecipeEdit } from "~/server/db/validators";
 
 export default function EditingRecipe({
   value,
   className
 }: {
-  value: inferRouterOutputs<AppRouter>['recipe']['getById'],
+  value: RouterOutputs['recipe']['getById'],
   className?: string;
 }) {
-  const recipeUpdateMutation = api.recipe.update.useMutation();
-  const form = useForm<inferRouterInputs<AppRouter>['recipe']['update']>({
+  const recipeUpdateMutation = api.recipe.edit.useMutation();
+  const form = useForm({
+    schema: zRecipeEdit,
     defaultValues: value,
   });
-  const onSubmit = async (data: inferRouterInputs<AppRouter>['recipe']['update']) => {
+  const onSubmit = async (data: z.infer<typeof zRecipeEdit>) => {
     try {
       await recipeUpdateMutation.mutateAsync(data);
     }

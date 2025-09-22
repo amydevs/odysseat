@@ -11,6 +11,7 @@ import Link from "next/link";
 import { cn } from "~/lib/utils";
 import RecipeMarker from "~/components/map/recipe-marker";
 import ExtendedMap from "~/components/map/extended-map";
+import { authClient } from "~/auth/client";
 
 export default function StaticRecipe({
   recipe,
@@ -22,22 +23,23 @@ export default function StaticRecipe({
   className?: string;
 }) {
     const [isMapOpen, setIsMapOpen] = React.useState(false);
+    const session = authClient.useSession();
     return <div className={cn('flex justify-center', className)}>
-        <div className='w-full max-w-full lg:max-w-7xl flex flex-col space-y-3'>
+        <div className='w-full max-w-full lg:max-w-7xl flex flex-col space-y-3 p-3'>
           <div>
-            <h1 className="font-bold text-6xl">{recipe.title}</h1>
+            <h1 className="font-bold text-4xl lg:text-7xl">{recipe.title}</h1>
           </div>
           <div className="flex-1" dangerouslySetInnerHTML={{ __html: recipeContentHtml }} />
-          <div>
-            <Button asChild>
+          <div className={cn(session.data?.user.id !== recipe.userId && "hidden")}>
+            <Button className="w-full" asChild>
               <Link href={`/recipe/${recipe.id}/edit`}>
                 Edit
               </Link>
             </Button>
           </div>
         </div>
-        <div className='fixed bottom-0 left-0 right-0 lg:sticky lg:top-0 lg:bottom-auto lg:max-h-[100vh]'>
-          <div className='lg:hidden absolute right-3 -top-12 h-12'>
+        <div className='fixed bottom-0 left-0 right-0 lg:sticky lg:top-[var(--navbar-height)] lg:bottom-auto lg:max-h-screen-minus-navbar'>
+          <div className='lg:hidden absolute right-3 -top-24 h-12'>
             <Button type='button' size="icon" onClick={() => setIsMapOpen(!isMapOpen)}>
               <GlobeIcon />
             </Button>

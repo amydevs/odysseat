@@ -1,22 +1,24 @@
 'use client';
 
 import * as React from 'react';
-import { TRPCError, type inferRouterInputs } from '@trpc/server';
-import type { AppRouter } from '~/server/api/root';
-import { Form } from '~/components/ui/form';
-import { useForm } from 'react-hook-form';
+import * as z from "zod/v4";
+import { TRPCError } from '@trpc/server';
+import { useForm, Form } from '~/components/ui/form';
 import { api } from '~/trpc/react';
 import 'maplibre-gl/dist/maplibre-gl.css'
 import "@blocknote/shadcn/style.css";
 import "@blocknote/core/fonts/inter.css";
 import { useRouter } from 'next/navigation';
 import RecipeForm from '~/components/editor/recipe-form';
+import { zRecipeCreate } from '~/server/db/validators';
 
 export default function CreatingRecipe() {
   const router = useRouter();
   const recipeCreateMutation = api.recipe.create.useMutation();
-  const form = useForm<inferRouterInputs<AppRouter>['recipe']['create']>();
-  const onSubmit = async (data: inferRouterInputs<AppRouter>['recipe']['create']) => {
+  const form = useForm({
+    schema: zRecipeCreate,
+  });
+  const onSubmit = async (data: z.infer<typeof zRecipeCreate>) => {
     try {
       const recipe = await recipeCreateMutation.mutateAsync(data);
       router.push(`/recipe/${recipe.id}`);

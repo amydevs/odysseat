@@ -7,7 +7,7 @@ import RecipeMarker from "../map/recipe-marker";
 import type React from "react";
 
 export default function MapFormField(props: React.ComponentProps<typeof FormItem>) {
-    const form = useFormContext<RouterInputs['recipe']['create'] | RouterInputs['recipe']['update']>();
+    const form = useFormContext<RouterInputs['recipe']['create'] | RouterInputs['recipe']['edit']>();
     return <FormField
         control={form.control}
         name="position"

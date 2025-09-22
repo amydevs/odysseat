@@ -46,11 +46,9 @@ export default function UserDropdown({
                         </Link>
                     </DropdownMenuItem>
                 </> : <>
-                    <DropdownMenuItem>Profile</DropdownMenuItem>
-                    <DropdownMenuItem>Billing</DropdownMenuItem>
-                    <DropdownMenuItem>Team</DropdownMenuItem>
-                    <DropdownMenuItem>Subscription</DropdownMenuItem>
+                    <DropdownMenuItem>Welcome, {user.name}</DropdownMenuItem>
                     <DropdownMenuSeparator />
+                    <DropdownMenuItem>Profile</DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={async () => {
                             await authClient.signOut();
@@ -70,7 +68,7 @@ export default function UserDropdown({
                     <DropdownMenuItem
                         onClick={() => {
                         const newTheme =
-                            theme.resolvedTheme == "dark" ? "light" : "dark";
+                        theme.resolvedTheme == "dark" ? "light" : "dark";
                             theme.setTheme(newTheme);
                         }}
                         className="hover:text-primary"

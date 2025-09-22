@@ -24,6 +24,7 @@ export default function RecipeForm({
   ...props
 }: React.ComponentProps<"form">) {
   const form = useFormContext<inferRouterInputs<AppRouter>['recipe']['create'] | inferRouterInputs<AppRouter>['recipe']['edit']>();
+  console.log(form);
   const { uppy } = useUppy();
   const currentUploads = useUppyState(uppy!, (u) => u.currentUploads);
   const [currentUploadId, setCurrentUploadId] = React.useState<string | null>(null);
@@ -91,7 +92,7 @@ export default function RecipeForm({
         />
 
         <Button type='submit'>Save</Button>
-        <FormMessage>{form.formState.errors.root?.message}</FormMessage>
+        <p className='text-[0.8rem] font-medium text-destructive'>{form.formState.errors.root?.message}</p>
       </div>
       <div className='fixed bottom-0 left-0 right-0 lg:sticky lg:top-[var(--navbar-height)] lg:bottom-auto lg:max-h-screen-minus-navbar'>
         <div className='lg:hidden absolute right-3 -top-24 h-12'>

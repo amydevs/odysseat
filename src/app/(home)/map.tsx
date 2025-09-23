@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { GeolocateControl, Popup } from 'react-map-gl/maplibre';
+import { GeolocateControl, Popup, type LngLat } from 'react-map-gl/maplibre';
 import { api } from "~/trpc/react";
 import { useDebouncedCallback } from "use-debounce";
 import RecipeMarker from "~/components/map/recipe-marker";
@@ -14,15 +14,13 @@ export default function HomeMap() {
 
     const [popupInfo, setPopupInfo] = React.useState<NonNullable<typeof markers>[number] | null>(null);
 
-    const [bounds, setBounds] = React.useState<{
-        north: number;
-        south: number;
-        east: number;
-        west: number;
-    } | null>(null);
+    const [bounds, setBounds] = React.useState<{ northWest: LngLat; southEast: LngLat; } | null>(null);
 
     const { data: markers } = api.recipe.getAll.useQuery(
-        { bounds: bounds ?? undefined },
+        {
+            minPosition: bounds?.northWest.toArray(),
+            maxPosition: bounds?.southEast.toArray(),
+        },
         { enabled: bounds != null, placeholderData: (prev) => prev }
     );
 
@@ -30,10 +28,8 @@ export default function HomeMap() {
         if (mapRef.current) {
             const mapBounds = mapRef.current.getBounds();
             setBounds({
-                north: mapBounds.getNorth(),
-                south: mapBounds.getSouth(),
-                east: mapBounds.getEast(),
-                west: mapBounds.getWest(),
+                northWest: mapBounds.getNorthWest(),
+                southEast: mapBounds.getSouthEast(),
             });
         }
     }, 200);

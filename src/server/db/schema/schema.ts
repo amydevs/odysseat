@@ -1,11 +1,11 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from "drizzle-orm";
+import { SQL, sql } from "drizzle-orm";
 import {
   index
 } from "drizzle-orm/pg-core";
-import { createTable } from "./utils";
+import { createTable, tsVector } from "./utils";
 import { user } from "./auth-schema";
 
 export const recipe = createTable(
@@ -24,12 +24,14 @@ export const recipe = createTable(
       .default(sql`CURRENT_TIMESTAMP`) // Setting CURRENT_TIMESTAMP as default so we can sort by updatedAt for all markers
       .$onUpdate(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
+    // search: tsVector("search_idx")
+    //   .notNull()
+    //   .generatedAlwaysAs((): SQL => sql`(
+    //     setweight(to_tsvector('english', ${recipe.title}), 'A')
+    //   )`)
   }),
   (t) => [
-    // index("position_idx").on(t.position),
-    index("title_idx").on(t.title),
-    // index("rating_idx").on(t.rating),
-    index("created_at_idx").on(t.createdAt),
+    // index('search_idx').using('gin', t.search),
   ],
 );
 

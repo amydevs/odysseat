@@ -12,6 +12,7 @@ export const zLongLat = z.tuple([z.number(), z.number()]);
 export const zRecipeFilter = createSelectSchema(recipe)
     .partial()
     .and(z.object({
+        // search: z.string().optional(),
         minPosition: zLongLat.optional(),
         maxPosition: zLongLat.optional(),
         ...zSortOptions.shape,

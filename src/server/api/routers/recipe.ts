@@ -31,6 +31,9 @@ export const recipeRouter = createTRPCRouter({
       } = input;
       const recipeCols = getTableColumns(recipe);
       const orderFn = sortOrder !== "desc" ? asc : desc;
+      // const normalizeLongitude = (lng: number) => {
+      //   return ((lng + 180) % 360 + 360) % 360 - 180;
+      // };
       return await ctx.db
         .select()
         .from(recipe)

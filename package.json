@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "auth:generate": "npx @better-auth/cli generate --config ./scripts/auth-config.ts --output ./src/server/db/schema/auth-schema.ts",
+    "auth:generate": "cross-env SKIP_ENV_VALIDATION=true npx @better-auth/cli generate --config ./scripts/auth-config.ts --output ./src/server/db/schema/auth-schema.ts",
     "build": "next build",
     "check": "cross-env SKIP_ENV_VALIDATION=true next lint && tsc --noEmit",
     "db:dbml": "cross-env SKIP_ENV_VALIDATION=true tsx ./scripts/generate-dbml",

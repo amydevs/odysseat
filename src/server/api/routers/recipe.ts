@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import { and, eq, ilike, sql, getTableColumns } from "drizzle-orm";
+import { and, eq, ilike, sql, getTableColumns, asc, desc } from "drizzle-orm";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import { recipe } from "~/server/db/schema";
@@ -22,8 +22,15 @@ export const recipeRouter = createTRPCRouter({
   getAll: publicProcedure
     .input(zRecipeFilter)
     .query(async ({ ctx, input }) => {
-      const { minPosition, maxPosition, ...inputRest } = input;
+      const {
+        minPosition,
+        maxPosition,
+        sortBy,
+        sortOrder,
+        ...inputRest
+      } = input;
       const recipeCols = getTableColumns(recipe);
+      const orderFn = sortOrder !== "desc" ? asc : desc;
       return await ctx.db
         .select()
         .from(recipe)
@@ -47,7 +54,7 @@ export const recipeRouter = createTRPCRouter({
               }),
           )
         )
-        .orderBy(recipe.createdAt);
+        .orderBy(orderFn(recipeCols[sortBy]))
     }),
   create: protectedProcedure
     .input(zRecipeCreate)

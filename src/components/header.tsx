@@ -17,9 +17,8 @@ const Header = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement> & {
     routes: Array<Route>;
     user?: User;
-    onThemeChange?: (theme: string) => void;
   }
->(({ routes, user, className, onThemeChange, ...props }, ref) => {
+>(({ routes, user, className, ...props }, ref) => {
   const [mobileEnable, setMobileEnable] = React.useState(false);
   const pathname = usePathname();
 
@@ -98,10 +97,6 @@ const Header = React.forwardRef<
 
       <MobileNavbar
         routes={routes}
-        onThemeChange={(theme) => {
-          onThemeChange?.(theme);
-          setMobileEnable(false);
-        }}
         className={cn(
           `auto-limit-w fixed inset-0 top-20 -z-10 max-h-screen transition-all
             md:hidden`,

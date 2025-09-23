@@ -23,7 +23,7 @@ const geist = Geist({
 
 const routes: Route[] = [
   {
-    name: "Home",
+    name: "Explore",
     path: "/",
   }
 ];

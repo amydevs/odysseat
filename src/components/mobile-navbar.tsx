@@ -7,9 +7,8 @@ const MobileNavbar = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
     routes: Array<Route>;
-    onThemeChange?: (theme: string) => void;
   }
->(({ routes, className, onThemeChange, ...props }, ref) => (
+>(({ routes, className, ...props }, ref) => (
   <div
     ref={ref}
     className={cn("bg-background text-lg font-medium", className)}

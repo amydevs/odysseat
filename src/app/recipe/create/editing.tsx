@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import * as z from "zod/v4";
+import type * as z from "zod/v4";
 import { TRPCError } from '@trpc/server';
 import { useForm, Form } from '~/components/ui/form';
 import { api } from '~/trpc/react';

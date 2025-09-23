@@ -12,7 +12,8 @@ const authCtx = await auth.$context;
 const u = await db.insert(user).values({
     id: "admin",
     email: "admin@odysseat.com",
-    name: "Odysseat Admin"
+    name: "Odysseat Admin",
+    username: "admin",
 })
     .returning()
     .then((us) => us[0]!);

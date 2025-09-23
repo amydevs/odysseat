@@ -10,6 +10,7 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { useRouter } from "next/navigation";
+import RootFormMessage from "~/components/form/root-form-message";
 
 const formSchema = z.object({
   email: z.string(),
@@ -87,7 +88,7 @@ export default function LoginPage() {
                     )}
                 />
                 <Button type="submit">Log In</Button>
-                <FormMessage>{form.formState.errors.root?.message}</FormMessage>
+                <RootFormMessage />
             </form>
             </Form>
         </main>

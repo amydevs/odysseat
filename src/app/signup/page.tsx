@@ -8,6 +8,7 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, For
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/navigation";
+import RootFormMessage from "~/components/form/root-form-message";
 
 
 const formSchema = z.object({
@@ -104,7 +105,7 @@ export default function SignupPage() {
                     )}
                 />
                 <Button type="submit">Sign Up</Button>
-                <FormMessage>{form.formState.errors.root?.message}</FormMessage>
+                <RootFormMessage />
             </form>
             </Form>
         </main>

@@ -1,4 +1,4 @@
-import { pgTableCreator } from "drizzle-orm/pg-core";
+import { customType, pgTableCreator } from "drizzle-orm/pg-core";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -7,3 +7,9 @@ import { pgTableCreator } from "drizzle-orm/pg-core";
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `odysseat_${name}`);
+
+export const tsVector = customType<{ data: string }>({
+  dataType() {
+    return "tsvector";
+  },
+});

@@ -23,6 +23,7 @@ export const recipeRouter = createTRPCRouter({
     .input(zRecipeFilter)
     .query(async ({ ctx, input }) => {
       const {
+        // search,
         minPosition,
         maxPosition,
         sortBy,
@@ -39,6 +40,7 @@ export const recipeRouter = createTRPCRouter({
         .from(recipe)
         .where(
           and(
+            // search != null ? sql`${recipe.search} @@ websearch_to_tsquery('english', ${search})` : sql`TRUE`,
             input.minPosition != null && input.maxPosition != null ? sql`${recipe.position} <@ box(
               point(${input.minPosition[0]}, ${input.minPosition[1]}),
               point(${input.maxPosition[0]}, ${input.maxPosition[1]})

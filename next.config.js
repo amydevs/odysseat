@@ -6,16 +6,16 @@ import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
 const config = {
-    output: "standalone",
-    serverExternalPackages: [
-        "@blocknote/server-util",
-        // "@blocknote/react",
-        // "@blocknote/core",
-    ],
-    reactStrictMode: false,
-    images: {
-        unoptimized: true,
-    },
+  output: "standalone",
+  serverExternalPackages: [
+    "@blocknote/server-util",
+    // "@blocknote/react",
+    // "@blocknote/core",
+  ],
+  reactStrictMode: false,
+  images: {
+    unoptimized: true,
+  },
 };
 
 export default config;

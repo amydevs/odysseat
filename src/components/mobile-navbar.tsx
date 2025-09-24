@@ -18,7 +18,7 @@ const MobileNavbar = React.forwardRef<
       {routes.map((route, i) => (
         <Link
           className={cn(
-            "transition-all hover:text-primary",
+            "hover:text-primary transition-all",
             route.current && "text-primary",
           )}
           href={route.path}

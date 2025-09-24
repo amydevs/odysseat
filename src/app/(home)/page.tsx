@@ -8,7 +8,11 @@ import { headers } from "next/headers";
 import { cn } from "~/lib/utils";
 import { redirect } from "next/navigation";
 import { PlusIcon, UserIcon } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 export default async function Home() {
   return (

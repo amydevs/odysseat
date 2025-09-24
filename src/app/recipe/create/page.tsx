@@ -1,17 +1,16 @@
-import * as React from 'react'
-import CreatingRecipe from './editing';
-import { getSession } from '~/auth/server';
-import { redirect } from 'next/navigation';
+import * as React from "react";
+import CreatingRecipe from "./editing";
+import { getSession } from "~/auth/server";
+import { redirect } from "next/navigation";
 
- 
-export default async function BlogPostPage() { 
+export default async function BlogPostPage() {
   const session = await getSession();
   if (session?.user == null) {
     redirect("/login");
   }
   return (
-    <main className='h-screen-minus-navbar'>
+    <main className="h-screen-minus-navbar">
       <CreatingRecipe />
     </main>
-  )
+  );
 }

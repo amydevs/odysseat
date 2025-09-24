@@ -11,7 +11,7 @@ export function createMemoryDbInstanceMock() {
   return db;
 }
 
-export async function pushSchema(db: ReturnType<typeof createMemoryDbInstanceMock>) {
+export async function pushDb(db: ReturnType<typeof createMemoryDbInstanceMock>) {
   const { createRequire } = await vi.importActual<typeof import("node:module")>("node:module");
   const require = createRequire(import.meta.url);
   const { pushSchema } = require("drizzle-kit/api") as typeof import("drizzle-kit/api");
@@ -19,6 +19,6 @@ export async function pushSchema(db: ReturnType<typeof createMemoryDbInstanceMoc
   await apply();
 }
 
-export async function reset(db: ReturnType<typeof createMemoryDbInstanceMock>) {
+export async function resetDb(db: ReturnType<typeof createMemoryDbInstanceMock>) {
   return await seedReset(db, schema);
 }

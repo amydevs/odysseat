@@ -1,5 +1,5 @@
 import { createAuthApiMock } from "__mocks__/authApi";
-import { createMemoryDbInstanceMock, pushSchema, reset } from "__mocks__/db";
+import { createMemoryDbInstanceMock, pushDb, resetDb } from "__mocks__/db";
 import { describe } from "node:test";
 import { beforeAll, beforeEach, it } from "vitest";
 import { createCaller } from "~/server/api/root";
@@ -9,11 +9,11 @@ describe("Recipe RPC Calls", () => {
   const authApi = createAuthApiMock();
 
   beforeAll(async () => {
-    await pushSchema(db);
+    await pushDb(db);
   });
 
   beforeEach(async () => {
-    reset(db);
+    resetDb(db);
     for (const mockFn of Object.values(authApi)) {
       mockFn.mockClear();
     }

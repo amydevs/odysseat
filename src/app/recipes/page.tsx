@@ -9,7 +9,7 @@ import { api } from "~/trpc/server"
 export default async function RecipesPage({
     searchParams
 }: {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+    searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
     const { search } = await searchParams;
     const recipes = await api.recipe.getAll({
@@ -18,7 +18,7 @@ export default async function RecipesPage({
     const searchAction = async (data: FormData) => {
         "use server";
         const search = data.get("search");
-        redirect(`/recipes?search=${search}`, RedirectType.push);
+        redirect(`/recipes?search=${search?.toString()}`, RedirectType.push);
     }
     return <main className="max-w-7xl mx-auto space-y-3 p-3">
         <form className="flex gap-1">

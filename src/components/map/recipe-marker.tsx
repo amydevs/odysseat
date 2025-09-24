@@ -60,6 +60,10 @@ export default function RecipeMarker({
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
     setExpanded((v) => !v);
     setMouseDown(false);
+    const mapInstance = map.current;
+    if (mapInstance) {
+      mapInstance.panTo(new LngLat(recipe.position[0], recipe.position[1]));
+    }
     onMouseUp?.(e);
   };
 

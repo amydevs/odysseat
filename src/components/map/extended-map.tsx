@@ -11,7 +11,7 @@ export type ExtendedMapRef = MapRef & {
 
 export type ExtendedMapProps = Omit<
   React.ComponentProps<typeof Map>,
-  "mapStyle"
+  "mapStyle" | "ref"
 > & {
   ref?: React.Ref<ExtendedMapRef>;
 };

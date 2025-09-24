@@ -25,6 +25,10 @@ const routes: Route[] = [
   {
     name: "Explore",
     path: "/",
+  },
+  {
+    name: "Recipes",
+    path: "/recipes",
   }
 ];
 

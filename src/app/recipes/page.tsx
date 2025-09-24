@@ -20,7 +20,7 @@ export default async function RecipesPage({
         const search = data.get("search");
         redirect(`/recipes?search=${search}`, RedirectType.push);
     }
-    return <main className="max-w-7xl mx-auto space-y-3">
+    return <main className="max-w-7xl mx-auto space-y-3 p-3">
         <form className="flex gap-1">
             <Input defaultValue={search} name="search" />
             <Button formAction={searchAction}>

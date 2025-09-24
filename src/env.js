@@ -17,17 +17,12 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string().min(1)
         : z.string().min(1).optional(),
-    
-    AWS_BUCKET:
-      z.string().optional(),
-    AWS_REGION:
-      z.string().optional(),
-    AWS_ENDPOINT_URL:
-      z.string().optional(),
-    AWS_ACCESS_KEY_ID:
-      z.string().optional(),
-    AWS_SECRET_ACCESS_KEY:
-      z.string().optional(),
+
+    AWS_BUCKET: z.string().optional(),
+    AWS_REGION: z.string().optional(),
+    AWS_ENDPOINT_URL: z.string().optional(),
+    AWS_ACCESS_KEY_ID: z.string().optional(),
+    AWS_SECRET_ACCESS_KEY: z.string().optional(),
   },
 
   /**

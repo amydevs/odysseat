@@ -29,7 +29,7 @@ const routes: Route[] = [
   {
     name: "Recipes",
     path: "/recipes",
-  }
+  },
 ];
 
 export default async function RootLayout({
@@ -47,7 +47,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <UppyProvider>
-              <header className="sticky top-0 z-50 bg-background px-3">
+              <header className="bg-background sticky top-0 z-50 px-3">
                 <Header routes={routes} user={session?.user} />
               </header>
               {children}

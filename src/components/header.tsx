@@ -22,19 +22,20 @@ const Header = React.forwardRef<
   const [mobileEnable, setMobileEnable] = React.useState(false);
   const pathname = usePathname();
 
-  const processedRoutes = React.useMemo(() => routes
-    .map((e) => {
-      let current = e.path === pathname;
-      if (e.currentPathRegex != null) {
-        current = new RegExp(e.currentPathRegex).test(pathname);
-      }
-      return {
-        ...e,
-        current,
-      };
-    }),
+  const processedRoutes = React.useMemo(
+    () =>
+      routes.map((e) => {
+        let current = e.path === pathname;
+        if (e.currentPathRegex != null) {
+          current = new RegExp(e.currentPathRegex).test(pathname);
+        }
+        return {
+          ...e,
+          current,
+        };
+      }),
     [routes, pathname],
-  )
+  );
 
   React.useEffect(() => {
     setMobileEnable(false);
@@ -45,18 +46,15 @@ const Header = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          `z-50 flex h-navbar bg-background py-6 text-lg
-          font-medium transition-all gap-3`,
+          `h-navbar bg-background z-50 flex gap-3 py-6 text-lg font-medium transition-all`,
           className,
-          mobileEnable && "shadow-none bg-background dark:bg-background",
+          mobileEnable && "bg-background dark:bg-background shadow-none",
         )}
         {...props}
       >
         <div>
-          <Link className="transition-all hover:text-primary" href="/">
-            <span className="text-primary">
-              Odysseat
-            </span>
+          <Link className="hover:text-primary transition-all" href="/">
+            <span className="text-primary">Odysseat</span>
           </Link>
         </div>
 
@@ -64,7 +62,7 @@ const Header = React.forwardRef<
           {processedRoutes.map((route, i) => (
             <Link
               className={cn(
-                "transition-all hover:text-primary",
+                "hover:text-primary transition-all",
                 route.current && "text-primary",
               )}
               href={route.path}
@@ -74,32 +72,31 @@ const Header = React.forwardRef<
             </Link>
           ))}
         </nav>
-        <div className="ml-auto md:ml-0 flex gap-1 -translate-1">
-            <Button variant={"ghost"} size={"icon"} asChild>
-              <Link href={"/recipe/create"}>
-                <PlusIcon />
-              </Link>
-            </Button>
-            <UserDropdown user={user} />
-            <Toggle
-              className={cn(
-                `transition-all md:hidden`,
-                mobileEnable && "rotate-90",
-              )}
-              pressed={mobileEnable}
-              onPressedChange={setMobileEnable}
-              title="Toggle Nav Menu"
-            >
-              <Menu />
-            </Toggle>
+        <div className="ml-auto flex -translate-1 gap-1 md:ml-0">
+          <Button variant={"ghost"} size={"icon"} asChild>
+            <Link href={"/recipe/create"}>
+              <PlusIcon />
+            </Link>
+          </Button>
+          <UserDropdown user={user} />
+          <Toggle
+            className={cn(
+              `transition-all md:hidden`,
+              mobileEnable && "rotate-90",
+            )}
+            pressed={mobileEnable}
+            onPressedChange={setMobileEnable}
+            title="Toggle Nav Menu"
+          >
+            <Menu />
+          </Toggle>
         </div>
       </div>
 
       <MobileNavbar
         routes={routes}
         className={cn(
-          `auto-limit-w fixed inset-0 top-20 -z-10 max-h-screen transition-all
-            md:hidden`,
+          `auto-limit-w fixed inset-0 top-20 -z-10 max-h-screen transition-all md:hidden`,
           !mobileEnable && "-top-full",
         )}
       />

@@ -1,10 +1,18 @@
 import { z } from "zod/v4";
 import { and, eq, ilike, sql, getTableColumns, asc, desc } from "drizzle-orm";
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { recipe } from "~/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { zRecipeCreate, zRecipeEdit, zRecipeFilter } from "~/server/db/validators";
+import {
+  zRecipeCreate,
+  zRecipeEdit,
+  zRecipeFilter,
+} from "~/server/db/validators";
 
 export const recipeRouter = createTRPCRouter({
   getById: publicProcedure
@@ -13,54 +21,53 @@ export const recipeRouter = createTRPCRouter({
       const r = await ctx.db
         .select()
         .from(recipe)
-        .where(eq(recipe.id, input.id))
+        .where(eq(recipe.id, input.id));
       if (r.length === 0) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
       return r[0]!;
     }),
-  getAll: publicProcedure
-    .input(zRecipeFilter)
-    .query(async ({ ctx, input }) => {
-      const {
-        // search,
-        minPosition,
-        maxPosition,
-        sortBy,
-        sortOrder,
-        ...inputRest
-      } = input;
-      const recipeCols = getTableColumns(recipe);
-      const orderFn = sortOrder !== "desc" ? asc : desc;
-      // const normalizeLongitude = (lng: number) => {
-      //   return ((lng + 180) % 360 + 360) % 360 - 180;
-      // };
-      return await ctx.db
-        .select()
-        .from(recipe)
-        .where(
-          and(
-            // search != null ? sql`${recipe.search} @@ websearch_to_tsquery('english', ${search})` : sql`TRUE`,
-            input.minPosition != null && input.maxPosition != null ? sql`${recipe.position} <@ box(
+  getAll: publicProcedure.input(zRecipeFilter).query(async ({ ctx, input }) => {
+    const {
+      // search,
+      minPosition,
+      maxPosition,
+      sortBy,
+      sortOrder,
+      ...inputRest
+    } = input;
+    const recipeCols = getTableColumns(recipe);
+    const orderFn = sortOrder !== "desc" ? asc : desc;
+    // const normalizeLongitude = (lng: number) => {
+    //   return ((lng + 180) % 360 + 360) % 360 - 180;
+    // };
+    return await ctx.db
+      .select()
+      .from(recipe)
+      .where(
+        and(
+          // search != null ? sql`${recipe.search} @@ websearch_to_tsquery('english', ${search})` : sql`TRUE`,
+          input.minPosition != null && input.maxPosition != null
+            ? sql`${recipe.position} <@ box(
               point(${input.minPosition[0]}, ${input.minPosition[1]}),
               point(${input.maxPosition[0]}, ${input.maxPosition[1]})
-            )` : sql`TRUE`,
-            ...Object.entries(inputRest)
-              .map(([k, v]) => {
-                if (v == null || !(k in recipeCols)) {
-                  return sql`TRUE`;
-                }
-                const col = recipeCols[k as keyof typeof recipeCols];
-                if (col.dataType !== "string" || typeof v !== "string") {
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
-                  return eq(col, v as any);
-                }
-                return ilike(col, `%${v}%`);
-              }),
-          )
-        )
-        .orderBy(orderFn(recipeCols[sortBy]))
-    }),
+            )`
+            : sql`TRUE`,
+          ...Object.entries(inputRest).map(([k, v]) => {
+            if (v == null || !(k in recipeCols)) {
+              return sql`TRUE`;
+            }
+            const col = recipeCols[k as keyof typeof recipeCols];
+            if (col.dataType !== "string" || typeof v !== "string") {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+              return eq(col, v as any);
+            }
+            return ilike(col, `%${v}%`);
+          }),
+        ),
+      )
+      .orderBy(orderFn(recipeCols[sortBy]));
+  }),
   create: protectedProcedure
     .input(zRecipeCreate)
     .mutation(async ({ ctx, input }) => {
@@ -80,10 +87,7 @@ export const recipeRouter = createTRPCRouter({
         .update(recipe)
         .set(input)
         .where(
-          and(
-            eq(recipe.id, input.id),
-            eq(recipe.userId, ctx.session.user.id),
-          ),
+          and(eq(recipe.id, input.id), eq(recipe.userId, ctx.session.user.id)),
         )
         .returning();
       if (r[0] == null) {
@@ -97,15 +101,12 @@ export const recipeRouter = createTRPCRouter({
       const r = await ctx.db
         .delete(recipe)
         .where(
-          and(
-            eq(recipe.id, input.id),
-            eq(recipe.userId, ctx.session.user.id),
-          ),
+          and(eq(recipe.id, input.id), eq(recipe.userId, ctx.session.user.id)),
         )
         .returning();
       if (r[0] == null) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
       return r[0];
-    })
+    }),
 });

@@ -1,29 +1,33 @@
 #!/usr/bin/env node
 
-import { spawn } from 'node:child_process'
+import { spawn } from "node:child_process";
 
-const env = { ...process.env }
+const env = { ...process.env };
 
 // If running the web server then prerender pages
-if (process.argv.slice(-2).join(' ') === 'node server.js') {
-  await exec('node_modules/.bin/next build --experimental-build-mode generate-env')
+if (process.argv.slice(-2).join(" ") === "node server.js") {
+  await exec(
+    "node_modules/.bin/next build --experimental-build-mode generate-env",
+  );
 }
 
 // launch application
-await exec(process.argv.slice(2).join(' '))
+await exec(process.argv.slice(2).join(" "));
 
 /**
  * @param {string} command
  */
 function exec(command) {
-  const child = spawn(command, { shell: true, stdio: 'inherit', env })
-  return /** @type {Promise<void>} */(new Promise((resolve, reject) => {
-    child.on('exit', code => {
-      if (code === 0) {
-        resolve()
-      } else {
-        reject(new Error(`${command} failed rc=${code}`))
-      }
+  const child = spawn(command, { shell: true, stdio: "inherit", env });
+  return /** @type {Promise<void>} */ (
+    new Promise((resolve, reject) => {
+      child.on("exit", (code) => {
+        if (code === 0) {
+          resolve();
+        } else {
+          reject(new Error(`${command} failed rc=${code}`));
+        }
+      });
     })
-  }))
+  );
 }

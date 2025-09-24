@@ -1,4 +1,5 @@
-import { drizzle } from "drizzle-orm/postgres-js";
+import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { PgliteDatabase } from "drizzle-orm/pglite";
 import postgres from "postgres";
 
 import { env } from "~/env";
@@ -12,7 +13,11 @@ const globalForDb = globalThis as unknown as {
   conn: postgres.Sql | undefined;
 };
 
+export let db:
+  | PostgresJsDatabase<Record<string, never>, typeof relations>
+  | PgliteDatabase<Record<string, never>, typeof relations>;
+
 const conn = globalForDb.conn ?? postgres(env.DATABASE_URL);
 if (env.NODE_ENV !== "production") globalForDb.conn = conn;
 
-export const db = drizzle(conn, { relations });
+db = drizzle(conn, { relations });

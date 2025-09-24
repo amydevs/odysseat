@@ -11,6 +11,8 @@ export default function RecipeMarker({
   recipe,
   className,
   animate = true,
+  onMouseDown,
+  onMouseUp,
   ...props
 }: {
   recipe: {
@@ -18,16 +20,28 @@ export default function RecipeMarker({
     thumbnailUrl: string | null;
   };
   animate?: boolean;
+  onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseUp?: React.MouseEventHandler<HTMLDivElement>;
 } & Omit<React.ComponentProps<typeof Marker>, "longitude" | "latitude">) {
+  const [expanded, setExpanded] = React.useState(false);
+  const [mouseDown, setMouseDown] = React.useState(false);
+  const [hovered, setHovered] = React.useState(false);
   const map = useExtendedMap();
   const [markerDelay, setMarkerDelay] = React.useState(0);
   const [shouldAnimate, setShouldAnimate] = React.useState(false);
+  const lastLngLat = React.useRef<LngLat | undefined>(undefined);
   React.useEffect(() => {
     const mapInstance = map.current;
     const lastPos = mapInstance?.getLastCenter();
     if (mapInstance == null || !animate) {
       return;
     }
+    if (lastLngLat.current === lastPos) {
+      setShouldAnimate(false);
+      return;
+    }
+
+
     const zoomLevel = mapInstance.getZoom();
     let delay = 0;
     const markerLngLat = new LngLat(recipe.position[0], recipe.position[1]);
@@ -35,7 +49,32 @@ export default function RecipeMarker({
     delay = Math.min(1000, distance * 0.000005 * zoomLevel ** 2 - 50);
     setMarkerDelay(delay);
     setShouldAnimate(true);
-  }, [animate, recipe.position]);
+    lastLngLat.current = lastPos;
+  }, [animate, recipe.position[0], recipe.position[1]]);
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    setMouseDown(true);
+    onMouseDown?.(e);
+  };
+
+  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+    setExpanded((v) => !v);
+    setMouseDown(false);
+    onMouseUp?.(e);
+  };
+
+  const handleMouseEnter = () => {
+    setHovered(true);
+    setShouldAnimate(false);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+    setMouseDown(false);
+  };
+
+  const pressHoverScale = mouseDown ? 0.95 : hovered ? 1.15 : 1;
+
   return (
     <Marker
       longitude={recipe.position[0]}
@@ -44,13 +83,20 @@ export default function RecipeMarker({
       {...props}
     >
       <div
-        className={`relative h-16 w-16 cursor-pointer opacity-0 transition ease-in-out hover:scale-125`}
+        className={`relative h-16 w-16 cursor-pointer opacity-0 transition ease-in-out`}
         style={{
           animationDelay: `${markerDelay}ms`,
-          animation: shouldAnimate
+          transition: `0.2s cubic-bezier(0.34, 1.56, 0.64, 1)`,
+          animation: shouldAnimate && !hovered && !mouseDown
             ? `marker 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${markerDelay}ms both`
             : undefined,
+          transform: `scale(${pressHoverScale})`,
+          opacity: shouldAnimate ? 0 : 1,
         }}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         {/* eslint-disable */}
         <Image

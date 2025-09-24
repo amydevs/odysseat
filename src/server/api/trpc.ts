@@ -36,7 +36,7 @@ export const createTRPCContext = async (opts: {
   return {
     authApi,
     session,
-    db: db as Omit<typeof db, "$client">,
+    db,
   };
 };
 

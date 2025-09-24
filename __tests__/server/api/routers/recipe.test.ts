@@ -1,22 +1,30 @@
 import { createAuthApiMock } from "__mocks__/authApi";
-import { createDbMock } from "__mocks__/db";
-import { drizzle } from "drizzle-orm/postgres-js";
+import { createMemoryDbInstanceMock, pushSchema, reset } from "__mocks__/db";
 import { describe } from "node:test";
-import { it } from "vitest";
+import { beforeAll, beforeEach, it } from "vitest";
 import { createCaller } from "~/server/api/root";
-import { relations } from "~/server/db/relations";
 
 describe("Recipe RPC Calls", () => {
-  const db = createDbMock();
+  const db = createMemoryDbInstanceMock();
   const authApi = createAuthApiMock();
-  const caller = createCaller({
-    db,
-    session: null,
-    authApi,
+
+  beforeAll(async () => {
+    await pushSchema(db);
+  });
+
+  beforeEach(async () => {
+    reset(db);
+    for (const mockFn of Object.values(authApi)) {
+      mockFn.mockClear();
+    }
   });
 
   it("Get All Recipes", async () => {
+    const caller = createCaller({
+      authApi,
+      db,
+      session: null,
+    });
     const recipes = await caller.recipe.getAll({});
-    console.log(recipes);
   });
 });

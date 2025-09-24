@@ -9,6 +9,7 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/navigation";
 import RootFormMessage from "~/components/form/root-form-message";
+import { Checkbox } from "~/components/ui/checkbox";
 
 
 const formSchema = z.object({
@@ -34,7 +35,7 @@ export default function SignupPage() {
         router.refresh();
     };
     return (
-        <main className="max-w-full flex justify-center items-center h-screen-minus-navbar">
+        <main className="flex justify-center items-center h-screen-minus-navbar">
             <Button className="bg-red-600 m-[0.5vh] absolute top-1 right-1" asChild>
                 <Link href={"/"}>x</Link>
             </Button>
@@ -102,6 +103,21 @@ export default function SignupPage() {
                         <FormDescription />
                         <FormMessage />
                     </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="rememeberMe"
+                    render={({ field: { onChange, value, ...field } }) => (
+                        <FormItem className="flex w-full justify-between">
+                            <FormLabel>
+                                Remember Me
+                            </FormLabel>
+                            <FormControl>
+                                <Checkbox onCheckedChange={onChange} value={`${value}`} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
                     )}
                 />
                 <Button type="submit">Sign Up</Button>

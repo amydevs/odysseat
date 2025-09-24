@@ -33,7 +33,7 @@ export default function LoginPage() {
         router.refresh();
     };
     return ( 
-        <main className="max-w-full flex justify-center items-center h-screen-minus-navbar">
+        <main className="flex justify-center items-center h-screen-minus-navbar">
             <Button className={"bg-red-600 absolute top-1 right-1"} asChild>
                 <Link href={"/"}>x</Link>
             </Button>
@@ -75,14 +75,13 @@ export default function LoginPage() {
                     control={form.control}
                     name="rememeberMe"
                     render={({ field: { onChange, value, ...field } }) => (
-                        <FormItem>
+                        <FormItem className="flex w-full justify-between">
                             <FormLabel>
                                 Remember Me
                             </FormLabel>
                             <FormControl>
                                 <Checkbox onCheckedChange={onChange} value={`${value}`} {...field} />
                             </FormControl>
-                            <FormDescription />
                             <FormMessage />
                         </FormItem>
                     )}

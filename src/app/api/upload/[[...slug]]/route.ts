@@ -3,9 +3,21 @@ import { FileStore } from "@tus/file-store";
 import { S3Store } from "@tus/s3-store";
 import { type NextRequest } from "next/server";
 import { env } from "~/env";
+import { auth } from "~/auth/server";
 
 const server = new Server({
   path: "/api/upload",
+  onUploadCreate: async (req, upload) => {
+    const session = await auth.api.getSession({ headers: req.headers });
+    if (session?.user == null) {
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
+      throw {
+        status_code: 401,
+        body: "Not authorized to make upload!",
+      };
+    }
+    return upload;
+  },
   datastore:
     env.AWS_BUCKET != null
       ? new S3Store({

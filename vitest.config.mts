@@ -9,6 +9,12 @@ export default defineConfig({
     coverage: {
         enabled: true,
         provider: "v8",
+        exclude: [
+            "src/env.js",
+        ],
+        include: [
+            "src/**/*",
+        ],
     }
   },
 })

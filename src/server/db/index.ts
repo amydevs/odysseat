@@ -13,11 +13,11 @@ const globalForDb = globalThis as unknown as {
   conn: postgres.Sql | undefined;
 };
 
-export let db:
-  | PostgresJsDatabase<Record<string, never>, typeof relations>
-  | PgliteDatabase<Record<string, never>, typeof relations>;
-
 const conn = globalForDb.conn ?? postgres(env.DATABASE_URL);
 if (env.NODE_ENV !== "production") globalForDb.conn = conn;
 
-db = drizzle(conn, { relations });
+export const db:
+  | PostgresJsDatabase<Record<string, never>, typeof relations>
+  | PgliteDatabase<Record<string, never>, typeof relations> = drizzle(conn, {
+  relations,
+});

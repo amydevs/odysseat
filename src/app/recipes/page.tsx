@@ -26,7 +26,10 @@ export default async function RecipesPage({
   const searchAction = async (data: FormData) => {
     "use server";
     const search = data.get("search");
-    redirect(`/recipes?search=${typeof search === "string" ? search : ""}`, RedirectType.push);
+    redirect(
+      `/recipes?search=${typeof search === "string" ? search : ""}`,
+      RedirectType.push,
+    );
   };
   return (
     <main className="mx-auto max-w-7xl space-y-3 p-3">

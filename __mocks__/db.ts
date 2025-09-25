@@ -1,9 +1,10 @@
-import { drizzle } from 'drizzle-orm/pglite';
+import type { db as serverDb } from "~/server/db";
+import { drizzle } from "drizzle-orm/pglite";
 import { reset as seedReset } from "drizzle-seed";
 import * as schema from "~/server/db/schema";
 import { relations } from "~/server/db/relations";
-import { vi } from 'vitest';
-import { PGlite } from '@electric-sql/pglite';
+import { vi } from "vitest";
+import { PGlite } from "@electric-sql/pglite";
 
 export function createMemoryDbInstanceMock() {
   const client = new PGlite();
@@ -11,14 +12,16 @@ export function createMemoryDbInstanceMock() {
   return db;
 }
 
-export async function pushDb(db: ReturnType<typeof createMemoryDbInstanceMock>) {
-  const { createRequire } = await vi.importActual<typeof import("node:module")>("node:module");
+export async function pushDb(db: typeof serverDb) {
+  const { createRequire } =
+    await vi.importActual<typeof import("node:module")>("node:module");
   const require = createRequire(import.meta.url);
-  const { pushSchema } = require("drizzle-kit/api") as typeof import("drizzle-kit/api");
+  const { pushSchema } =
+    require("drizzle-kit/api") as typeof import("drizzle-kit/api");
   const { apply } = await pushSchema(schema, db);
   await apply();
 }
 
-export async function resetDb(db: ReturnType<typeof createMemoryDbInstanceMock>) {
+export async function resetDb(db: typeof serverDb) {
   return await seedReset(db, schema);
 }

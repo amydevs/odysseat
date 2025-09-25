@@ -68,7 +68,7 @@ export default function HomeMap() {
           }}
         />
       ))}
-      {popupInfo && (
+      {/* {popupInfo && (
         <Popup
           anchor="top"
           longitude={popupInfo.position[0]}
@@ -86,7 +86,7 @@ export default function HomeMap() {
             {popupInfo.title}
           </Link>
         </Popup>
-      )}
+      )} */}
     </ExtendedMap>
   );
 }

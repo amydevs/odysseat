@@ -41,7 +41,6 @@ export default function RecipeMarker({
       return;
     }
 
-
     const zoomLevel = mapInstance.getZoom();
     let delay = 0;
     const markerLngLat = new LngLat(recipe.position[0], recipe.position[1]);
@@ -91,9 +90,10 @@ export default function RecipeMarker({
         style={{
           animationDelay: `${markerDelay}ms`,
           transition: `0.2s cubic-bezier(0.34, 1.56, 0.64, 1)`,
-          animation: shouldAnimate && !hovered && !mouseDown
-            ? `marker 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${markerDelay}ms both`
-            : undefined,
+          animation:
+            shouldAnimate && !hovered && !mouseDown
+              ? `marker 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${markerDelay}ms both`
+              : undefined,
           transform: `scale(${pressHoverScale})`,
           opacity: shouldAnimate ? 0 : 1,
         }}

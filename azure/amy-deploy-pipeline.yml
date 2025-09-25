@@ -12,29 +12,54 @@ pool:
 variables:
 - group: production
 
-steps:
-- script: |
-    curl -L https://fly.io/install.sh | sh
-  displayName: 'install fly'
+jobs:
+  - job: Test
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.x'
+      displayName: 'Install Node.js'
 
-- script: |
-    /home/vsts/.fly/bin/flyctl secrets set AUTH_SECRET=$(AUTH_SECRET) --stage
-    /home/vsts/.fly/bin/flyctl secrets set DATABASE_URL=$(DATABASE_URL) --stage
-    /home/vsts/.fly/bin/flyctl secrets set NEXT_PUBLIC_MAP_STYLE=$(NEXT_PUBLIC_MAP_STYLE) --stage
+    - task: Cache@2
+      inputs:
+        key: 'npm | "$(Agent.OS)" | package-lock.json'
+        restoreKeys: |
+          npm | "$(Agent.OS)"
+        path: $(npm_config_cache)
+      displayName: Cache npm
 
-    /home/vsts/.fly/bin/flyctl secrets set AWS_BUCKET=$(AWS_BUCKET) --stage
-    /home/vsts/.fly/bin/flyctl secrets set AWS_REGION=$(AWS_REGION) --stage
-    /home/vsts/.fly/bin/flyctl secrets set AWS_ENDPOINT_URL=$(AWS_ENDPOINT_URL) --stage
-    /home/vsts/.fly/bin/flyctl secrets set AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) --stage
-    /home/vsts/.fly/bin/flyctl secrets set AWS_SECRET_ACCESS_KEY=$(AWS_ACCESS_KEY_ID) --stage
-  displayName: 'fly secrets set'
-  env:
-    FLY_API_TOKEN: $(FLY_API_TOKEN)
+    - script: |
+        npm ci
+        npm run test -- --run
+      displayName: 'npm install and test'
+      env:
+        SKIP_ENV_VALIDATION: true
+  
+  - job: Deploy
+    dependsOn: Test
+    steps:
+    - script: |
+        curl -L https://fly.io/install.sh | sh
+      displayName: 'install fly'
 
-- script: |
-    /home/vsts/.fly/bin/flyctl deploy \
-      --remote-only \
-      --detach
-  displayName: 'fly deploy'
-  env:
-    FLY_API_TOKEN: $(FLY_API_TOKEN)
+    - script: |
+        /home/vsts/.fly/bin/flyctl secrets set AUTH_SECRET=$(AUTH_SECRET) --stage
+        /home/vsts/.fly/bin/flyctl secrets set DATABASE_URL=$(DATABASE_URL) --stage
+        /home/vsts/.fly/bin/flyctl secrets set NEXT_PUBLIC_MAP_STYLE=$(NEXT_PUBLIC_MAP_STYLE) --stage
+
+        /home/vsts/.fly/bin/flyctl secrets set AWS_BUCKET=$(AWS_BUCKET) --stage
+        /home/vsts/.fly/bin/flyctl secrets set AWS_REGION=$(AWS_REGION) --stage
+        /home/vsts/.fly/bin/flyctl secrets set AWS_ENDPOINT_URL=$(AWS_ENDPOINT_URL) --stage
+        /home/vsts/.fly/bin/flyctl secrets set AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) --stage
+        /home/vsts/.fly/bin/flyctl secrets set AWS_SECRET_ACCESS_KEY=$(AWS_ACCESS_KEY_ID) --stage
+      displayName: 'fly secrets set'
+      env:
+        FLY_API_TOKEN: $(FLY_API_TOKEN)
+
+    - script: |
+        /home/vsts/.fly/bin/flyctl deploy \
+          --remote-only \
+          --detach
+      displayName: 'fly deploy'
+      env:
+        FLY_API_TOKEN: $(FLY_API_TOKEN)

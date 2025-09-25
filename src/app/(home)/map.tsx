@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
-import { GeolocateControl, Popup, type LngLat } from "react-map-gl/maplibre";
+import { LngLat } from "maplibre-gl";
+import { GeolocateControl, Popup } from "react-map-gl/maplibre";
 import { api } from "~/trpc/react";
 import { useDebouncedCallback } from "use-debounce";
 import RecipeMarker from "~/components/map/recipe-marker";
@@ -61,6 +62,9 @@ export default function HomeMap() {
           onClick={(e) => {
             e.originalEvent.stopPropagation();
             setPopupInfo(marker);
+            if (mapRef.current != null) {
+              mapRef.current.panTo(new LngLat(marker.position[0], marker.position[1]));
+            }
           }}
         />
       ))}

@@ -23,7 +23,6 @@ export default function RecipeMarker({
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
   onMouseUp?: React.MouseEventHandler<HTMLDivElement>;
 } & Omit<React.ComponentProps<typeof Marker>, "longitude" | "latitude">) {
-  const [expanded, setExpanded] = React.useState(false);
   const [mouseDown, setMouseDown] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
   const map = useExtendedMap();
@@ -51,19 +50,12 @@ export default function RecipeMarker({
     lastLngLat.current = lastPos;
   }, [animate, recipe.position[0], recipe.position[1]]);
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = () => {
     setMouseDown(true);
-    onMouseDown?.(e);
   };
 
-  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
-    setExpanded((v) => !v);
+  const handleMouseUp = () => {
     setMouseDown(false);
-    const mapInstance = map.current;
-    if (mapInstance) {
-      mapInstance.panTo(new LngLat(recipe.position[0], recipe.position[1]));
-    }
-    onMouseUp?.(e);
   };
 
   const handleMouseEnter = () => {

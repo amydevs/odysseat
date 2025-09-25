@@ -11,6 +11,8 @@ pool:
 
 variables:
 - group: production
+- name: npm_config_cache
+  value: $(Pipeline.Workspace)/.npm
 
 jobs:
   - job: Test

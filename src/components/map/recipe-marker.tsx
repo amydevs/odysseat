@@ -40,7 +40,9 @@ export default function RecipeMarker({
     const distance = lastPos != null ? markerLngLat.distanceTo(lastPos) : 0;
     delay = Math.min(1000, distance * 0.000005 * zoomLevel ** 2 - 50);
     return delay;
-  }, [animate, recipe, map]);
+  }, [animate, recipe.position, map.current]);
+
+  console.log(markerDelay);
 
   return (
     <Marker

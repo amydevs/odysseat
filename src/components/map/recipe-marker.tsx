@@ -42,8 +42,6 @@ export default function RecipeMarker({
     return delay;
   }, [animate, recipe.position, map.current]);
 
-  console.log(markerDelay);
-
   return (
     <Marker
       longitude={recipe.position[0]}

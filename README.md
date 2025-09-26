@@ -7,7 +7,8 @@ This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3
 
 ### Local Development
 1.  Copy the `.env.example` file to `.env`.
-2. If using Laragon, use [this guide](https://dev.to/dendihandian/adding-postgresql-to-laragon-2kde) to add Postgres to your instance, run it locally, and modify the `DATABASE_URL` variable inside `.env` to have the correct credentials. Otherwise, run:
+2.  If on windows, change the terminal from Powershell to a Unix environment like git bash
+3.  If using Laragon, use [this guide](https://dev.to/dendihandian/adding-postgresql-to-laragon-2kde) to add Postgres to your instance, run it locally, and modify the `DATABASE_URL` variable inside `.env` to have the correct credentials. Otherwise, run:
 ```
 ./start-database.sh
 ```

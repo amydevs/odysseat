@@ -42,11 +42,26 @@ export default function RecipeMarker({
     return delay;
   }, [animate, recipe.position, map.current]);
 
+  const screenCoordinates = React.useMemo(() => {
+    if (map.current == null) {
+      return null;
+    }
+    return map.current.project(new LngLat(recipe.position[0], recipe.position[1]));
+  }, [recipe.position, map.current]);
+
+  const zindex = React.useMemo(() => {
+    if (screenCoordinates == null) {
+      return 0;
+    }
+    return Math.floor(screenCoordinates.y);
+  }, [screenCoordinates]);
+
   return (
     <Marker
       longitude={recipe.position[0]}
       latitude={recipe.position[1]}
-      className={cn("-translate-y-2/3", expanded && "z-50", className)}
+      className={cn("-translate-y-2/3", className)}
+      style={{ zIndex: expanded ? 10000 : zindex }}
       {...props}
     >
       <div

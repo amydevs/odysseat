@@ -102,7 +102,7 @@ export default function RecipeMarker({
           {expanded && (
             <Link
               href={`/recipe/${recipe.id}`}
-              className="absolute text-base text-foreground hover:text-muted-foreground bottom-1 left-1/2 -translate-x-1/2 w-64 px-6 text-center line-clamp-2"
+              className="absolute text-base text-foreground hover:text-muted-foreground bottom-1 left-1/2 -translate-x-1/2 w-64 px-6 text-center line-clamp-2 transition-all duration-100"
             >
               {recipe.title}
             </Link>

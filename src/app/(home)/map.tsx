@@ -5,8 +5,6 @@ import { GeolocateControl, Popup } from "react-map-gl/maplibre";
 import { api } from "~/trpc/react";
 import { useDebouncedCallback } from "use-debounce";
 import RecipeMarker from "~/components/map/recipe-marker";
-import Link from "next/link";
-import Image from "next/image";
 import "maplibre-gl/dist/maplibre-gl.css"; // Required CSS for MapLibre GL to render marker positions correctly
 import ExtendedMap, {
   type ExtendedMapRef,
@@ -15,9 +13,7 @@ import ExtendedMap, {
 export default function HomeMap() {
   const mapRef = React.useRef<ExtendedMapRef>(null);
 
-  const [popupInfo, setPopupInfo] = React.useState<
-    NonNullable<typeof markers>[number] | null
-  >(null);
+  const [selectedId, setSelectedId] = React.useState<number | null>(null);
 
   const [bounds, setBounds] = React.useState<{
     northWest: LngLat;
@@ -59,34 +55,16 @@ export default function HomeMap() {
         <RecipeMarker
           key={marker.id} // Needs to stay marker.id so that recipes with same id doesnt rerender
           recipe={marker}
+          expanded={selectedId === marker.id}
           onClick={(e) => {
             e.originalEvent.stopPropagation();
-            setPopupInfo(marker);
+            setSelectedId(selectedId === marker.id ? null : marker.id);
             if (mapRef.current != null) {
               mapRef.current.panTo(new LngLat(marker.position[0], marker.position[1]));
             }
           }}
         />
       ))}
-      {/* {popupInfo && (
-        <Popup
-          anchor="top"
-          longitude={popupInfo.position[0]}
-          latitude={popupInfo.position[1]}
-          onClose={() => setPopupInfo(null)}
-        >
-          <Image
-            alt={popupInfo.title}
-            height={400}
-            width={300}
-            className="w-full"
-            src={popupInfo.thumbnailUrl!}
-          />
-          <Link href={`/recipe/${popupInfo.id}`} className="text-foreground">
-            {popupInfo.title}
-          </Link>
-        </Popup>
-      )} */}
     </ExtendedMap>
   );
 }

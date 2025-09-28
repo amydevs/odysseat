@@ -19,6 +19,7 @@ import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { useRouter } from "next/navigation";
 import RootFormMessage from "~/components/form/root-form-message";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   email: z.string(),
@@ -40,6 +41,9 @@ export default function LoginPage() {
     router.push("/");
     router.refresh();
   };
+  useEffect(() => {
+  document.title = "Log In";
+}, []);
   return (
     <main className="h-screen-minus-navbar flex items-center justify-center">
       <Button className={"absolute top-1 right-1 bg-red-600"} asChild>

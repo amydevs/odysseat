@@ -11,6 +11,7 @@ import "@blocknote/core/fonts/inter.css";
 import { useRouter } from "next/navigation";
 import RecipeForm from "~/components/editor/recipe-form";
 import { zRecipeCreate } from "~/server/db/validators";
+import { useEffect } from "react";
 
 export default function CreatingRecipe() {
   const router = useRouter();
@@ -28,6 +29,9 @@ export default function CreatingRecipe() {
       }
     }
   };
+  useEffect(() => {
+    document.title = "New Recipe";
+  }, []);
   return (
     <Form {...form}>
       <RecipeForm

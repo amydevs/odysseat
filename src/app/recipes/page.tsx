@@ -14,6 +14,10 @@ import {
 import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/server";
 
+export const metadata = {
+  title: "Recipes"
+};
+
 export default async function RecipesPage({
   searchParams,
 }: {

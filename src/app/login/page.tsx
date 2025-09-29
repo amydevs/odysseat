@@ -20,6 +20,7 @@ import { Checkbox } from "~/components/ui/checkbox";
 import { useRouter } from "next/navigation";
 import RootFormMessage from "~/components/form/root-form-message";
 import { useEffect } from "react";
+import Head from "next/head";
 
 const formSchema = z.object({
   email: z.string(),

@@ -33,10 +33,10 @@ export default function UserDropdown({ user }: { user?: User }) {
         {user == null ? (
           <>
             <DropdownMenuItem asChild>
-              <Link href={"/login"}>Login</Link>
+              <Link href={"/login"}>Log In</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href={"/signup"}>Signup</Link>
+              <Link href={"/signup"}>Sign Up</Link>
             </DropdownMenuItem>
           </>
         ) : (

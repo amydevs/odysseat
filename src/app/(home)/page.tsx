@@ -15,7 +15,7 @@ import {
 } from "~/components/ui/tooltip";
 
 export const metadata = {
-  title: "Odysseat"
+  title: "Odysseat",
 };
 
 export default async function Home() {

@@ -12,6 +12,7 @@ import { cn } from "~/lib/utils";
 import RecipeMarker from "~/components/map/recipe-marker";
 import ExtendedMap from "~/components/map/extended-map";
 import { authClient } from "~/auth/client";
+import { useEffect } from "react";
 
 export default function StaticRecipe({
   recipe,
@@ -24,6 +25,9 @@ export default function StaticRecipe({
 }) {
   const [isMapOpen, setIsMapOpen] = React.useState(false);
   const session = authClient.useSession();
+  useEffect(() => {
+  document.title = recipe.title;
+}, []);
   return (
     <div className={cn("flex justify-center", className)}>
       <div className="flex w-full max-w-full flex-col space-y-3 p-3 lg:max-w-7xl">

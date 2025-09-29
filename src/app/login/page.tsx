@@ -59,7 +59,7 @@ export default function LoginPage() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="pl-1">Email</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -73,7 +73,7 @@ export default function LoginPage() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="pl-1">Password</FormLabel>
                 <FormControl>
                   <Input type="password" {...field} />
                 </FormControl>
@@ -86,7 +86,7 @@ export default function LoginPage() {
             control={form.control}
             name="rememeberMe"
             render={({ field: { onChange, value, ...field } }) => (
-              <FormItem className="flex w-full justify-between">
+              <FormItem className="flex w-full justify-between p-2 pl-1">
                 <FormLabel>Remember Me</FormLabel>
                 <FormControl>
                   <Checkbox

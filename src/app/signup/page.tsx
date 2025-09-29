@@ -117,7 +117,7 @@ export default function SignupPage() {
             control={form.control}
             name="rememeberMe"
             render={({ field: { onChange, value, ...field } }) => (
-              <FormItem className="flex w-full justify-between">
+              <FormItem className="flex w-full justify-between p-2 pl-0">
                 <FormLabel>Remember Me</FormLabel>
                 <FormControl>
                   <Checkbox

@@ -7,7 +7,7 @@ import { beforeAll, beforeEach, expect, it } from "vitest";
 import { createCaller } from "~/server/api/root";
 import * as schema from "~/server/db/schema";
 
-describe("recipe rpc calls", () => {
+await describe("recipe rpc calls", () => {
   const db = createMemoryDbInstanceMock();
   const authApi = createAuthApiMock();
   const session = createSessionMock();

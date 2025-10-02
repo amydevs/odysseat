@@ -73,11 +73,11 @@ const Header = React.forwardRef<
           ))}
         </nav>
         <div className="ml-auto flex -translate-1 gap-1 md:ml-0">
-          <Button variant={"ghost"} size={"icon"} asChild>
+          {user != null && <Button variant={"ghost"} size={"icon"} asChild>
             <Link href={"/recipe/create"}>
               <PlusIcon />
             </Link>
-          </Button>
+          </Button>}
           <UserDropdown user={user} />
           <Toggle
             className={cn(

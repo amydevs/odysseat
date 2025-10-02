@@ -11,7 +11,7 @@ import { auth } from "~/auth/server";
 import UppyProvider from "~/components/upload/uppy-provider";
 
 export const metadata: Metadata = {
-  title: { // using template for title so that the icon doesn't get overriden
+  title: { // using template for title so that the icon doesn't get overridden
     template: "%s",
     default: "Odysseat"
   },

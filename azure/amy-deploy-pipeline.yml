@@ -59,7 +59,7 @@ jobs:
         /home/vsts/.fly/bin/flyctl secrets set AWS_REGION=$(AWS_REGION) --stage
         /home/vsts/.fly/bin/flyctl secrets set AWS_ENDPOINT_URL=$(AWS_ENDPOINT_URL) --stage
         /home/vsts/.fly/bin/flyctl secrets set AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) --stage
-        /home/vsts/.fly/bin/flyctl secrets set AWS_SECRET_ACCESS_KEY=$(AWS_ACCESS_KEY_ID) --stage
+        /home/vsts/.fly/bin/flyctl secrets set AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) --stage
       displayName: 'fly secrets set'
       env:
         FLY_API_TOKEN: $(FLY_API_TOKEN)

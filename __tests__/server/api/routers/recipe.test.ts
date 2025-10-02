@@ -30,13 +30,74 @@ await describe("recipe rpc calls", () => {
       mockFn.mockClear();
     }
   });
-  it("create recipe unauthorized", async () => { // ROY!!!  
+  it("create recipe unauthorized", async () => { // Roy - makes sure unauthorised users may not create recipes
     const caller = createCaller({
       authApi,
       db,
       session: null,
     });
     await expect(caller.recipe.create(testRecipe)).rejects.toThrowError();
+  });
+    it("update recipe unauthorized", async () => { // ensures that unauthorised users may not edit recipes
+    const badUserId = "nottestuser";
+    const caller = createCaller({
+      authApi,
+      db,
+      session: {
+        session: {
+          ...session.session,
+          userId: badUserId,
+        },
+        user: {
+          ...session.user,
+          id: badUserId,
+        },
+      },
+    });
+    const createdRecipe = await db
+      .insert(schema.recipe)
+      .values([
+        {
+          ...testRecipe,
+          userId: session.user.id,
+        },
+      ])
+      .returning()
+      .then((e) => e[0]!);
+    await expect(
+      caller.recipe.edit({
+        ...createdRecipe,
+        title: "New Title",
+      }),
+    ).rejects.toThrowError();
+  });
+  it("delete recipe unauthorized", async () => { // ensures that unauthorised users may not delete recipes
+    const badUserId = "nottestuser";
+    const caller = createCaller({
+      authApi,
+      db,
+      session: {
+        session: {
+          ...session.session,
+          userId: badUserId,
+        },
+        user: {
+          ...session.user,
+          id: badUserId,
+        },
+      },
+    });
+    const createdRecipe = await db
+      .insert(schema.recipe)
+      .values([
+        {
+          ...testRecipe,
+          userId: session.user.id,
+        },
+      ])
+      .returning()
+      .then((e) => e[0]!);
+    await expect(caller.recipe.delete(createdRecipe)).rejects.toThrowError();
   });
   it("create recipe", async () => { // AMY!!!
     const caller = createCaller({
@@ -83,39 +144,7 @@ await describe("recipe rpc calls", () => {
     });
     expect(foundRecipe).toMatchObject(editedRecipeDetails);
   });
-  it("update recipe unauthorized", async () => { // ROY!!!
-    const badUserId = "nottestuser";
-    const caller = createCaller({
-      authApi,
-      db,
-      session: {
-        session: {
-          ...session.session,
-          userId: badUserId,
-        },
-        user: {
-          ...session.user,
-          id: badUserId,
-        },
-      },
-    });
-    const createdRecipe = await db
-      .insert(schema.recipe)
-      .values([
-        {
-          ...testRecipe,
-          userId: session.user.id,
-        },
-      ])
-      .returning()
-      .then((e) => e[0]!);
-    await expect(
-      caller.recipe.edit({
-        ...createdRecipe,
-        title: "New Title",
-      }),
-    ).rejects.toThrowError();
-  });
+
   it("get all recipes", async () => { // CJ!!!
     const caller = createCaller({
       authApi,
@@ -155,33 +184,5 @@ await describe("recipe rpc calls", () => {
     await expect(caller.recipe.delete(createdRecipe)).resolves.toMatchObject(
       createdRecipe,
     );
-  });
-  it("delete recipe unauthorized", async () => { // ROY!!!
-    const badUserId = "nottestuser";
-    const caller = createCaller({
-      authApi,
-      db,
-      session: {
-        session: {
-          ...session.session,
-          userId: badUserId,
-        },
-        user: {
-          ...session.user,
-          id: badUserId,
-        },
-      },
-    });
-    const createdRecipe = await db
-      .insert(schema.recipe)
-      .values([
-        {
-          ...testRecipe,
-          userId: session.user.id,
-        },
-      ])
-      .returning()
-      .then((e) => e[0]!);
-    await expect(caller.recipe.delete(createdRecipe)).rejects.toThrowError();
   });
 });

@@ -38,7 +38,6 @@ export default function RecipeForm({
   >();
   console.log(form);
   const { uppy } = useUppy();
-  const currentUploads = useUppyState(uppy!, (u) => u.currentUploads);
   const [currentUploadId, setCurrentUploadId] = React.useState<string | null>(
     null,
   );
@@ -79,23 +78,33 @@ export default function RecipeForm({
                         if (file == null) {
                           return;
                         }
-                        const fileId = uppy!.addFile(file);
-                        setCurrentUploadId(fileId);
+                        try {
+                          const fileId = uppy!.addFile(file);
+                          setCurrentUploadId(fileId);
 
-                        const uploadResults = await uppy!.upload();
-                        const uploadedFile = uploadResults?.successful?.find(
-                          (e) => e.id === fileId,
-                        );
-                        if (uploadedFile?.uploadURL == null) {
-                          return;
+                          const uploadResults = await uppy!.upload();
+                          const uploadedFile = uploadResults?.successful?.find(
+                            (e) => e.id === fileId,
+                          );
+                          if (uploadedFile?.uploadURL == null) {
+                            return;
+                          }
+                          onChange(uploadedFile.uploadURL);
                         }
-                        onChange(uploadedFile.uploadURL);
+                        catch (e) {
+                          if (e instanceof Error) {
+                            form.setError("thumbnailUrl", { message: e.message });
+                          }
+                        }
+                        finally {
+                          setCurrentUploadId(null);
+                        }
                       }}
                     />
                     <LoaderIcon
                       className={cn(
                         "animate-spin",
-                        currentUploads[currentUploadId ?? ""] == null &&
+                        currentUploadId == null &&
                           "hidden",
                       )}
                     />

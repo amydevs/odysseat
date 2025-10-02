@@ -25,11 +25,18 @@ export const zRecipeFilter = createSelectSchema(recipe)
     }),
   );
 
-export const zRecipeCreate = createInsertSchema(recipe).omit({
-  id: true,
-  userId: true,
-});
+export const zRecipeCreate = createInsertSchema(recipe, {
+  title: (schema) => schema.min(1),
+  content: (schema) => schema.min(1)
+})
+  .omit({
+    id: true,
+    userId: true,
+  });
 
-export const zRecipeEdit = createUpdateSchema(recipe)
+export const zRecipeEdit = createUpdateSchema(recipe, {
+  title: (schema) => schema.min(1),
+  content: (schema) => schema.min(1),
+})
   .omit({ userId: true })
   .and(z.object({ id: z.number() }));

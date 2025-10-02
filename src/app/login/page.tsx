@@ -20,18 +20,22 @@ import { Checkbox } from "~/components/ui/checkbox";
 import { useRouter } from "next/navigation";
 import RootFormMessage from "~/components/form/root-form-message";
 import { useEffect } from "react";
-import Head from "next/head";
 
 const formSchema = z.object({
   email: z.string(),
   password: z.string(),
-  rememeberMe: z.boolean().default(false),
+  rememberMe: z.boolean().default(false),
 });
 
 export default function LoginPage() {
   const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false
+    }
   });
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const res = await authClient.signIn.email(data);
@@ -85,7 +89,7 @@ export default function LoginPage() {
           />
           <FormField
             control={form.control}
-            name="rememeberMe"
+            name="rememberMe"
             render={({ field: { onChange, value, ...field } }) => (
               <FormItem className="flex w-full justify-between p-2 pl-1">
                 <FormLabel>Remember Me</FormLabel>

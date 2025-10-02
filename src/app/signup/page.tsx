@@ -25,13 +25,20 @@ const formSchema = z.object({
   username: z.string(),
   email: z.email(),
   password: z.string(),
-  rememeberMe: z.boolean().default(false),
+  rememberMe: z.boolean().default(false),
 });
 
 export default function SignupPage() {
   const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      username: "",
+      email: "",
+      password: "",
+      rememberMe: false
+    }
   });
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const res = await authClient.signUp.email(data);
@@ -115,7 +122,7 @@ export default function SignupPage() {
           />
           <FormField
             control={form.control}
-            name="rememeberMe"
+            name="rememberMe"
             render={({ field: { onChange, value, ...field } }) => (
               <FormItem className="flex w-full justify-between p-2 pl-0">
                 <FormLabel>Remember Me</FormLabel>

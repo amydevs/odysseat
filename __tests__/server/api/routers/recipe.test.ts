@@ -38,7 +38,7 @@ await describe("recipe rpc calls", () => {
     });
     await expect(caller.recipe.create(testRecipe)).rejects.toThrowError();
   });
-    it("update recipe unauthorized", async () => { // ensures that unauthorised users may not edit recipes
+    it("update recipe unauthorized", async () => { // Ensures that users may not edit recipes they aren't authorised to
     const badUserId = "nottestuser";
     const caller = createCaller({
       authApi,
@@ -71,7 +71,7 @@ await describe("recipe rpc calls", () => {
       }),
     ).rejects.toThrowError();
   });
-  it("delete recipe unauthorized", async () => { // ensures that unauthorised users may not delete recipes
+  it("delete recipe unauthorized", async () => { // Ensures users may not delete recipes that they aren't authorised to
     const badUserId = "nottestuser";
     const caller = createCaller({
       authApi,

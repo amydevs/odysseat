@@ -32,11 +32,17 @@ jobs:
 
     - script: |
         npm ci
-        npm run test -- --run
+        npm run test -- --run --reporter=default --reporter=junit --outputFile=reports/junit.xml
       displayName: 'npm install and test'
       env:
         SKIP_ENV_VALIDATION: true
-  
+
+    - task: PublishTestResults@2
+      displayName: 'supply npm test results to pipelines'
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFiles: 'reports/junit.xml'
+
   - job: Deploy
     dependsOn: Test
     steps:

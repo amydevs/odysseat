@@ -2,12 +2,11 @@ import { createAuthApiMock } from "__mocks__/authApi"; // For RPC insert and upd
 import { createMemoryDbInstanceMock, pushDb, resetDb } from "__mocks__/db";
 import { createSessionMock, insertSessionDb } from "__mocks__/session";
 import { seed } from "drizzle-seed";
-import { describe } from "node:test";
-import { beforeAll, beforeEach, expect, it } from "vitest";
+import { describe, beforeAll, beforeEach, expect, it } from "vitest";
 import { createCaller } from "~/server/api/root";
 import * as schema from "~/server/db/schema";
 
-await describe("recipe rpc calls", () => {
+describe("recipe rpc calls", () => {
   // Here we create a mock local database with a test Recipe
   const db = createMemoryDbInstanceMock();
   const authApi = createAuthApiMock();

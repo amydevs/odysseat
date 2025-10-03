@@ -15,7 +15,7 @@ export default function MarkdownEditor({
   initialValue: string;
   onValueChange?: (data: string) => void;
 }) {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   // Creates a new editor instance.
   const editor = useCreateBlockNote({
     // disableExtensions: ["textColor"]
@@ -34,7 +34,7 @@ export default function MarkdownEditor({
     <BlockNoteView
       className={className}
       style={{ "--bn-colors-editor-background": "var(--background)" } as object}
-      theme={theme === "dark" ? "dark" : "light"}
+      theme={resolvedTheme === "dark" ? "dark" : "light"}
       onChange={async (editor) =>
         onValueChange?.(await editor.blocksToMarkdownLossy(editor.document))
       }

@@ -1,8 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { type inferRouterInputs } from "@trpc/server";
-import type { AppRouter } from "~/server/api/root";
 import {
   FormControl,
   FormField,
@@ -20,9 +18,9 @@ import "@blocknote/shadcn/style.css";
 import "@blocknote/core/fonts/inter.css";
 import { useUppy } from "~/hooks/use-uppy";
 import dynamic from "next/dynamic";
-import { useUppyState } from "@uppy/react";
 import MapFormField from "./map-form-field";
 import RootFormMessage from "../form/root-form-message";
+import type { RouterInputs } from "~/trpc/react";
 
 const MarkdownEditor = dynamic(() => import("./markdown-editor"), {
   ssr: false,
@@ -33,8 +31,8 @@ export default function RecipeForm({
   ...props
 }: React.ComponentProps<"form">) {
   const form = useFormContext<
-    | inferRouterInputs<AppRouter>["recipe"]["create"]
-    | inferRouterInputs<AppRouter>["recipe"]["edit"]
+    | RouterInputs["recipe"]["create"]
+    | RouterInputs["recipe"]["edit"]
   >();
   console.log(form);
   const { uppy } = useUppy();

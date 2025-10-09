@@ -18,6 +18,7 @@ const server = new Server({
     }
     return upload;
   },
+  respectForwardedHeaders: true,
   datastore:
     env.AWS_BUCKET != null
       ? new S3Store({

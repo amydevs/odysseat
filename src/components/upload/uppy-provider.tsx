@@ -11,7 +11,14 @@ export default function UppyProvider({
   children?: React.ReactNode;
 }) {
   const [uppy] = React.useState(() =>
-    new Uppy().use(Tus, { endpoint: "/api/upload" }),
+    new Uppy({
+      restrictions: {
+        allowedFileTypes: ["image/*"],
+      }
+    })
+      .use(Tus, {
+        endpoint: "/api/upload",
+      }),
   );
   return <UppyContextProvider uppy={uppy}>{children}</UppyContextProvider>;
 }

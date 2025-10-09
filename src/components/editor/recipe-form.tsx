@@ -70,6 +70,7 @@ export default function RecipeForm({
                   <div className="flex items-center gap-2">
                     <Input
                       type="file"
+                      accept="image/*"
                       onChange={async (e) => {
                         uppy!.cancelAll();
                         const file = e.currentTarget.files?.[0];

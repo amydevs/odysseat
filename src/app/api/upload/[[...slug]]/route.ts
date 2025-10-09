@@ -7,6 +7,7 @@ import { auth } from "~/auth/server";
 
 const server = new Server({
   path: "/api/upload",
+  maxSize: 10 * 1024 * 1024,
   onUploadCreate: async (req, upload) => {
     const session = await auth.api.getSession({ headers: req.headers });
     if (session?.user == null) {

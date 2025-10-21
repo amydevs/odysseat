@@ -13,8 +13,7 @@ import RecipeMarker from "~/components/map/recipe-marker";
 import ExtendedMap from "~/components/map/extended-map";
 import { authClient } from "~/auth/client";
 import { useEffect } from "react";
-import { Textarea } from "~/components/ui/textarea";
-import { Rating, RatingButton } from '~/components/ui/shadcn-io/rating';
+import ReviewSection from "~/components/recipe/review-section";
 
 export default function StaticRecipe({
   recipe,
@@ -27,9 +26,10 @@ export default function StaticRecipe({
 }) {
   const [isMapOpen, setIsMapOpen] = React.useState(false);
   const session = authClient.useSession();
+  const isAuth = session.data?.user != null;
   useEffect(() => {
   document.title = recipe.title;
-}, []);
+}, [recipe.title]);
   return (
     <div className={cn("flex justify-center", className)}>
       <div className="flex w-full max-w-full flex-col space-y-3 p-3 lg:max-w-7xl">
@@ -50,20 +50,7 @@ export default function StaticRecipe({
         <div
           className={cn(session.data?.user.id == recipe.userId && "hidden")}
         >
-          <div className="h-1 bg-muted-foreground rounded-full" />
-          <div className="text-2xl font-bold pt-5"> Review </div>
-            <Textarea />
-          <div className="flex w-full justify-around pt-4">
-              <Rating defaultValue={0}>
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <RatingButton key={index} />
-                ))}
-              </Rating>
-              <div /><div />
-            <Button className="w-100">
-              Submit Review
-            </Button>
-          </div>
+          <ReviewSection recipeId={recipe.id} isAuth={isAuth} />
         </div>
       </div>
       <div className="lg:max-h-screen-minus-navbar fixed right-0 bottom-0 left-0 lg:sticky lg:top-[var(--navbar-height)] lg:bottom-auto">

@@ -40,3 +40,15 @@ export const zRecipeEdit = createUpdateSchema(recipe, {
 })
   .omit({ userId: true })
   .and(z.object({ id: z.number() }));
+
+export const zCommentCreate = z.object({
+  recipeId: z.number(),
+  content: z.string().min(1, "Review content cannot be empty"),
+  rating: z.number().min(1, "Rating must be at least 1").max(5, "Rating cannot exceed 5"),
+});
+
+export const zCommentEdit = z.object({
+  id: z.number(),
+  content: z.string().min(1).optional(),
+  rating: z.number().min(1).max(5).optional(),
+});

@@ -51,6 +51,7 @@ export const comment = createTable(
       .notNull()
       .references(() => recipe.id),
     content: d.text().notNull(),
+    rating: d.integer().notNull(),
     createdAt: d
       .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`) // Could be changed to new Date() to be handled by JS but shouldn't matter

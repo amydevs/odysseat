@@ -86,12 +86,6 @@ stages:
         dockerfile: $(dockerfilePath)
         tags: |
           $(tag)
-    - script: |
-        mkdir -p $(Pipeline.Workspace)/docker
-        docker save -o $(Pipeline.Workspace)/docker/cache.tar $(imageRepository):$(tag)
-        docker load -i $(Pipeline.Workspace)/docker/cache.tar
-      displayName: Docker save
-      condition: and(not(canceled()), not(failed()), ne(variables.CACHE_RESTORED, 'true'))
     - task: Docker@2
       displayName: Push docker image
       inputs:
@@ -100,6 +94,12 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+    - script: |
+        mkdir -p $(Pipeline.Workspace)/docker
+        docker save -o $(Pipeline.Workspace)/docker/cache.tar $(imageRepository):$(tag)
+        docker load -i $(Pipeline.Workspace)/docker/cache.tar
+      displayName: Docker save
+      condition: and(not(canceled()), not(failed()), ne(variables.CACHE_RESTORED, 'true'))
 - stage: Deploy
   displayName: Deploy stage
   jobs:

@@ -1,0 +1,75 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+- group: production
+- name: npm_config_cache
+  value: $(Pipeline.Workspace)/.npm
+- name: dockerRegistryServiceConnection
+  value: '6379d5f6-0d87-46f7-938c-85dc63546e12'
+- name: imageRepository
+  value: 'odysseat'
+- name: containerRegistry
+  value: 'odysseat.azurecr.io'
+- name: dockerfilePath
+  value: '$(Build.SourcesDirectory)/Dockerfile'
+- name: tag
+  value: '$(Build.BuildId)'
+- name: vmImageName
+  value: 'ubuntu-latest'
+
+stages:
+- stage: Test
+  displayName: Test stage
+  jobs:
+    - job: Test
+      steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '24.x'
+        displayName: 'Install Node.js'
+
+      - task: Cache@2
+        inputs:
+          key: 'npm | "$(Agent.OS)" | package-lock.json'
+          restoreKeys: |
+            npm | "$(Agent.OS)"
+          path: $(npm_config_cache)
+        displayName: Cache npm
+
+      - script: |
+          npm ci
+          npm run test -- --run --reporter=default --reporter=junit --outputFile=reports/junit.xml
+        displayName: 'npm install and test'
+        env:
+          SKIP_ENV_VALIDATION: true
+
+      - task: PublishTestResults@2
+        displayName: 'supply npm test results to pipelines'
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFiles: 'reports/junit.xml'
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)

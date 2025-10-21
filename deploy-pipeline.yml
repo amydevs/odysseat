@@ -61,13 +61,23 @@ stages:
         inputs:
           testResultsFiles: 'reports/junit.xml'
 - stage: Build
-  displayName: Build and push stage
+  displayName: Build stage
   jobs:
   - job: Build
     displayName: Build
     pool:
       vmImage: $(vmImageName)
     steps:
+    - task: Cache@2
+      displayName: Cache task
+      inputs:
+        key: 'docker | "$(Agent.OS)" | cache'        ## A unique identifier for the cache
+        path: $(Pipeline.Workspace)/docker           ## Path of the folder or file that you want to cache
+        cacheHitVar: CACHE_RESTORED                  ## Variable to set to 'true' when the cache is restored
+    - script: |
+        docker load -i $(Pipeline.Workspace)/docker/cache.tar
+      displayName: Docker restore
+      condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:
@@ -77,11 +87,16 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+    - script: |
+        mkdir -p $(Pipeline.Workspace)/docker
+        docker save -o $(Pipeline.Workspace)/docker/cache.tar $(repository):$(tag)
+      displayName: Docker save
+      condition: and(not(canceled()), not(failed()), ne(variables.CACHE_RESTORED, 'true'))
 - stage: Deploy
   displayName: Deploy stage
   jobs:
-  - job: Build
-    displayName: Build
+  - job: Deploy
+    displayName: Deploy
     steps:
     - task: AzureWebAppContainer@1
       inputs:

@@ -68,16 +68,16 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    # - task: Cache@2
-    #   displayName: Cache task
-    #   inputs:
-    #     key: 'docker | "$(Agent.OS)" | cache'        ## A unique identifier for the cache
-    #     path: $(Pipeline.Workspace)/docker           ## Path of the folder or file that you want to cache
-    #     cacheHitVar: CACHE_RESTORED                  ## Variable to set to 'true' when the cache is restored
-    # - script: |
-    #     docker load -i $(Pipeline.Workspace)/docker/cache.tar
-    #   displayName: Docker restore
-    #   condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
+    - task: Cache@2
+      displayName: Cache task
+      inputs:
+        key: 'docker | "$(Agent.OS)" | cache'        ## A unique identifier for the cache
+        path: $(Pipeline.Workspace)/docker           ## Path of the folder or file that you want to cache
+        cacheHitVar: CACHE_RESTORED                  ## Variable to set to 'true' when the cache is restored
+    - script: |
+        docker load -i $(Pipeline.Workspace)/docker/cache.tar
+      displayName: Docker restore
+      condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
     - task: Docker@2
       displayName: Build docker image
       inputs:
@@ -89,6 +89,7 @@ stages:
     - script: |
         mkdir -p $(Pipeline.Workspace)/docker
         docker save -o $(Pipeline.Workspace)/docker/cache.tar $(imageRepository):$(tag)
+        docker load -i $(Pipeline.Workspace)/docker/cache.tar
       displayName: Docker save
       condition: and(not(canceled()), not(failed()), ne(variables.CACHE_RESTORED, 'true'))
     - task: Docker@2
@@ -96,7 +97,6 @@ stages:
       inputs:
         command: push
         repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)

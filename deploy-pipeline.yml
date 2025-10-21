@@ -81,25 +81,18 @@ stages:
     - task: Docker@2
       displayName: Build docker image
       inputs:
-        command: build
+        command: buildAndPush
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+          latest
     - script: |
         mkdir -p $(Pipeline.Workspace)/docker
-        docker save -o $(Pipeline.Workspace)/docker/cache.tar $(containerRegistry)/$(imageRepository):$(tag)
+        docker save -o $(Pipeline.Workspace)/docker/cache.tar $(containerRegistry)/$(imageRepository):latest
       displayName: Save docker image
       condition: and(not(canceled()), not(failed()), ne(variables.CACHE_RESTORED, 'true'))
-    - task: Docker@2
-      displayName: Push docker image
-      inputs:
-        command: push
-        repository: $(imageRepository)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
 
 - stage: Deploy
   displayName: Deploy stage

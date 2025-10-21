@@ -69,31 +69,25 @@ stages:
       vmImage: $(vmImageName)
     steps:
     - task: Cache@2
-      displayName: Cache task
+      displayName: Cache Docker
       inputs:
-        key: 'docker1 | "$(Agent.OS)" | cache'        ## A unique identifier for the cache
-        path: $(Pipeline.Workspace)/docker           ## Path of the folder or file that you want to cache
-        cacheHitVar: CACHE_RESTORED                  ## Variable to set to 'true' when the cache is restored
+        key: 'docker | "$(Agent.OS)" | $(imageRepository) | $(dockerfilePath)'
+        path: $(Pipeline.Workspace)/docker_image_cache
+        restoreKeys: |
+          docker | "$(Agent.OS)" | $(imageRepository)
     - script: |
-        docker load -i $(Pipeline.Workspace)/docker/cache.tar
-      displayName: Restore docker cache
-      condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
-    - task: Docker@2
+        docker buildx create --name builder --driver docker-container --use
+        docker buildx build \
+          --tag $(containerRegistry)/$(imageRepository):$(tag) \
+          --tag $(containerRegistry)/$(imageRepository):latest \
+          --cache-from=type=local,src=$(Pipeline.Workspace)/docker_image_cache \
+          --cache-to=type=local,dest=$(Pipeline.Workspace)/docker_image_cache,mode=max \
+          --file $(dockerfilePath) \
+          --output=type=docker \
+          .
       displayName: Build docker image
-      inputs:
-        command: build
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        arguments: --cache-from $(containerRegistry)/$(imageRepository):latest
-        tags: |
-          latest
-          $(tag)
-    - script: |
-        mkdir -p $(Pipeline.Workspace)/docker
-        docker save -o $(Pipeline.Workspace)/docker/cache.tar $(containerRegistry)/$(imageRepository):latest
-      displayName: Save docker image
-      condition: and(not(canceled()), not(failed()), ne(variables.CACHE_RESTORED, 'true'))
+      env:
+        DOCKER_BUILDKIT: 1
     - task: Docker@2
       displayName: Push docker image
       inputs:

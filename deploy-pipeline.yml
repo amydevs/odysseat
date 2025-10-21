@@ -14,6 +14,8 @@ variables:
   value: $(Pipeline.Workspace)/.npm
 - name: azureSubscription
   value: 'Azure for Students(66144f75-7a2e-4bf5-a595-3c50340d2c18)'
+- name: appName
+  value: 'odysseat'
 - name: dockerRegistryServiceConnection
   value: '6379d5f6-0d87-46f7-938c-85dc63546e12'
 - name: imageRepository

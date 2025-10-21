@@ -34,7 +34,6 @@ export default function RecipeForm({
     | RouterInputs["recipe"]["create"]
     | RouterInputs["recipe"]["edit"]
   >();
-  console.log(form);
   const { uppy } = useUppy();
   const [currentUploadId, setCurrentUploadId] = React.useState<string | null>(
     null,

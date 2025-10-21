@@ -1,6 +1,4 @@
 "use client";
-import type { inferRouterOutputs } from "@trpc/server";
-import type { AppRouter } from "~/server/api/root";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "@blocknote/shadcn/style.css";
 import "@blocknote/core/fonts/inter.css";
@@ -12,46 +10,106 @@ import { cn } from "~/lib/utils";
 import RecipeMarker from "~/components/map/recipe-marker";
 import ExtendedMap from "~/components/map/extended-map";
 import { authClient } from "~/auth/client";
-import { useEffect } from "react";
-import ReviewSection from "~/components/recipe/review-section";
+import { api } from "~/trpc/react";
+import { Rating, RatingButton } from "~/components/ui/shadcn-io/rating";
+import type * as z from "zod/v4";
+import { Form, useForm } from "~/components/ui/form";
+import { zCommentCreate } from "~/server/db/validators";
+import CommentForm from "~/components/comment/comment-form";
+import { Separator } from "~/components/ui/separator";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
+import { Skeleton } from "~/components/ui/skeleton";
 
 export default function StaticRecipe({
-  recipe,
+  recipeId,
   recipeContentHtml,
   className,
 }: {
-  recipe: inferRouterOutputs<AppRouter>["recipe"]["getById"];
+  recipeId: number;
   recipeContentHtml: string;
   className?: string;
 }) {
+  const utils = api.useUtils();
   const [isMapOpen, setIsMapOpen] = React.useState(false);
   const session = authClient.useSession();
-  const isAuth = session.data?.user != null;
-  useEffect(() => {
-  document.title = recipe.title;
-}, [recipe.title]);
+  const [recipe] = api.recipe.getById.useSuspenseQuery({ id: recipeId });
+  const commentsQuery = api.comment.getByRecipeId.useQuery({ recipeId });
+  const commentCreateMutation = api.comment.create.useMutation({
+    onSuccess: async () => {
+      await utils.comment.getByRecipeId.invalidate({ recipeId: recipeId });
+    }
+  });
+  
+  const form = useForm({
+    schema: zCommentCreate,
+    defaultValues: {
+      recipeId,
+    }
+  });
+
+  const onSubmit = async (data: z.infer<typeof zCommentCreate>) => {
+    try {
+      await commentCreateMutation.mutateAsync(data);
+      form.reset({
+        recipeId,
+        content: "",
+        rating: 0,
+      });
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        form.setError("root", { message: e.message });
+      }
+    }
+  };
+
   return (
     <div className={cn("flex justify-center", className)}>
-      <div className="flex w-full max-w-full flex-col space-y-3 p-3 lg:max-w-7xl">
-        <div>
-          <h1 className="text-4xl font-bold lg:text-7xl">{recipe.title}</h1>
+      <div className="flex w-full max-w-full flex-col space-y-9 p-3 lg:max-w-7xl">
+        <div className="space-y-3 min-h-screen-minus-navbar">
+          <div>
+            <h1 className="text-4xl font-bold lg:text-7xl">{recipe.title}</h1>
+          </div>
+          <div
+            className="flex-1"
+            dangerouslySetInnerHTML={{ __html: recipeContentHtml }}
+          />
+          <div
+            className={cn(session.data?.user.id !== recipe.userId && "hidden")}
+          >
+            <Button className="w-full" asChild>
+              <Link href={`/recipe/${recipe.id}/edit`}>Edit</Link>
+            </Button>
+          </div>
         </div>
-        <div
-          className="flex-1"
-          dangerouslySetInnerHTML={{ __html: recipeContentHtml }}
-        />
-        <div
-          className={cn(session.data?.user.id !== recipe.userId && "hidden")}
-        >
-          <Button className="w-full" asChild>
-            <Link href={`/recipe/${recipe.id}/edit`}>Edit</Link>
-          </Button>
+        <Separator className={cn(session.data?.user.id === recipe.userId && "hidden")} />
+        <div className={cn(session.data?.user.id === recipe.userId && "hidden")}>
+          <Form {...form}>
+            <CommentForm onSubmit={form.handleSubmit(onSubmit, console.log)} disabled={session.data == null} />
+          </Form>
         </div>
-        <div
-          className={cn(session.data?.user.id == recipe.userId && "hidden")}
-        >
-          <ReviewSection recipeId={recipe.id} isAuth={isAuth} />
+        <Separator />
+        <div className="space-y-3">
+          {commentsQuery.data?.map((comment) => (
+            <Card key={comment.id}>
+              <CardHeader className="flex items-center justify-between">
+                <Rating value={comment.rating} readOnly>
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <RatingButton key={index} />
+                  ))}
+                </Rating>
+                <span className="text-sm text-muted-foreground">
+                  {new Date(comment.createdAt).toLocaleDateString()}
+                </span>
+              </CardHeader>
+              <CardContent>
+                <p className="whitespace-pre-wrap">{comment.content}</p>
+              </CardContent>
+            </Card>
+          ))}
+          { commentsQuery.data?.length === 0 && "No reviews found! :(" }
+          { commentsQuery.isFetching && <Skeleton className="h-32" /> }
         </div>
+        
       </div>
       <div className="lg:max-h-screen-minus-navbar fixed right-0 bottom-0 left-0 lg:sticky lg:top-[var(--navbar-height)] lg:bottom-auto">
         <div className="absolute -top-24 right-3 h-12 lg:hidden">

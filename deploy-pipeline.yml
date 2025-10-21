@@ -12,6 +12,8 @@ variables:
 - group: production
 - name: npm_config_cache
   value: $(Pipeline.Workspace)/.npm
+- name: azureSubscription
+  value: 'Azure for Students(66144f75-7a2e-4bf5-a595-3c50340d2c18)'
 - name: dockerRegistryServiceConnection
   value: '6379d5f6-0d87-46f7-938c-85dc63546e12'
 - name: imageRepository
@@ -73,3 +75,14 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+- stage: Deploy
+  displayName: Deploy stage
+  jobs:
+  - job: Build
+    displayName: Build
+    steps:
+    - task: AzureWebAppContainer@1
+      inputs:
+        azureSubscription: $(azureSubscription)
+        appName: $(appName)
+        containers: $(containerRegistry)/$(imageRepository):$(tag)

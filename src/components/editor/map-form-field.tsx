@@ -35,6 +35,8 @@ export default function MapFormField(
                 <RecipeMarker
                   key={form.getValues().position?.join("")}
                   recipe={{
+                    id: 0,
+                    title: form.getValues().title!,
                     position: form.getValues().position!,
                     thumbnailUrl: form.getValues().thumbnailUrl ?? null,
                   }}

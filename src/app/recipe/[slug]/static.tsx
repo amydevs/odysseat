@@ -128,7 +128,7 @@ export default function StaticRecipe({
           )}
         >
           <ExtendedMap
-            style={{ width: "36rem", height: "100%" }}
+            style={{ height: "100%" }}
             longitude={recipe.position[0]}
             latitude={recipe.position[1]}
             initialViewState={{

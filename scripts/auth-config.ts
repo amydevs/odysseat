@@ -5,4 +5,5 @@ export const auth = initAuth({
   baseUrl: "",
   productionUrl: "",
   secret: env.AUTH_SECRET,
+  resendApiKey: undefined,
 });

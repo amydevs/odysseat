@@ -110,14 +110,13 @@ stages:
   - job: Deploy
     displayName: Deploy
     steps:
-    - checkout: none
     - task: AzureWebAppContainer@1
       displayName: Deploy to Azure
       inputs:
         azureSubscription: $(azureSubscription)
         appName: $(appName)
         containers: $(containerRegistry)/$(imageRepository):$(tag)
-        appSettings: -AUTH_SECRET $(AUTH_SECRET) -DATABASE_URL $(DATABASE_URL) -NEXT_PUBLIC_MAP_STYLE $(NEXT_PUBLIC_MAP_STYLE) -AWS_BUCKET $(AWS_BUCKET) -AWS_REGION $(AWS_REGION) -AWS_ENDPOINT_URL $(AWS_ENDPOINT_URL) -AWS_ACCESS_KEY_ID $(AWS_ACCESS_KEY_ID) -AWS_SECRET_ACCESS_KEY $(AWS_SECRET_ACCESS_KEY)
+        appSettings: -AUTH_SECRET $(AUTH_SECRET) -DATABASE_URL $(DATABASE_URL) -NEXT_PUBLIC_MAP_STYLE $(NEXT_PUBLIC_MAP_STYLE) -AWS_BUCKET $(AWS_BUCKET) -AWS_REGION $(AWS_REGION) -AWS_ENDPOINT_URL $(AWS_ENDPOINT_URL) -AWS_ACCESS_KEY_ID $(AWS_ACCESS_KEY_ID) -AWS_SECRET_ACCESS_KEY $(AWS_SECRET_ACCESS_KEY) -RESEND_API_KEY $(RESEND_API_KEY)
     - script: |
         curl -L https://fly.io/install.sh | sh
         /home/vsts/.fly/bin/flyctl secrets set AUTH_SECRET=$(AUTH_SECRET) --stage
@@ -128,6 +127,7 @@ stages:
         /home/vsts/.fly/bin/flyctl secrets set AWS_ENDPOINT_URL=$(AWS_ENDPOINT_URL) --stage
         /home/vsts/.fly/bin/flyctl secrets set AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) --stage
         /home/vsts/.fly/bin/flyctl secrets set AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) --stage
+        /home/vsts/.fly/bin/flyctl secrets set RESEND_API_KEY=$(RESEND_API_KEY) --stage
         /home/vsts/.fly/bin/flyctl deploy --detach --image registry.fly.io/$(imageRepository):$(tag)
       displayName: Deploy to Fly
       env:

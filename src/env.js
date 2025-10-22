@@ -22,6 +22,7 @@ export const env = createEnv({
     AWS_ENDPOINT_URL: z.string().optional(),
     AWS_ACCESS_KEY_ID: z.string().optional(),
     AWS_SECRET_ACCESS_KEY: z.string().optional(),
+    RESEND_API_KEY: z.string().optional(),
   },
 
   /**
@@ -49,6 +50,7 @@ export const env = createEnv({
     AWS_ENDPOINT_URL: process.env.AWS_ENDPOINT_URL,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

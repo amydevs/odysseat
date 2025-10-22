@@ -11,8 +11,9 @@ export function initAuth(options: {
   baseUrl: string;
   productionUrl: string;
   secret: string | undefined;
+  resendApiKey: string | undefined;
 }) {
-  const resend = new Resend("re_CcWzkhB1_N11WRS8fjbyCHsfsitXWPvKZ");
+  const resend = new Resend(options.resendApiKey);
   const config = {
     database: drizzleAdapter(db, {
       provider: "pg",
@@ -23,7 +24,7 @@ export function initAuth(options: {
     secret: options.secret,
     emailAndPassword: {
       enabled: true,
-      sendResetPassword: async ({user, url, token}, request) => {
+      sendResetPassword: async ({ user, url, token }, request) => {
         try {
           const { data, error } = await resend.emails.send({
             from: "onboarding@resend.dev",

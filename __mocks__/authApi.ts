@@ -5,6 +5,7 @@ export const auth = initAuth({
   baseUrl: "",
   productionUrl: "",
   secret: "",
+  resendApiKey: undefined,
 });
 
 type AuthApi = typeof auth.api;

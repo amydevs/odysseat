@@ -13,6 +13,7 @@ export const auth = initAuth({
   baseUrl,
   productionUrl: `https://turbo.t3.gg`,
   secret: env.AUTH_SECRET,
+  resendApiKey: env.RESEND_API_KEY,
 });
 
 export const getSession = cache(async () =>

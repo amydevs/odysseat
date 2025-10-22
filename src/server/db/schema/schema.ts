@@ -13,7 +13,7 @@ export const recipe = createTable(
     userId: d
       .text()
       .notNull()
-      .references(() => user.id),
+      .references(() => user.id, { onDelete: "cascade" }),
     title: d.text().notNull(),
     content: d.text().notNull(),
     thumbnailUrl: d.varchar({ length: 1024 }),
@@ -45,11 +45,11 @@ export const comment = createTable(
     userId: d
       .text()
       .notNull()
-      .references(() => user.id),
+      .references(() => user.id, { onDelete: "cascade" }),
     recipeId: d
       .integer()
       .notNull()
-      .references(() => recipe.id),
+      .references(() => recipe.id, { onDelete: "cascade" }),
     content: d.text().notNull(),
     rating: d.integer().notNull(),
     createdAt: d

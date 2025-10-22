@@ -28,8 +28,11 @@ const MarkdownEditor = dynamic(() => import("./markdown-editor"), {
 
 export default function RecipeForm({
   className,
+  onDelete,
   ...props
-}: React.ComponentProps<"form">) {
+}: React.ComponentProps<"form"> & {
+  onDelete?: () => void;
+}) {
   const form = useFormContext<
     RouterInputs["recipe"]["create"] | RouterInputs["recipe"]["edit"]
   >();
@@ -127,7 +130,19 @@ export default function RecipeForm({
           )}
         />
 
-        <Button type="submit">Save</Button>
+        <div className="flex gap-1">
+          <Button type="submit" className="flex-1">
+            Edit
+          </Button>
+          <Button
+            type="button"
+            onClick={onDelete}
+            variant={"destructive"}
+            className={cn("flex-1 cursor-pointer", !onDelete && "hidden")}
+          >
+            Delete
+          </Button>
+        </div>
         <RootFormMessage />
       </div>
       <div className="lg:max-h-screen-minus-navbar fixed right-0 bottom-0 left-0 lg:sticky lg:top-[var(--navbar-height)] lg:bottom-auto">

@@ -24,6 +24,7 @@ import {
   CardHeader,
 } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
+import { useRouter } from "next/navigation";
 
 export default function StaticRecipe({
   recipeId,
@@ -34,10 +35,12 @@ export default function StaticRecipe({
   recipeContentHtml: string;
   className?: string;
 }) {
+  const router = useRouter();
   const utils = api.useUtils();
   const [isMapOpen, setIsMapOpen] = React.useState(false);
   const session = authClient.useSession();
   const [recipe] = api.recipe.getById.useSuspenseQuery({ id: recipeId });
+  const recipeDeleteMutation = api.recipe.delete.useMutation();
   const commentsQuery = api.comment.getByRecipeId.useQuery({ recipeId });
   const commentCreateMutation = api.comment.create.useMutation({
     onSuccess: async () => {
@@ -67,6 +70,11 @@ export default function StaticRecipe({
     }
   };
 
+  const onDelete = async () => {
+    await recipeDeleteMutation.mutateAsync({ id: recipe.id });
+    router.push("/");
+  };
+
   return (
     <div className={cn("flex justify-center", className)}>
       <div className="flex w-full max-w-full flex-col space-y-9 p-3 lg:max-w-7xl">
@@ -79,10 +87,20 @@ export default function StaticRecipe({
             dangerouslySetInnerHTML={{ __html: recipeContentHtml }}
           />
           <div
-            className={cn(session.data?.user.id !== recipe.userId && "hidden")}
+            className={cn(
+              "flex w-full gap-1",
+              session.data?.user.id !== recipe.userId && "hidden",
+            )}
           >
-            <Button className="w-full" asChild>
+            <Button className="flex-1" asChild>
               <Link href={`/recipe/${recipe.id}/edit`}>Edit</Link>
+            </Button>
+            <Button
+              onClick={onDelete}
+              variant={"destructive"}
+              className="flex-1 cursor-pointer"
+            >
+              Delete
             </Button>
           </div>
         </div>
@@ -130,6 +148,7 @@ export default function StaticRecipe({
       <div className="lg:max-h-screen-minus-navbar fixed right-0 bottom-0 left-0 lg:sticky lg:top-[var(--navbar-height)] lg:bottom-auto">
         <div className="absolute -top-24 right-3 h-12 lg:hidden">
           <Button
+            className="cursor-pointer"
             type="button"
             size="icon"
             onClick={() => setIsMapOpen(!isMapOpen)}

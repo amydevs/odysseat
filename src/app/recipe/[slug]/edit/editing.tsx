@@ -11,6 +11,7 @@ import "@blocknote/shadcn/style.css";
 import "@blocknote/core/fonts/inter.css";
 import RecipeForm from "~/components/editor/recipe-form";
 import { zRecipeEdit } from "~/server/db/validators";
+import { useRouter } from "next/navigation";
 
 export default function EditingRecipe({
   value,
@@ -19,7 +20,9 @@ export default function EditingRecipe({
   value: RouterOutputs["recipe"]["getById"];
   className?: string;
 }) {
+  const router = useRouter();
   const recipeUpdateMutation = api.recipe.edit.useMutation();
+  const recipeDeleteMutation = api.recipe.delete.useMutation();
   const form = useForm({
     schema: zRecipeEdit,
     defaultValues: value,
@@ -33,11 +36,22 @@ export default function EditingRecipe({
       }
     }
   };
+  const onDelete = async () => {
+    try {
+      await recipeDeleteMutation.mutateAsync({ id: value.id });
+      router.push("/");
+    } catch (e: unknown) {
+      if (e instanceof TRPCError) {
+        form.setError("root", { message: e.message });
+      }
+    }
+  };
   return (
     <Form {...form}>
       <RecipeForm
         className={cn("flex justify-center", className)}
         onSubmit={form.handleSubmit(onSubmit)}
+        onDelete={onDelete}
       />
     </Form>
   );

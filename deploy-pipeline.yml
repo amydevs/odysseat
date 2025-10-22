@@ -84,8 +84,6 @@ stages:
           --cache-to=type=local,dest=$(Pipeline.Workspace)/docker_image_cache,mode=max,compression=zstd \
           --file $(dockerfilePath) \
           --output=type=docker \
-          --sbom=true \
-          --attest type=provenance \
           .
       displayName: Build docker image
       env:

@@ -2,6 +2,7 @@ import type { BetterAuthOptions } from "better-auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { oAuthProxy, username } from "better-auth/plugins";
+import { Resend } from 'resend';
 
 import * as authSchema from "~/server/db/schema/auth-schema";
 import { db } from "~/server/db";
@@ -11,6 +12,7 @@ export function initAuth(options: {
   productionUrl: string;
   secret: string | undefined;
 }) {
+  const resend = new Resend("re_CcWzkhB1_N11WRS8fjbyCHsfsitXWPvKZ");
   const config = {
     database: drizzleAdapter(db, {
       provider: "pg",
@@ -21,6 +23,30 @@ export function initAuth(options: {
     secret: options.secret,
     emailAndPassword: {
       enabled: true,
+      sendResetPassword: async ({user, url, token}, request) => {
+        try {
+          const { data, error } = await resend.emails.send({
+            from: "onboarding@resend.dev",
+            to: user.email,
+            subject: "Reset your password - Odysseat",
+            html: `
+              <h2>Password Reset Request</h2>
+              <p>Click the link below to reset your password:</p>
+              <a href="${url}">Reset Password</a>
+            `,
+          });
+
+          if (error) {
+            console.error('Resend error:', error);
+            throw new Error(`Failed to send email: ${error.message}`);
+          }
+
+          console.log('Email sent successfully:', data);
+        } catch (error) {
+          console.error('Error sending reset email:', error);
+          throw error; // Re-throw to let BetterAuth handle it
+        }
+      },
     },
     plugins: [
       username(),

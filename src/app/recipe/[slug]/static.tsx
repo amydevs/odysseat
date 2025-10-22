@@ -77,8 +77,8 @@ export default function StaticRecipe({
 
   return (
     <div className={cn("flex justify-center", className)}>
-      <div className="flex w-full max-w-full flex-col space-y-9 p-3 lg:max-w-7xl">
-        <div className="min-h-screen-minus-navbar space-y-3">
+      <div className="flex w-full max-w-full flex-col space-y-9 px-3 lg:max-w-7xl">
+        <div className="min-h-screen-minus-navbar flex flex-col gap-3 py-3">
           <div>
             <h1 className="text-4xl font-bold lg:text-7xl">{recipe.title}</h1>
           </div>
@@ -118,7 +118,7 @@ export default function StaticRecipe({
           </Form>
         </div>
         <Separator />
-        <div className="space-y-3">
+        <div className="space-y-3 py-3">
           {commentsQuery.data?.map((comment) => (
             <Card key={comment.id}>
               <CardHeader className="flex items-center justify-between">

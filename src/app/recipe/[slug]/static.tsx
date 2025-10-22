@@ -17,7 +17,7 @@ import { Form, useForm } from "~/components/ui/form";
 import { zCommentCreate } from "~/server/db/validators";
 import CommentForm from "~/components/comment/comment-form";
 import { Separator } from "~/components/ui/separator";
-import { Card, CardContent, CardHeader } from "~/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
 
 export default function StaticRecipe({
@@ -111,6 +111,9 @@ export default function StaticRecipe({
               <CardContent>
                 <p className="whitespace-pre-wrap">{comment.content}</p>
               </CardContent>
+              <CardFooter>
+                <p className="text-muted-foreground text-sm">{comment.userName}</p>
+              </CardFooter>
             </Card>
           ))}
           {commentsQuery.data?.length === 0 && "No reviews found! :("}

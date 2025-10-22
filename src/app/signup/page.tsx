@@ -2,8 +2,6 @@
 import Link from "next/link";
 import { z } from "zod/v4";
 import { authClient } from "~/auth/client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import {
   Form,
   FormField,
@@ -12,6 +10,7 @@ import {
   FormControl,
   FormDescription,
   FormMessage,
+  useForm,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
@@ -31,7 +30,7 @@ const formSchema = z.object({
 export default function SignupPage() {
   const router = useRouter();
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    schema: formSchema,
     defaultValues: {
       name: "",
       username: "",

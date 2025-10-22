@@ -1,9 +1,7 @@
 "use client";
-import Link from "next/link";
 import { z } from "zod/v4";
 import { authClient } from "~/auth/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import {
   Form,
   FormField,
@@ -12,42 +10,24 @@ import {
   FormControl,
   FormDescription,
   FormMessage,
+  useForm,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { useSearchParams } from "next/navigation";
-import RootFormMessage from "~/components/form/root-form-message";
 
 const formSchema = z.object({
-  password: z.string(),
+  email: z.email(),
 });
 
-export default function ResetPassword() {
-  const form = useForm({resolver: zodResolver(formSchema)});
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
-  if (!token) {
-    return (<h1>umm no token idk</h1>);
-  }
+export default function ForgotPassword() {
+  const form = useForm({ schema: formSchema });
   const onSubmit = async (d: z.infer<typeof formSchema>) => {
-    try {
-      const { data , error } = await authClient.resetPassword({
-        newPassword: d.password,
-        token,
-      });
-      if (error) {
-        console.log("Failed to reset password: ", error);
-      }
-      else {
-        alert("Your password has been changed successfully!");
-      }
-    }
-    catch (error) {
-      console.log("Error: ", error);
-    }
-    
-  };
-
+    await authClient.requestPasswordReset({
+      email: d.email,
+      redirectTo: window.location.origin + "/reset-password",
+    });
+    alert("A password reset email has been sent");
+  }
 
   return (
     <main className="h-screen-minus-navbar flex items-center justify-center">
@@ -58,10 +38,10 @@ export default function ResetPassword() {
         >
           <FormField
             control={form.control}
-            name="password"
+            name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="pl-1">New password</FormLabel>
+                <FormLabel className="pl-1">Email</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -70,8 +50,7 @@ export default function ResetPassword() {
               </FormItem>
             )}
           />
-          <Button type="submit">Reset Password</Button>
-          <RootFormMessage />
+          <Button type="submit">Send Email</Button>
         </form>
       </Form>
     </main>

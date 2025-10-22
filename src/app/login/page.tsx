@@ -4,7 +4,6 @@ import Link from "next/link";
 import { z } from "zod/v4";
 import { authClient } from "~/auth/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import {
   Form,
   FormField,
@@ -13,6 +12,7 @@ import {
   FormControl,
   FormDescription,
   FormMessage,
+  useForm,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
@@ -30,7 +30,7 @@ const formSchema = z.object({
 export default function LoginPage() {
   const router = useRouter();
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    schema: formSchema,
     defaultValues: {
       email: "",
       password: "",
@@ -87,7 +87,7 @@ export default function LoginPage() {
               </FormItem>
             )}
           />
-          <Link href="../forgotPassword" style={{fontSize: "14px", textDecoration: "underline", marginLeft: "4px"}}>Forgot Password?</Link>
+          <Link href="/forgot-password" style={{fontSize: "14px", textDecoration: "underline", marginLeft: "4px"}}>Forgot Password?</Link>
           <FormField
             control={form.control}
             name="rememberMe"

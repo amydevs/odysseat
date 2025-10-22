@@ -81,7 +81,7 @@ stages:
           --tag $(containerRegistry)/$(imageRepository):$(tag) \
           --tag $(containerRegistry)/$(imageRepository):latest \
           --cache-from=type=local,src=$(Pipeline.Workspace)/docker_image_cache \
-          --cache-to=type=local,dest=$(Pipeline.Workspace)/docker_image_cache,mode=max,compression=zstd \
+          --cache-to=type=local,dest=$(Pipeline.Workspace)/docker_image_cache,mode=max \
           --file $(dockerfilePath) \
           --output=type=docker \
           .

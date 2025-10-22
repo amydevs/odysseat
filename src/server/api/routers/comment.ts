@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import { and, eq } from "drizzle-orm";
+import { and, eq, or, sql } from "drizzle-orm";
 
 import {
   createTRPCRouter,
@@ -85,7 +85,10 @@ export const commentRouter = createTRPCRouter({
         .where(
           and(
             eq(comment.id, input.id),
-            eq(comment.userId, ctx.session.user.id),
+            or(
+              ctx.session.user.role === "admin" ? sql`TRUE` : sql`FALSE`,
+              eq(comment.userId, ctx.session.user.id),
+            ),
           ),
         )
         .returning();

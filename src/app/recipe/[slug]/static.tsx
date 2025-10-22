@@ -158,7 +158,8 @@ export default function StaticRecipe({
                 <p className="text-muted-foreground text-sm">
                   {comment.userName}
                 </p>
-                {session.data?.user.id === comment.userId && (
+                {(session.data?.user.id === comment.userId ||
+                  session.data?.user.role === "admin") && (
                   <Button
                     size="sm"
                     disabled={commentDeleteMutation.isPending}

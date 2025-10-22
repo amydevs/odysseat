@@ -32,6 +32,23 @@ export const commentRouter = createTRPCRouter({
   create: protectedProcedure
     .input(zCommentCreate)
     .mutation(async ({ ctx, input }) => {
+      const existing = await ctx.db
+        .select()
+        .from(comment)
+        .where(
+          and(
+            eq(comment.recipeId, input.recipeId),
+            eq(comment.userId, ctx.session.user.id),
+          ),
+        )
+        .limit(1);
+
+      if (existing.length > 0) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "You already have a review for this recipe. Please delete your original review first.",
+        });
+      }
       const c = await ctx.db
         .insert(comment)
         .values({

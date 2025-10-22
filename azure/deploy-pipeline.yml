@@ -97,13 +97,13 @@ stages:
         tags: |
           latest
           $(tag)
-
 - stage: Deploy
   displayName: Deploy stage
   jobs:
   - job: Deploy
     displayName: Deploy
     steps:
+    - checkout: none
     - task: AzureWebAppContainer@1
       inputs:
         azureSubscription: $(azureSubscription)

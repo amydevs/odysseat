@@ -14,10 +14,11 @@ export default function MapFormField(
   >();
   return (
     <FormField
+
       control={form.control}
       name="position"
       render={({ field }) => (
-        <FormItem {...props}>
+        <FormItem className="relative" {...props}>
           <FormControl>
             <ExtendedMap
               style={{ height: "100%" }}
@@ -44,7 +45,7 @@ export default function MapFormField(
               )}
             </ExtendedMap>
           </FormControl>
-          <FormMessage />
+          <FormMessage className="absolute inset-x-1 top-1 border bg-background p-1 rounded-md shadow" />
         </FormItem>
       )}
     />

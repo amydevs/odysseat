@@ -19,6 +19,7 @@ export default function CreatingRecipe() {
   const form = useForm({
     schema: zRecipeCreate,
     defaultValues: {
+      title: "",
       content:
         "# Ingredients\n" +
         new Array(3).map((_, i) => `- ingredient ${i + 1}`).join("\n\n") +

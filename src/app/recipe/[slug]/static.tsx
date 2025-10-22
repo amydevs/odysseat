@@ -47,11 +47,18 @@ export default function StaticRecipe({
       await utils.comment.getByRecipeId.invalidate({ recipeId: recipeId });
     },
   });
+  const commentDeleteMutation = api.comment.delete.useMutation({
+    onSuccess: async () => {
+      await utils.comment.getByRecipeId.invalidate({ recipeId });
+    },
+  });
 
   const form = useForm({
     schema: zCommentCreate,
     defaultValues: {
       recipeId,
+      content: "",
+      rating: 0,
     },
   });
 
@@ -139,10 +146,21 @@ export default function StaticRecipe({
               <CardContent>
                 <p className="whitespace-pre-wrap">{comment.content}</p>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="flex items-center justify-between">
                 <p className="text-muted-foreground text-sm">
                   {comment.userName}
                 </p>
+                {session.data?.user.id === comment.userId && (
+                  <Button
+                    size="sm"
+                    disabled={commentDeleteMutation.isPending}
+                    onClick={() =>
+                      commentDeleteMutation.mutate({ id: comment.id })
+                    }
+                  >
+                    Delete
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           ))}

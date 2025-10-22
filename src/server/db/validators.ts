@@ -26,16 +26,36 @@ export const zRecipeFilter = createSelectSchema(recipe)
   );
 
 export const zRecipeCreate = createInsertSchema(recipe, {
-  title: (schema) => schema.min(1),
-  content: (schema) => schema.min(1),
+  title: (schema) => schema.min(1, "What's in a name? That which we call a rose by any other name would smell just as sweet."),
+  content: (schema) =>
+    schema
+      .min(1, "Content cannot be empty")
+      .refine(
+        (content) => content.toLowerCase().includes("# ingredients"),
+        "Recipe must include an 'Ingredients' section"
+      )
+      .refine(
+        (content) => content.toLowerCase().includes("# steps"),
+        "Recipe must include a 'Steps' section"
+      ),
 }).omit({
   id: true,
   userId: true,
 });
 
 export const zRecipeEdit = createUpdateSchema(recipe, {
-  title: (schema) => schema.min(1),
-  content: (schema) => schema.min(1),
+  title: (schema) => schema.min(1, "What's in a name? That which we call a rose by any other name would smell just as sweet."),
+  content: (schema) =>
+    schema
+      .min(1, "Content cannot be empty")
+      .refine(
+        (content) => content.toLowerCase().includes("# ingredients"),
+        "Recipe must include an 'Ingredients' section"
+      )
+      .refine(
+        (content) => content.toLowerCase().includes("# steps"),
+        "Recipe must include a 'Steps' section"
+      ),
 })
   .omit({ userId: true })
   .and(z.object({ id: z.number() }));

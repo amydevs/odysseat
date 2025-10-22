@@ -73,6 +73,7 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.62.0",
     "react-map-gl": "^8.0.4",
+    "resend": "^6.2.2",
     "server-only": "^0.0.1",
     "sonner": "^2.0.7",
     "superjson": "^2.2.1",

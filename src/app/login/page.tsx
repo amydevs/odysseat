@@ -87,6 +87,7 @@ export default function LoginPage() {
               </FormItem>
             )}
           />
+          <Link href="../forgotPassword" style={{fontSize: "14px", textDecoration: "underline", marginLeft: "4px"}}>Forgot Password?</Link>
           <FormField
             control={form.control}
             name="rememberMe"

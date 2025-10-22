@@ -87,7 +87,6 @@ export default function LoginPage() {
               </FormItem>
             )}
           />
-          <Link href="/forgot-password" className="text-sm underline ml-1">Forgot Password?</Link>
           <FormField
             control={form.control}
             name="rememberMe"
@@ -105,6 +104,11 @@ export default function LoginPage() {
               </FormItem>
             )}
           />
+          <div className="mx-1 mb-2">
+            <Link href="/forgot-password" className="text-sm underline">
+              Forgot Password?
+            </Link>
+          </div>
           <Button type="submit">Log In</Button>
           <RootFormMessage />
         </form>

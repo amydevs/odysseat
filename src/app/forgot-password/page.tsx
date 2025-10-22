@@ -14,6 +14,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import RootFormMessage from "~/components/form/root-form-message";
 
 const formSchema = z.object({
   email: z.email(),
@@ -22,12 +23,16 @@ const formSchema = z.object({
 export default function ForgotPassword() {
   const form = useForm({ schema: formSchema });
   const onSubmit = async (d: z.infer<typeof formSchema>) => {
-    await authClient.requestPasswordReset({
+    const { error } = await authClient.requestPasswordReset({
       email: d.email,
       redirectTo: window.location.origin + "/reset-password",
     });
+    if (error) {
+      form.setError("root", { message: error.message });
+      return;
+    }
     alert("A password reset email has been sent");
-  }
+  };
 
   return (
     <main className="h-screen-minus-navbar flex items-center justify-center">
@@ -50,6 +55,9 @@ export default function ForgotPassword() {
               </FormItem>
             )}
           />
+          <div>
+            <RootFormMessage />
+          </div>
           <Button type="submit">Send Email</Button>
         </form>
       </Form>

@@ -14,7 +14,11 @@ export const userRouter = createTRPCRouter({
           name: user.name,
         })
         .from(user)
-        .where(sql`${user.id} IN (${sql.join(input.userIds.map((id) => sql`${id}`), sql`, `,)})`,
+        .where(
+          sql`${user.id} IN (${sql.join(
+            input.userIds.map((id) => sql`${id}`),
+            sql`, `,
+          )})`,
         );
     }),
 });

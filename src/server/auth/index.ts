@@ -1,8 +1,9 @@
 import type { BetterAuthOptions } from "better-auth";
 import { betterAuth } from "better-auth";
+import { APIError } from "better-auth/api";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { oAuthProxy, username } from "better-auth/plugins";
-import { Resend } from 'resend';
+import { Resend } from "resend";
 
 import * as authSchema from "~/server/db/schema/auth-schema";
 import { db } from "~/server/db";
@@ -24,9 +25,9 @@ export function initAuth(options: {
     secret: options.secret,
     emailAndPassword: {
       enabled: true,
-      sendResetPassword: async ({ user, url, token }, request) => {
+      sendResetPassword: async ({ user, url }) => {
         try {
-          const { data, error } = await resend.emails.send({
+          const { error } = await resend.emails.send({
             from: "onboarding@resend.dev",
             to: user.email,
             subject: "Reset your password - Odysseat",
@@ -38,13 +39,11 @@ export function initAuth(options: {
           });
 
           if (error) {
-            console.error('Resend error:', error);
-            throw new Error(`Failed to send email: ${error.message}`);
+            throw new APIError("INTERNAL_SERVER_ERROR", {
+              message: error.message,
+            });
           }
-
-          console.log('Email sent successfully:', data);
         } catch (error) {
-          console.error('Error sending reset email:', error);
           throw error; // Re-throw to let BetterAuth handle it
         }
       },

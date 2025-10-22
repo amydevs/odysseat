@@ -26,27 +26,17 @@ export default function ResetPassword() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   if (!token) {
-    return (<h1>umm no token idk</h1>);
+    return <h1>umm no token idk</h1>;
   }
   const onSubmit = async (d: z.infer<typeof formSchema>) => {
-    try {
-      const { data , error } = await authClient.resetPassword({
-        newPassword: d.password,
-        token,
-      });
-      if (error) {
-        console.log("Failed to reset password: ", error);
-      }
-      else {
-        alert("Your password has been changed successfully!");
-      }
+    const { error } = await authClient.resetPassword({
+      newPassword: d.password,
+      token,
+    });
+    if (error) {
+      form.setError("root", { message: error.message });
     }
-    catch (error) {
-      console.log("Error: ", error);
-    }
-    
   };
-
 
   return (
     <main className="h-screen-minus-navbar flex items-center justify-center">
@@ -69,8 +59,10 @@ export default function ResetPassword() {
               </FormItem>
             )}
           />
+          <div>
+            <RootFormMessage />
+          </div>
           <Button type="submit">Reset Password</Button>
-          <RootFormMessage />
         </form>
       </Form>
     </main>

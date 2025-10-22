@@ -29,11 +29,11 @@ export default async function RecipesPage({
   const recipes = await api.recipe.getAll({
     title: search?.toString(),
   });
-  
+
   const ratings = await api.recipe.getAverageRatings({
     recipeIds: recipes.map((r) => r.id),
   });
-  
+
   const searchAction = async (data: FormData) => {
     "use server";
     const search = data.get("search");
@@ -50,7 +50,9 @@ export default async function RecipesPage({
       </form>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-3">
         {recipes.map((r) => {
-          const avgRating = ratings.find((rating) => rating.recipeId === r.id)?.avgRating;
+          const avgRating = ratings.find(
+            (rating) => rating.recipeId === r.id,
+          )?.avgRating;
           const displayRating = avgRating ? Number(avgRating) : 0;
           return (
             <Card key={r.id}>
@@ -70,18 +72,18 @@ export default async function RecipesPage({
                 <Button asChild>
                   <Link href={`/recipe/${r.id}`}>View</Link>
                 </Button>
-                  {avgRating != null && (
-                    <div className="flex items-center gap-0">
-                      <span className="text-sm text-muted-foreground">
-                        ({displayRating.toFixed(1)})
-                      </span>
-                      <Rating value={Math.round(displayRating)} readOnly>
-                        {Array.from({ length: 1 }).map((_, index) => (
-                          <RatingButton key={index} />
-                        ))}
-                      </Rating>
-                    </div>
-                  )}
+                {avgRating != null && (
+                  <div className="flex items-center gap-0">
+                    <span className="text-muted-foreground text-sm">
+                      ({displayRating.toFixed(1)})
+                    </span>
+                    <Rating value={Math.round(displayRating)} readOnly>
+                      {Array.from({ length: 1 }).map((_, index) => (
+                        <RatingButton key={index} />
+                      ))}
+                    </Rating>
+                  </div>
+                )}
               </CardFooter>
             </Card>
           );

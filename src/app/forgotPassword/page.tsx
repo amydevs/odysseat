@@ -26,7 +26,7 @@ export default function ForgotPassword() {
       email: d.email,
       redirectTo: window.location.origin + "/resetPassword",
     });
-    alert("hi!");
+    alert("A password reset email has been sent");
   }
 
   return (

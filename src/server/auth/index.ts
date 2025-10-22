@@ -12,7 +12,7 @@ export function initAuth(options: {
   productionUrl: string;
   secret: string | undefined;
 }) {
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  const resend = new Resend("re_CcWzkhB1_N11WRS8fjbyCHsfsitXWPvKZ");
   const config = {
     database: drizzleAdapter(db, {
       provider: "pg",

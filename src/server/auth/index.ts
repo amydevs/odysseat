@@ -4,7 +4,6 @@ import { APIError } from "better-auth/api";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { oAuthProxy, username } from "better-auth/plugins";
 import { Resend } from "resend";
-
 import * as authSchema from "~/server/db/schema/auth-schema";
 import { db } from "~/server/db";
 
@@ -14,7 +13,6 @@ export function initAuth(options: {
   secret: string | undefined;
   resendApiKey: string | undefined;
 }) {
-  const resend = new Resend(options.resendApiKey);
   const config = {
     database: drizzleAdapter(db, {
       provider: "pg",
@@ -23,9 +21,21 @@ export function initAuth(options: {
     }),
     baseURL: options.baseUrl,
     secret: options.secret,
+    user: {
+      additionalFields: {
+        role: {
+          type: "string",
+          defaultValue: "user",
+          input: false,
+          required: true,
+          returned: true,
+        },
+      },
+    },
     emailAndPassword: {
       enabled: true,
       sendResetPassword: async ({ user, url }) => {
+        const resend = new Resend(options.resendApiKey);
         try {
           const { error } = await resend.emails.send({
             from: "onboarding@resend.dev",

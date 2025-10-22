@@ -8,6 +8,7 @@ import {
   asc,
   desc,
   avg,
+  or,
 } from "drizzle-orm";
 import { comment } from "~/server/db/schema";
 
@@ -129,7 +130,13 @@ export const recipeRouter = createTRPCRouter({
       const r = await ctx.db
         .delete(recipe)
         .where(
-          and(eq(recipe.id, input.id), eq(recipe.userId, ctx.session.user.id)),
+          and(
+            eq(recipe.id, input.id),
+            or(
+              ctx.session.user.role === "admin" ? sql`TRUE` : sql`FALSE`,
+              eq(recipe.userId, ctx.session.user.id),
+            ),
+          ),
         )
         .returning();
       if (r[0] == null) {

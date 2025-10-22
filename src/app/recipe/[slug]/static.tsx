@@ -89,7 +89,9 @@ export default function StaticRecipe({
           <div
             className={cn(
               "flex w-full gap-1",
-              session.data?.user.id !== recipe.userId && "hidden",
+              session.data?.user.role !== "admin" &&
+                session.data?.user.id !== recipe.userId &&
+                "hidden",
             )}
           >
             <Button className="flex-1" asChild>
@@ -98,7 +100,10 @@ export default function StaticRecipe({
             <Button
               onClick={onDelete}
               variant={"destructive"}
-              className="flex-1 cursor-pointer"
+              className={cn(
+                "flex-1 cursor-pointer",
+                session.data?.user.role !== "admin" && "hidden",
+              )}
             >
               Delete
             </Button>

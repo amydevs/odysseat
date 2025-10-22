@@ -2,7 +2,10 @@ import type { Session, User } from "better-auth";
 import type { db as serverDb } from "~/server/db";
 import { user, session } from "~/server/db/schema/auth-schema";
 
-type SessionWrapper = { session: Session; user: User };
+type SessionWrapper = {
+  session: Session;
+  user: User & { role: "user" | "admin" };
+};
 
 export function createSessionMock(): SessionWrapper {
   const userId = "mockeduser";
@@ -18,6 +21,7 @@ export function createSessionMock(): SessionWrapper {
     },
     user: {
       id: userId,
+      role: "user",
       email: "mockeduser@gmail.com",
       emailVerified: true,
       createdAt: new Date(0),

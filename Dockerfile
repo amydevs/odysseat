@@ -29,7 +29,8 @@ COPY . .
 
 # Build application
 ENV SKIP_ENV_VALIDATION=true
-RUN npx --yes next build --experimental-build-mode compile
+RUN --mount=type=cache,target=/app/.next/cache \
+    npx --yes next build --experimental-build-mode compile
 
 # Remove development dependencies
 RUN npm prune --omit=dev

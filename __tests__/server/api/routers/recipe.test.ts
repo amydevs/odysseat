@@ -13,7 +13,7 @@ describe("recipe rpc calls", () => {
   const session = createSessionMock();
   const testRecipe = {
     title: "Test",
-    content: "Test",
+    content: "# Ingredients\n- 1\n# Steps\n1. 1",
     position: [0, 0] as [number, number],
     thumbnailUrl: "https://test.com",
   };

@@ -6,7 +6,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { comment } from "~/server/db/schema";
+import { comment, user } from "~/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { zCommentCreate, zCommentEdit } from "~/server/db/validators";
 
@@ -15,8 +15,18 @@ export const commentRouter = createTRPCRouter({
     .input(z.object({ recipeId: z.number() }))
     .query(async ({ ctx, input }) => {
       return await ctx.db
-        .select()
+        .select({
+          id: comment.id,
+          recipeId: comment.recipeId,
+          userId: comment.userId,
+          content: comment.content,
+          rating: comment.rating,
+          createdAt: comment.createdAt,
+          updatedAt: comment.updatedAt,
+          userName: user.name,
+        })
         .from(comment)
+        .leftJoin(user, eq(comment.userId, user.id))
         .where(eq(comment.recipeId, input.recipeId));
     }),
   create: protectedProcedure

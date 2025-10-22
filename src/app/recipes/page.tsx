@@ -25,7 +25,7 @@ export default async function RecipesPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const { search } = await searchParams;
+  const { search, error } = await searchParams;
   const recipes = await api.recipe.getAll({
     title: search?.toString(),
   });
@@ -37,6 +37,10 @@ export default async function RecipesPage({
   const searchAction = async (data: FormData) => {
     "use server";
     const search = data.get("search");
+    const pattern = /(\b(union|select|insert|update|delete|drop|exec)\b.*\b(from|where|into|table)\b|--|;.*drop|xp_|sp_cmdshell)/i
+    if (search && typeof search === "string" && search.match(pattern)) {
+      redirect(`/recipes?error=suspicious`, RedirectType.push);
+    }
     redirect(
       `/recipes?search=${typeof search === "string" ? search : ""}`,
       RedirectType.push,
@@ -48,6 +52,11 @@ export default async function RecipesPage({
         <Input defaultValue={search} name="search" />
         <Button formAction={searchAction}>Search</Button>
       </form>
+      {error === "suspicious" && (
+        <div className="rounded-md bg-destructive/10 p-3 text-destructive">
+          What are you trying to do huh?
+        </div>
+      )}
       <div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-3">
         {recipes.map((r) => {
           const avgRating = ratings.find(

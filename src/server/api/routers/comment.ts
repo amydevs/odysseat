@@ -46,7 +46,8 @@ export const commentRouter = createTRPCRouter({
       if (existing.length > 0) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "You already have a review for this recipe. Please delete your original review first.",
+          message:
+            "You already have a review for this recipe. Please delete your original review first.",
         });
       }
       const c = await ctx.db

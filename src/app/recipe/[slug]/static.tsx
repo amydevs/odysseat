@@ -101,7 +101,13 @@ export default function StaticRecipe({
                 "hidden",
             )}
           >
-            <Button className="flex-1" asChild>
+            <Button
+              className={cn(
+                "flex-1",
+                session.data?.user.id !== recipe.userId && "hidden",
+              )}
+              asChild
+            >
               <Link href={`/recipe/${recipe.id}/edit`}>Edit</Link>
             </Button>
             <Button
@@ -109,7 +115,9 @@ export default function StaticRecipe({
               variant={"destructive"}
               className={cn(
                 "flex-1 cursor-pointer",
-                session.data?.user.role !== "admin" && "hidden",
+                session.data?.user.role !== "admin" &&
+                  session.data?.user.id !== recipe.userId &&
+                  "hidden",
               )}
             >
               Delete

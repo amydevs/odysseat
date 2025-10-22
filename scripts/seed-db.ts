@@ -17,6 +17,7 @@ const u = await db
     email: "admin@odysseat.com",
     name: "Odysseat Admin",
     username: "admin",
+    role: "admin",
   })
   .returning()
   .then((us) => us[0]!);

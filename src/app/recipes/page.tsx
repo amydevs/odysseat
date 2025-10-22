@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect, RedirectType } from "next/navigation";
@@ -14,8 +15,8 @@ import {
 import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/server";
 
-export const metadata = {
-  title: "Recipes"
+export const metadata: Metadata = {
+  title: "Recipes",
 };
 
 export default async function RecipesPage({

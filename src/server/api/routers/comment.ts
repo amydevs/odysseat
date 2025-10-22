@@ -38,7 +38,10 @@ export const commentRouter = createTRPCRouter({
         .update(comment)
         .set(input)
         .where(
-          and(eq(comment.id, input.id), eq(comment.userId, ctx.session.user.id)),
+          and(
+            eq(comment.id, input.id),
+            eq(comment.userId, ctx.session.user.id),
+          ),
         )
         .returning();
       if (c[0] == null) {
@@ -52,7 +55,10 @@ export const commentRouter = createTRPCRouter({
       const c = await ctx.db
         .delete(comment)
         .where(
-          and(eq(comment.id, input.id), eq(comment.userId, ctx.session.user.id)),
+          and(
+            eq(comment.id, input.id),
+            eq(comment.userId, ctx.session.user.id),
+          ),
         )
         .returning();
       if (c[0] == null) {

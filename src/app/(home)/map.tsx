@@ -60,7 +60,9 @@ export default function HomeMap() {
             e.originalEvent.stopPropagation();
             setSelectedId(selectedId === marker.id ? null : marker.id);
             if (mapRef.current != null) {
-              mapRef.current.panTo(new LngLat(marker.position[0], marker.position[1]));
+              mapRef.current.panTo(
+                new LngLat(marker.position[0], marker.position[1]),
+              );
             }
           }}
         />

@@ -1,10 +1,22 @@
 import * as React from "react";
 import { api, HydrateClient } from "~/trpc/server";
 import { ServerBlockNoteEditor } from "@blocknote/server-util";
-import { Button } from "~/components/ui/button";
 import StaticRecipe from "./static";
-import Link from "next/link";
 import { Skeleton } from "~/components/ui/skeleton";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const id = Number.parseInt(slug);
+  const recipe = await api.recipe.getById({ id });
+  return {
+    title: recipe.title,
+  };
+}
 
 export default async function BlogPostPage({
   params,
@@ -23,11 +35,7 @@ export default async function BlogPostPage({
   return (
     <HydrateClient>
       <main className="min-h-screen-minus-navbar flex flex-col">
-        <React.Suspense
-          fallback={
-            <Skeleton className="flex-1" />
-          }
-        >
+        <React.Suspense fallback={<Skeleton className="flex-1" />}>
           <StaticRecipe
             className="flex-1"
             recipeContentHtml={html}

@@ -52,7 +52,8 @@ await db.insert(account).values({
   password: await authCtx.password.hash("Password@123"),
 });
 
-const recipes = await db.insert(recipe)
+const recipes = await db
+  .insert(recipe)
   .values(
     await Promise.all(
       scrapedData.map(async (r) => ({
@@ -70,14 +71,13 @@ const recipes = await db.insert(recipe)
   )
   .returning();
 
-await db.insert(comment)
-  .values(
-    recipes.map((e) => ({
-      recipeId: e.id,
-      userId: u1.id,
-      content: "Very good!",
-      rating: 5,
-    }))
-  );
+await db.insert(comment).values(
+  recipes.map((e) => ({
+    recipeId: e.id,
+    userId: u1.id,
+    content: "Very good!",
+    rating: 5,
+  })),
+);
 
 process.exit(0);

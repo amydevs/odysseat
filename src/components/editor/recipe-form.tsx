@@ -31,8 +31,7 @@ export default function RecipeForm({
   ...props
 }: React.ComponentProps<"form">) {
   const form = useFormContext<
-    | RouterInputs["recipe"]["create"]
-    | RouterInputs["recipe"]["edit"]
+    RouterInputs["recipe"]["create"] | RouterInputs["recipe"]["edit"]
   >();
   const { uppy } = useUppy();
   const [currentUploadId, setCurrentUploadId] = React.useState<string | null>(
@@ -88,13 +87,13 @@ export default function RecipeForm({
                             return;
                           }
                           onChange(uploadedFile.uploadURL);
-                        }
-                        catch (e) {
+                        } catch (e) {
                           if (e instanceof Error) {
-                            form.setError("thumbnailUrl", { message: e.message });
+                            form.setError("thumbnailUrl", {
+                              message: e.message,
+                            });
                           }
-                        }
-                        finally {
+                        } finally {
                           setCurrentUploadId(null);
                         }
                       }}
@@ -102,8 +101,7 @@ export default function RecipeForm({
                     <LoaderIcon
                       className={cn(
                         "animate-spin",
-                        currentUploadId == null &&
-                          "hidden",
+                        currentUploadId == null && "hidden",
                       )}
                     />
                   </div>

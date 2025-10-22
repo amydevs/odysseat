@@ -34,8 +34,8 @@ export default function LoginPage() {
     defaultValues: {
       email: "",
       password: "",
-      rememberMe: false
-    }
+      rememberMe: false,
+    },
   });
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const res = await authClient.signIn.email(data);
@@ -47,8 +47,8 @@ export default function LoginPage() {
     router.refresh();
   };
   useEffect(() => {
-  document.title = "Log In";
-}, []);
+    document.title = "Log In";
+  }, []);
   return (
     <main className="h-screen-minus-navbar flex items-center justify-center">
       <Button className={"absolute top-1 right-1 bg-red-600"} asChild>

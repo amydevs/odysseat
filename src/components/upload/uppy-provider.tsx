@@ -14,11 +14,10 @@ export default function UppyProvider({
     new Uppy({
       restrictions: {
         allowedFileTypes: ["image/*"],
-      }
-    })
-      .use(Tus, {
-        endpoint: "/api/upload",
-      }),
+      },
+    }).use(Tus, {
+      endpoint: "/api/upload",
+    }),
   );
   return <UppyContextProvider uppy={uppy}>{children}</UppyContextProvider>;
 }

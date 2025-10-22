@@ -2,9 +2,16 @@
 import * as React from "react";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
-import { Rating, RatingButton } from '~/components/ui/shadcn-io/rating';
+import { Rating, RatingButton } from "~/components/ui/shadcn-io/rating";
 import { api } from "~/trpc/react";
-import { useForm, Form, FormField, FormItem, FormControl, FormMessage } from "~/components/ui/form";
+import {
+  useForm,
+  Form,
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from "~/components/ui/form";
 import { type zCommentCreate } from "~/server/db/validators";
 import type * as z from "zod/v4";
 import { TRPCError } from "@trpc/server";
@@ -32,7 +39,11 @@ export default function CommentForm({
               <Textarea
                 {...field}
                 disabled={disabled}
-                placeholder={disabled ? "Sign in to leave a review!" : "Write your review..."}
+                placeholder={
+                  disabled
+                    ? "Sign in to leave a review!"
+                    : "Write your review..."
+                }
               />
             </FormControl>
             <FormMessage />
@@ -46,7 +57,11 @@ export default function CommentForm({
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Rating value={field.value} onValueChange={field.onChange} readOnly={disabled}>
+                <Rating
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  readOnly={disabled}
+                >
                   {Array.from({ length: 5 }).map((_, index) => (
                     <RatingButton key={index} />
                   ))}
@@ -57,16 +72,14 @@ export default function CommentForm({
           )}
         />
         {!disabled ? (
-          <Button type="submit">
-            Submit Review
-          </Button>
+          <Button type="submit">Submit Review</Button>
         ) : (
           <Button type="button" asChild>
             <Link href="/login">Log In to Review</Link>
           </Button>
         )}
       </div>
-      { form.formState.errors.root && <RootFormMessage /> }
+      {form.formState.errors.root && <RootFormMessage />}
     </form>
   );
 }

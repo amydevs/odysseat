@@ -11,9 +11,10 @@ import { auth } from "~/auth/server";
 import UppyProvider from "~/components/upload/uppy-provider";
 
 export const metadata: Metadata = {
-  title: { // using template for title so that the icon doesn't get overridden
+  title: {
+    // using template for title so that the icon doesn't get overridden
     template: "%s",
-    default: "Odysseat"
+    default: "Odysseat",
   },
   description: "Odysseat - Share your recipes with the world!",
   icons: [{ rel: "icon", url: "/favicon.ico" }],

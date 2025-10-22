@@ -19,11 +19,14 @@ export default function CreatingRecipe() {
   const form = useForm({
     schema: zRecipeCreate,
     defaultValues: {
-      content: "# Ingredients\n" +
+      content:
+        "# Ingredients\n" +
         new Array(3).map((_, i) => `- ingredient ${i + 1}`).join("\n\n") +
         "\n# Steps\n" +
-        new Array(3).map((_, i) => `## Step ${i + 1}\nexample step ${i + 1}`).join("\n\n"),
-    }
+        new Array(3)
+          .map((_, i) => `## Step ${i + 1}\nexample step ${i + 1}`)
+          .join("\n\n"),
+    },
   });
   const onSubmit = async (data: z.infer<typeof zRecipeCreate>) => {
     try {

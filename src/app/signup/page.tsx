@@ -37,8 +37,8 @@ export default function SignupPage() {
       username: "",
       email: "",
       password: "",
-      rememberMe: false
-    }
+      rememberMe: false,
+    },
   });
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const res = await authClient.signUp.email(data);

@@ -37,14 +37,14 @@ export default function StaticRecipe({
   const commentCreateMutation = api.comment.create.useMutation({
     onSuccess: async () => {
       await utils.comment.getByRecipeId.invalidate({ recipeId: recipeId });
-    }
+    },
   });
-  
+
   const form = useForm({
     schema: zCommentCreate,
     defaultValues: {
       recipeId,
-    }
+    },
   });
 
   const onSubmit = async (data: z.infer<typeof zCommentCreate>) => {
@@ -65,7 +65,7 @@ export default function StaticRecipe({
   return (
     <div className={cn("flex justify-center", className)}>
       <div className="flex w-full max-w-full flex-col space-y-9 p-3 lg:max-w-7xl">
-        <div className="space-y-3 min-h-screen-minus-navbar">
+        <div className="min-h-screen-minus-navbar space-y-3">
           <div>
             <h1 className="text-4xl font-bold lg:text-7xl">{recipe.title}</h1>
           </div>
@@ -81,10 +81,17 @@ export default function StaticRecipe({
             </Button>
           </div>
         </div>
-        <Separator className={cn(session.data?.user.id === recipe.userId && "hidden")} />
-        <div className={cn(session.data?.user.id === recipe.userId && "hidden")}>
+        <Separator
+          className={cn(session.data?.user.id === recipe.userId && "hidden")}
+        />
+        <div
+          className={cn(session.data?.user.id === recipe.userId && "hidden")}
+        >
           <Form {...form}>
-            <CommentForm onSubmit={form.handleSubmit(onSubmit, console.log)} disabled={session.data == null} />
+            <CommentForm
+              onSubmit={form.handleSubmit(onSubmit, console.log)}
+              disabled={session.data == null}
+            />
           </Form>
         </div>
         <Separator />
@@ -97,7 +104,7 @@ export default function StaticRecipe({
                     <RatingButton key={index} />
                   ))}
                 </Rating>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-muted-foreground text-sm">
                   {new Date(comment.createdAt).toLocaleDateString()}
                 </span>
               </CardHeader>
@@ -106,10 +113,9 @@ export default function StaticRecipe({
               </CardContent>
             </Card>
           ))}
-          { commentsQuery.data?.length === 0 && "No reviews found! :(" }
-          { commentsQuery.isFetching && <Skeleton className="h-32" /> }
+          {commentsQuery.data?.length === 0 && "No reviews found! :("}
+          {commentsQuery.isFetching && <Skeleton className="h-32" />}
         </div>
-        
       </div>
       <div className="lg:max-h-screen-minus-navbar fixed right-0 bottom-0 left-0 lg:sticky lg:top-[var(--navbar-height)] lg:bottom-auto">
         <div className="absolute -top-24 right-3 h-12 lg:hidden">

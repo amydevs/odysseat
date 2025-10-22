@@ -29,7 +29,8 @@ describe("recipe rpc calls", () => {
       mockFn.mockClear();
     }
   });
-  it("create recipe unauthorized", async () => { // Roy - makes sure unauthorised users may not create recipes
+  it("create recipe unauthorized", async () => {
+    // Roy - makes sure unauthorised users may not create recipes
     const caller = createCaller({
       authApi,
       db,
@@ -37,7 +38,8 @@ describe("recipe rpc calls", () => {
     });
     await expect(caller.recipe.create(testRecipe)).rejects.toThrowError();
   });
-    it("update recipe unauthorized", async () => { // Ensures that users may not edit recipes they aren't authorised to
+  it("update recipe unauthorized", async () => {
+    // Ensures that users may not edit recipes they aren't authorised to
     const badUserId = "nottestuser";
     const caller = createCaller({
       authApi,
@@ -70,7 +72,8 @@ describe("recipe rpc calls", () => {
       }),
     ).rejects.toThrowError();
   });
-  it("delete recipe unauthorized", async () => { // Ensures users may not delete recipes that they aren't authorised to
+  it("delete recipe unauthorized", async () => {
+    // Ensures users may not delete recipes that they aren't authorised to
     const badUserId = "nottestuser";
     const caller = createCaller({
       authApi,
@@ -98,7 +101,8 @@ describe("recipe rpc calls", () => {
       .then((e) => e[0]!);
     await expect(caller.recipe.delete(createdRecipe)).rejects.toThrowError();
   });
-  it("create recipe", async () => { // AMY!!!
+  it("create recipe", async () => {
+    // AMY!!!
     const caller = createCaller({
       authApi,
       db,
@@ -112,7 +116,8 @@ describe("recipe rpc calls", () => {
     });
     expect(foundRecipe).toMatchObject(testRecipe);
   });
-  it("update recipe", async () => { // ALLANAH!!!
+  it("update recipe", async () => {
+    // ALLANAH!!!
     const caller = createCaller({
       authApi,
       db,
@@ -144,7 +149,8 @@ describe("recipe rpc calls", () => {
     expect(foundRecipe).toMatchObject(editedRecipeDetails);
   });
 
-  it("get all recipes", async () => { // CJ!!!
+  it("get all recipes", async () => {
+    // CJ!!!
     const caller = createCaller({
       authApi,
       db,
@@ -164,7 +170,8 @@ describe("recipe rpc calls", () => {
       expect(seededRecipes[i]).toMatchObject(recipe);
     }
   });
-  it("delete recipe", async () => { // IAN!!!
+  it("delete recipe", async () => {
+    // IAN!!!
     const caller = createCaller({
       authApi,
       db,

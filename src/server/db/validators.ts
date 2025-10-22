@@ -27,12 +27,11 @@ export const zRecipeFilter = createSelectSchema(recipe)
 
 export const zRecipeCreate = createInsertSchema(recipe, {
   title: (schema) => schema.min(1),
-  content: (schema) => schema.min(1)
-})
-  .omit({
-    id: true,
-    userId: true,
-  });
+  content: (schema) => schema.min(1),
+}).omit({
+  id: true,
+  userId: true,
+});
 
 export const zRecipeEdit = createUpdateSchema(recipe, {
   title: (schema) => schema.min(1),
@@ -44,7 +43,10 @@ export const zRecipeEdit = createUpdateSchema(recipe, {
 export const zCommentCreate = z.object({
   recipeId: z.number(),
   content: z.string().min(1, "Review content cannot be empty"),
-  rating: z.number().min(1, "Rating must be at least 1").max(5, "Rating cannot exceed 5"),
+  rating: z
+    .number()
+    .min(1, "Rating must be at least 1")
+    .max(5, "Rating cannot exceed 5"),
 });
 
 export const zCommentEdit = z.object({

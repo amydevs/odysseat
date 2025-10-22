@@ -15,17 +15,14 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { Checkbox } from "~/components/ui/checkbox";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import RootFormMessage from "~/components/form/root-form-message";
-import { useEffect } from "react";
 
 const formSchema = z.object({
   password: z.string(),
 });
 
 export default function ResetPassword() {
-  const router = useRouter();
   const form = useForm({resolver: zodResolver(formSchema)});
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -35,8 +32,8 @@ export default function ResetPassword() {
   const onSubmit = async (d: z.infer<typeof formSchema>) => {
     try {
       const { data , error } = await authClient.resetPassword({
-        newPassword: d.password, // required
-        token, // required
+        newPassword: d.password,
+        token,
       });
       if (error) {
         console.log("Failed to reset password: ", error);

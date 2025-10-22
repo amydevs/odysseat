@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { z } from "zod/v4";
 import { authClient } from "~/auth/client";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,11 +14,6 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { Checkbox } from "~/components/ui/checkbox";
-import { useRouter } from "next/navigation";
-import RootFormMessage from "~/components/form/root-form-message";
-import { useEffect } from "react";
-import { Resend } from 'resend';
 
 const formSchema = z.object({
   email: z.email(),
@@ -28,7 +22,7 @@ const formSchema = z.object({
 export default function ForgotPassword() {
   const form = useForm({resolver: zodResolver(formSchema),});
   const onSubmit = async (d: z.infer<typeof formSchema>) => {
-    const { data, error } = await authClient.requestPasswordReset({
+    await authClient.requestPasswordReset({
       email: d.email,
       redirectTo: window.location.origin + "/resetPassword",
     });

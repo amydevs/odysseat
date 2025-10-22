@@ -108,10 +108,11 @@ stages:
   displayName: Deploy stage
   jobs:
   - job: Deploy
-    displayName: Deploy to Azure
+    displayName: Deploy
     steps:
     - checkout: none
     - task: AzureWebAppContainer@1
+      displayName: Deploy to Azure
       inputs:
         azureSubscription: $(azureSubscription)
         appName: $(appName)

@@ -132,7 +132,7 @@ export default function RecipeForm({
 
         <div className="flex gap-1">
           <Button type="submit" className="flex-1">
-            Edit
+            Save
           </Button>
           <Button
             type="button"

@@ -71,10 +71,10 @@ stages:
     - task: Cache@2
       displayName: Cache Docker
       inputs:
-        key: 'docker | "$(Agent.OS)" | $(imageRepository) | $(dockerfilePath)'
+        key: 'docker1 | "$(Agent.OS)" | $(imageRepository) | $(dockerfilePath)'
         path: $(Pipeline.Workspace)/docker_image_cache
         restoreKeys: |
-          docker | "$(Agent.OS)" | $(imageRepository)
+          docker1 | "$(Agent.OS)" | $(imageRepository)
     - script: |
         docker buildx create --name builder --driver docker-container --use
         docker buildx build \

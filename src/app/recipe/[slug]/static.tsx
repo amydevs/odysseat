@@ -57,6 +57,8 @@ export default function StaticRecipe({
     schema: zCommentCreate,
     defaultValues: {
       recipeId,
+      content: "",
+      rating: 0,
     },
   });
 

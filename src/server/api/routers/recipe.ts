@@ -1,5 +1,6 @@
 import { z } from "zod/v4";
-import { and, eq, ilike, sql, getTableColumns, asc, desc } from "drizzle-orm";
+import { and, eq, ilike, sql, getTableColumns, asc, desc, avg } from "drizzle-orm";
+import { comment } from "~/server/db/schema";
 
 import {
   createTRPCRouter,
@@ -67,6 +68,19 @@ export const recipeRouter = createTRPCRouter({
         ),
       )
       .orderBy(orderFn(recipeCols[sortBy]));
+  }),
+  getAverageRatings: publicProcedure
+  .input(z.object({ recipeIds: z.array(z.number()) }))
+  .query(async ({ ctx, input }) => {
+    if (input.recipeIds.length === 0) return [];
+    return await ctx.db
+      .select({
+        recipeId: comment.recipeId,
+        avgRating: avg(comment.rating),
+      })
+      .from(comment)
+      .where(sql`${comment.recipeId} IN (${sql.join(input.recipeIds.map((id) => sql`${id}`), sql`, `)})`)
+      .groupBy(comment.recipeId);
   }),
   create: protectedProcedure
     .input(zRecipeCreate)

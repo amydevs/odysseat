@@ -43,7 +43,9 @@ export default function UserDropdown({ user }: { user?: User }) {
           <>
             <DropdownMenuItem>Welcome, {user.name}</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={"/profile"}>Profile</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={async () => {
                 await authClient.signOut();

@@ -156,7 +156,13 @@ describe("recipe rpc calls", () => {
       db,
       session: null,
     });
-    await seed(db, schema, { count: 20 }); // Fill with random data
+    await seed(db, schema, { count: 20, }).refine((f) => ({
+      user: {
+        columns: {
+          role: f.valuesFromArray({ values: ["user", "admin"] }),
+        }
+      }
+    })); // Fill with random data
     const seededRecipes = await db.query.recipe.findMany({
       orderBy: {
         content: "desc",
@@ -167,7 +173,7 @@ describe("recipe rpc calls", () => {
       sortOrder: "desc",
     });
     for (const [i, recipe] of recipes.entries()) {
-      expect(seededRecipes[i]).toMatchObject(recipe);
+      expect(recipe).toMatchObject(seededRecipes[i]!);
     }
   });
   it("delete recipe", async () => {

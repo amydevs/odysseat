@@ -10,7 +10,7 @@ import {
   avg,
   or,
 } from "drizzle-orm";
-import { comment } from "~/server/db/schema";
+import { comment, user } from "~/server/db/schema";
 
 import {
   createTRPCRouter,
@@ -23,62 +23,73 @@ import {
   zRecipeCreate,
   zRecipeEdit,
   zRecipeFilter,
+  zRecipeSelect,
 } from "~/server/db/validators";
 
 export const recipeRouter = createTRPCRouter({
   getById: publicProcedure
     .input(z.object({ id: z.number() }))
+    .output(zRecipeSelect)
     .query(async ({ ctx, input }) => {
       const r = await ctx.db
         .select()
         .from(recipe)
+        .innerJoin(user, eq(user.id, recipe.userId))
         .where(eq(recipe.id, input.id));
       if (r.length === 0) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
-      return r[0]!;
+      return {
+        ...r[0]!.recipe,
+        user: r[0]!.user,
+      };
     }),
-  getAll: publicProcedure.input(zRecipeFilter).query(async ({ ctx, input }) => {
-    const {
-      // search,
-      minPosition,
-      maxPosition,
-      sortBy,
-      sortOrder,
-      ...inputRest
-    } = input;
-    const recipeCols = getTableColumns(recipe);
-    const orderFn = sortOrder !== "desc" ? asc : desc;
-    // const normalizeLongitude = (lng: number) => {
-    //   return ((lng + 180) % 360 + 360) % 360 - 180;
-    // };
-    return await ctx.db
-      .select()
-      .from(recipe)
-      .where(
-        and(
-          // search != null ? sql`${recipe.search} @@ websearch_to_tsquery('english', ${search})` : sql`TRUE`,
-          input.minPosition != null && input.maxPosition != null
-            ? sql`${recipe.position} <@ box(
+  getAll: publicProcedure
+    .input(zRecipeFilter)
+    .output(zRecipeSelect.array())
+    .query(async ({ ctx, input }) => {
+      const {
+        // search,
+        minPosition,
+        maxPosition,
+        sortBy,
+        sortOrder,
+        ...inputRest
+      } = input;
+      const recipeCols = getTableColumns(recipe);
+      const orderFn = sortOrder !== "desc" ? asc : desc;
+      // const normalizeLongitude = (lng: number) => {
+      //   return ((lng + 180) % 360 + 360) % 360 - 180;
+      // };
+      const res = await ctx.db
+        .select()
+        .from(recipe)
+        .innerJoin(user, eq(user.id, recipe.userId))
+        .where(
+          and(
+            // search != null ? sql`${recipe.search} @@ websearch_to_tsquery('english', ${search})` : sql`TRUE`,
+            input.minPosition != null && input.maxPosition != null
+              ? sql`${recipe.position} <@ box(
               point(${input.minPosition[0]}, ${input.minPosition[1]}),
               point(${input.maxPosition[0]}, ${input.maxPosition[1]})
             )`
-            : sql`TRUE`,
-          ...Object.entries(inputRest).map(([k, v]) => {
-            if (v == null || !(k in recipeCols)) {
-              return sql`TRUE`;
-            }
-            const col = recipeCols[k as keyof typeof recipeCols];
-            if (col.dataType !== "string" || typeof v !== "string") {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
-              return eq(col, v as any);
-            }
-            return ilike(col, `%${v}%`);
-          }),
-        ),
-      )
-      .orderBy(orderFn(recipeCols[sortBy]));
-  }),
+              : sql`TRUE`,
+            ...Object.entries(inputRest).map(([k, v]) => {
+              if (v == null || !(k in recipeCols)) {
+                return sql`TRUE`;
+              }
+              const col = recipeCols[k as keyof typeof recipeCols];
+              if (col.dataType !== "string" || typeof v !== "string") {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+                return eq(col, v as any);
+              }
+              return ilike(col, `%${v}%`);
+            }),
+          ),
+        )
+        .orderBy(orderFn(recipeCols[sortBy]));
+      return res.map((e) => ({ ...e.recipe, user: e.user }));
+    }),
   getAverageRatings: publicProcedure
     .input(z.object({ recipeIds: z.array(z.number()) }))
     .query(async ({ ctx, input }) => {

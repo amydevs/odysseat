@@ -4,7 +4,7 @@ import {
   createUpdateSchema,
 } from "drizzle-zod";
 import * as z from "zod/v4";
-import { recipe } from "./schema";
+import { comment, recipe, user } from "./schema";
 
 export const zSortOptions = z.object({
   sortBy: z.string(),
@@ -12,6 +12,14 @@ export const zSortOptions = z.object({
 });
 
 export const zLongLat = z.tuple([z.number(), z.number()]);
+
+export const zUserSelect = z.object({
+  ...createSelectSchema(user).omit({
+    username: true,
+    email: true,
+    emailVerified: true,
+  }).shape,
+});
 
 export const zRecipeFilter = createSelectSchema(recipe)
   .partial()
@@ -68,6 +76,11 @@ export const zRecipeEdit = createUpdateSchema(recipe, {
   .omit({ userId: true })
   .and(z.object({ id: z.number() }));
 
+export const zRecipeSelect = z.object({
+  ...createSelectSchema(recipe).shape,
+  user: zUserSelect,
+});
+
 export const zCommentCreate = z.object({
   recipeId: z.number(),
   content: z.string().min(1, "Review content cannot be empty"),
@@ -81,4 +94,9 @@ export const zCommentEdit = z.object({
   id: z.number(),
   content: z.string().min(1).optional(),
   rating: z.number().min(1).max(5).optional(),
+});
+
+export const zCommentSelect = z.object({
+  ...createSelectSchema(comment).shape,
+  user: zUserSelect,
 });

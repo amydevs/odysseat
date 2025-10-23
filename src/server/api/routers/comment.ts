@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import { and, eq, or, sql } from "drizzle-orm";
+import { and, eq, getTableColumns, or, sql } from "drizzle-orm";
 
 import {
   createTRPCRouter,
@@ -8,26 +8,23 @@ import {
 } from "~/server/api/trpc";
 import { comment, user } from "~/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { zCommentCreate, zCommentEdit } from "~/server/db/validators";
+import {
+  zCommentCreate,
+  zCommentEdit,
+  zCommentSelect,
+} from "~/server/db/validators";
 
 export const commentRouter = createTRPCRouter({
   getByRecipeId: publicProcedure
     .input(z.object({ recipeId: z.number() }))
+    .output(zCommentSelect.array())
     .query(async ({ ctx, input }) => {
-      return await ctx.db
-        .select({
-          id: comment.id,
-          recipeId: comment.recipeId,
-          userId: comment.userId,
-          content: comment.content,
-          rating: comment.rating,
-          createdAt: comment.createdAt,
-          updatedAt: comment.updatedAt,
-          userName: user.name,
-        })
+      const res = await ctx.db
+        .select()
         .from(comment)
-        .leftJoin(user, eq(comment.userId, user.id))
+        .innerJoin(user, eq(comment.userId, user.id))
         .where(eq(comment.recipeId, input.recipeId));
+      return res.map(({ comment, user }) => ({ ...comment, user }));
     }),
   create: protectedProcedure
     .input(zCommentCreate)
@@ -42,7 +39,6 @@ export const commentRouter = createTRPCRouter({
           ),
         )
         .limit(1);
-
       if (existing.length > 0) {
         throw new TRPCError({
           code: "CONFLICT",

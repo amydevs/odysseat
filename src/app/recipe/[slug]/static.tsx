@@ -22,9 +22,11 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
+  CardTitle,
 } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useRouter } from "next/navigation";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 
 export default function StaticRecipe({
   recipeId,
@@ -124,6 +126,20 @@ export default function StaticRecipe({
             </Button>
           </div>
         </div>
+        <Separator />
+        <div className="flex items-center justify-end gap-3 px-6 text-lg">
+          <Avatar>
+            <AvatarFallback>
+              {recipe.user.name[0]!.toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <Link
+            href={`/profile/${recipe.user.id}`}
+            className="text-muted-foreground"
+          >
+            {recipe.user.name}
+          </Link>
+        </div>
         <Separator
           className={cn(session.data?.user.id === recipe.userId && "hidden")}
         />
@@ -156,7 +172,7 @@ export default function StaticRecipe({
               </CardContent>
               <CardFooter className="flex items-center justify-between">
                 <p className="text-muted-foreground text-sm">
-                  {comment.userName}
+                  {comment.user.name}
                 </p>
                 {(session.data?.user.id === comment.userId ||
                   session.data?.user.role === "admin") && (

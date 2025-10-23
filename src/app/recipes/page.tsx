@@ -37,8 +37,9 @@ export default async function RecipesPage({
   const searchAction = async (data: FormData) => {
     "use server";
     const search = data.get("search");
-    const pattern = /(\b(union|select|insert|update|delete|drop|exec)\b.*\b(from|where|into|table)\b|--|;.*drop|xp_|sp_cmdshell)/i
-    if (search && typeof search === "string" && search.match(pattern)) {
+    const pattern =
+      /(\b(union|select|insert|update|delete|drop|exec)\b.*\b(from|where|into|table)\b|--|;.*drop|xp_|sp_cmdshell)/i;
+    if (search && typeof search === "string" && pattern.exec(search)) {
       redirect(`/recipes?error=suspicious`, RedirectType.push);
     }
     redirect(
@@ -53,7 +54,7 @@ export default async function RecipesPage({
         <Button formAction={searchAction}>Search</Button>
       </form>
       {error === "suspicious" && (
-        <div className="rounded-md bg-destructive/10 p-3 text-destructive">
+        <div className="bg-destructive/10 text-destructive rounded-md p-3">
           What are you trying to do huh?
         </div>
       )}

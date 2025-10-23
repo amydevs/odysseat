@@ -1,50 +1,35 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect, RedirectType } from "next/navigation";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
+import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { Rating, RatingButton } from "~/components/ui/shadcn-io/rating";
 import { api } from "~/trpc/server";
-import { auth } from "~/auth/server";
-import { headers } from "next/headers";
 import { Separator } from "~/components/ui/separator";
 
 export default async function RecipesPage({
-  // searchParams,
+  params,
 }: {
-  // searchParams: Promise<Record<string, string | string[] | undefined>>;
+  params: Promise<{ slug: string }>;
 }) {
-  // const { search, error } = await searchParams;
-  const sessionData = await auth.api.getSession({
-    headers: await headers(),
-  });
-  
+  const { slug: userId } = await params;
+  const user = await api.profileRouter.getById({ id: userId });
   const recipes = await api.recipe.getAll({
-    userId: sessionData?.user?.id,
+    userId,
   });
-
-  const name = sessionData?.user?.name;
 
   const ratings = await api.recipe.getAverageRatings({
     recipeIds: recipes.map((r) => r.id),
   });
   return (
     <main className="mx-auto max-w-7xl space-y-3 p-3">
-      <div className="bg-muted-foreground/20 rounded-2xl text-center align-bottom p-10 text-8xl ">
-        Hello {name}!
-      </div>
+      <Card>
+        <CardHeader className="flex items-center justify-between">
+          <CardTitle className="text-3xl">{user.name}</CardTitle>
+          <span>{recipes.length} recipes</span>
+        </CardHeader>
+      </Card>
       <Separator />
-      <h2 className="text-2xl font-bold">Your Recipes</h2>
+      <h2 className="text-2xl font-bold">Recipes</h2>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-3">
         {recipes.map((r) => {
           const avgRating = ratings.find(

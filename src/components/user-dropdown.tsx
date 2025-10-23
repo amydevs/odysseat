@@ -44,7 +44,7 @@ export default function UserDropdown({ user }: { user?: User }) {
             <DropdownMenuItem>Welcome, {user.name}</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href={"/profile"}>Profile</Link>
+              <Link href={`/profile/${user.id}`}>Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={async () => {

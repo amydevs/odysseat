@@ -7,7 +7,7 @@ import { initAuth } from "~/server/auth";
 
 import { env } from "~/env";
 
-const baseUrl = env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+const baseUrl = env.BASE_URL ?? "http://localhost:3000";
 
 export const auth = initAuth({
   baseUrl,

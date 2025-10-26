@@ -17,7 +17,7 @@ primary_region = 'syd'
   processes = ['app']
 
 [env]
-  NEXT_PUBLIC_BASE_URL = "https://odysseat.fly.dev"
+  BASE_URL = "https://odysseat.fly.dev"
 
 [[vm]]
   size = 'shared-cpu-1x'

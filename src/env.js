@@ -23,6 +23,7 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: z.string().optional(),
     AWS_SECRET_ACCESS_KEY: z.string().optional(),
     RESEND_API_KEY: z.string().optional(),
+    BASE_URL: z.string().optional(),
   },
 
   /**
@@ -32,7 +33,6 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_MAP_STYLE: z.string(),
-    NEXT_PUBLIC_BASE_URL:  z.string().optional(),
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
   },
 
@@ -52,7 +52,7 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
-    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    BASE_URL: process.env.BASE_URL,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

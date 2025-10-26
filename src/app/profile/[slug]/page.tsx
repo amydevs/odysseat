@@ -5,6 +5,7 @@ import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { Rating, RatingButton } from "~/components/ui/shadcn-io/rating";
 import { api } from "~/trpc/server";
 import { Separator } from "~/components/ui/separator";
+import { authClient } from "~/auth/client";
 
 export default async function RecipesPage({
   params,
@@ -20,6 +21,10 @@ export default async function RecipesPage({
   const ratings = await api.recipe.getAverageRatings({
     recipeIds: recipes.map((r) => r.id),
   });
+
+  async function deleteAccount() {
+    const res = await authClient.deleteUser();
+  }
   return (
     <main className="mx-auto max-w-7xl space-y-3 p-3">
       <Card>
@@ -70,6 +75,9 @@ export default async function RecipesPage({
             </Card>
           );
         })}
+      </div>
+      <div style={{ display: "block", textAlign: "center", textDecoration: "underline"}}>
+        <a href="/delete-account">Delete Account</a>
       </div>
     </main>
   );

@@ -22,6 +22,9 @@ export function initAuth(options: {
     baseURL: options.baseUrl,
     secret: options.secret,
     user: {
+      deleteUser: {
+        enabled: true
+      },
       additionalFields: {
         role: {
           type: "string",

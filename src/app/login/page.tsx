@@ -56,7 +56,7 @@ export default function LoginPage() {
       </Button>
       <Form {...form}>
         <form
-          className="relative mx-auto max-w-7xl"
+          className="relative mx-auto w-full max-w-xs"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormField
@@ -66,7 +66,7 @@ export default function LoginPage() {
               <FormItem>
                 <FormLabel className="pl-1">Email</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input placeholder="jane.doe@gmail.com" {...field} />
                 </FormControl>
                 <FormDescription />
                 <FormMessage />
@@ -80,7 +80,7 @@ export default function LoginPage() {
               <FormItem>
                 <FormLabel className="pl-1">Password</FormLabel>
                 <FormControl>
-                  <Input type="password" {...field} />
+                  <Input placeholder="********" type="password" {...field} />
                 </FormControl>
                 <FormDescription />
                 <FormMessage />
@@ -105,7 +105,10 @@ export default function LoginPage() {
             )}
           />
           <div className="mx-1 mb-2">
-            <Link href="/forgot-password" className="text-sm underline">
+            <Link
+              href={`/forgot-password?email=${form.watch("email")}`}
+              className="text-sm underline"
+            >
               Forgot Password?
             </Link>
           </div>

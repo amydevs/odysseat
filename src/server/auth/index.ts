@@ -39,9 +39,15 @@ export function initAuth(options: {
       enabled: true,
       sendResetPassword: async ({ user, url }) => {
         const resend = new Resend(options.resendApiKey);
+        let domain = "resend.dev";
+        const { data: domainsData } = await resend.domains.list({ limit: 1 });
+        const foundDomain = domainsData?.data[0];
+        if (foundDomain) {
+          domain = foundDomain.name;
+        }
         try {
           const { error } = await resend.emails.send({
-            from: "onboarding@resend.dev",
+            from: `onboarding@${domain}`,
             to: user.email,
             subject: "Reset your password - Odysseat",
             html: `

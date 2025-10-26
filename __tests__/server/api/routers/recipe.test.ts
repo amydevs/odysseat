@@ -156,12 +156,12 @@ describe("recipe rpc calls", () => {
       db,
       session: null,
     });
-    await seed(db, schema, { count: 20, }).refine((f) => ({
+    await seed(db, schema, { count: 20 }).refine((f) => ({
       user: {
         columns: {
           role: f.valuesFromArray({ values: ["user", "admin"] }),
-        }
-      }
+        },
+      },
     })); // Fill with random data
     const seededRecipes = await db.query.recipe.findMany({
       orderBy: {

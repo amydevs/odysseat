@@ -56,7 +56,7 @@ export default function LoginPage() {
       </Button>
       <Form {...form}>
         <form
-          className="relative mx-auto max-w-xs w-full"
+          className="relative mx-auto w-full max-w-xs"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormField
@@ -105,7 +105,10 @@ export default function LoginPage() {
             )}
           />
           <div className="mx-1 mb-2">
-            <Link href={`/forgot-password?email=${form.watch("email")}`} className="text-sm underline">
+            <Link
+              href={`/forgot-password?email=${form.watch("email")}`}
+              className="text-sm underline"
+            >
               Forgot Password?
             </Link>
           </div>

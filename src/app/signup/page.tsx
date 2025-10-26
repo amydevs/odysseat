@@ -60,7 +60,7 @@ export default function SignupPage() {
       </Button>
       <Form {...form}>
         <form
-          className="mx-auto max-w-xs w-full"
+          className="mx-auto w-full max-w-xs"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormField

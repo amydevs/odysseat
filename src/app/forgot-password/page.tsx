@@ -23,7 +23,10 @@ const formSchema = z.object({
 
 export default function ForgotPassword() {
   const searchParams = useSearchParams();
-  const form = useForm({ schema: formSchema, defaultValues: { email: searchParams.get("email") } });
+  const form = useForm({
+    schema: formSchema,
+    defaultValues: { email: searchParams.get("email") ?? undefined },
+  });
   const onSubmit = async (d: z.infer<typeof formSchema>) => {
     const { error } = await authClient.requestPasswordReset({
       email: d.email,
@@ -40,7 +43,7 @@ export default function ForgotPassword() {
     <main className="h-screen-minus-navbar flex items-center justify-center">
       <Form {...form}>
         <form
-          className="relative mx-auto max-w-xs w-full"
+          className="relative mx-auto w-full max-w-xs"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormField

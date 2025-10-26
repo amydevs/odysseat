@@ -42,7 +42,7 @@ export default function ResetPassword() {
     <main className="h-screen-minus-navbar flex items-center justify-center">
       <Form {...form}>
         <form
-          className="relative mx-auto max-w-xs w-full"
+          className="relative mx-auto w-full max-w-xs"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormField

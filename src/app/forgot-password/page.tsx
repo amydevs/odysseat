@@ -15,13 +15,15 @@ import {
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import RootFormMessage from "~/components/form/root-form-message";
+import { useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
   email: z.email(),
 });
 
 export default function ForgotPassword() {
-  const form = useForm({ schema: formSchema });
+  const searchParams = useSearchParams();
+  const form = useForm({ schema: formSchema, defaultValues: { email: searchParams.get("email") } });
   const onSubmit = async (d: z.infer<typeof formSchema>) => {
     const { error } = await authClient.requestPasswordReset({
       email: d.email,
@@ -38,7 +40,7 @@ export default function ForgotPassword() {
     <main className="h-screen-minus-navbar flex items-center justify-center">
       <Form {...form}>
         <form
-          className="relative mx-auto max-w-7xl"
+          className="relative mx-auto max-w-xs w-full"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormField
@@ -48,7 +50,7 @@ export default function ForgotPassword() {
               <FormItem>
                 <FormLabel className="pl-1">Email</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input placeholder="jane.doe@gmail.com" {...field} />
                 </FormControl>
                 <FormDescription />
                 <FormMessage />

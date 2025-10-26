@@ -42,7 +42,7 @@ export default function ResetPassword() {
     <main className="h-screen-minus-navbar flex items-center justify-center">
       <Form {...form}>
         <form
-          className="relative mx-auto max-w-7xl"
+          className="relative mx-auto max-w-xs w-full"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormField
@@ -52,7 +52,7 @@ export default function ResetPassword() {
               <FormItem>
                 <FormLabel className="pl-1">New password</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input placeholder="********" type="password" {...field} />
                 </FormControl>
                 <FormDescription />
                 <FormMessage />

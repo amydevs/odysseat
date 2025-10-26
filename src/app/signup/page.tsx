@@ -60,7 +60,7 @@ export default function SignupPage() {
       </Button>
       <Form {...form}>
         <form
-          className="mx-auto max-w-7xl p-6"
+          className="mx-auto max-w-xs w-full"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormField
@@ -70,7 +70,7 @@ export default function SignupPage() {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input placeholder="janedoe1" {...field} />
                 </FormControl>
                 <FormDescription />
                 <FormMessage />
@@ -84,7 +84,7 @@ export default function SignupPage() {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input placeholder="Jane Doe" {...field} />
                 </FormControl>
                 <FormDescription />
                 <FormMessage />
@@ -98,7 +98,7 @@ export default function SignupPage() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input placeholder="jane.doe@gmail.com" {...field} />
                 </FormControl>
                 <FormDescription />
                 <FormMessage />
@@ -112,7 +112,7 @@ export default function SignupPage() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" {...field} />
+                  <Input placeholder="********" type="password" {...field} />
                 </FormControl>
                 <FormDescription />
                 <FormMessage />

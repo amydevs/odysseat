@@ -12,6 +12,7 @@ export function initAuth(options: {
   productionUrl: string;
   secret: string | undefined;
   resendApiKey: string | undefined;
+  resendDomain?: string;
 }) {
   const config = {
     database: drizzleAdapter(db, {
@@ -39,12 +40,7 @@ export function initAuth(options: {
       enabled: true,
       sendResetPassword: async ({ user, url }) => {
         const resend = new Resend(options.resendApiKey);
-        let domain = "resend.dev";
-        const { data: domainsData } = await resend.domains.list({ limit: 1 });
-        const foundDomain = domainsData?.data[0];
-        if (foundDomain) {
-          domain = foundDomain.name;
-        }
+        const domain = options.resendDomain || "resend.dev";
         try {
           const { error } = await resend.emails.send({
             from: `onboarding@${domain}`,

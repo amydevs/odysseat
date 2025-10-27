@@ -18,15 +18,15 @@ import RootFormMessage from "~/components/form/root-form-message";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  confirmPassword: z.string()
+  password: z.string(),
 });
 
 export default function DeleteAccount() {
   const router = useRouter();
-  const form = useForm({ schema: formSchema, defaultValues: {confirmPassword: ""} });
+  const form = useForm({ schema: formSchema, defaultValues: { password: "" } });
   const onSubmit = async (d: z.infer<typeof formSchema>) => {
     const { error } = await authClient.deleteUser({
-      password: d.confirmPassword,
+      password: d.password,
     });
     if (error) {
       form.setError("root", { message: error.message });
@@ -41,17 +41,17 @@ export default function DeleteAccount() {
     <main className="h-screen-minus-navbar flex items-center justify-center">
       <Form {...form}>
         <form
-          className="relative mx-auto max-w-7xl"
+          className="relative mx-auto w-full max-w-xs"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormField
             control={form.control}
-            name="confirmPassword"
+            name="password"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="pl-1">Confirm Password</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input type="password" {...field} />
                 </FormControl>
                 <FormDescription />
                 <FormMessage />
@@ -61,7 +61,9 @@ export default function DeleteAccount() {
           <div>
             <RootFormMessage />
           </div>
-          <Button type="submit">Delete Account</Button>
+          <Button variant={"destructive"} type="submit">
+            Delete Account
+          </Button>
         </form>
       </Form>
     </main>

@@ -50,7 +50,11 @@ export default async function RecipesPage({
   return (
     <main className="mx-auto max-w-7xl space-y-3 p-3">
       <form className="flex gap-1">
-        <Input defaultValue={search} name="search" />
+        <Input
+          placeholder="Search for a recipe..."
+          defaultValue={search}
+          name="search"
+        />
         <Button formAction={searchAction}>Search</Button>
       </form>
       {error === "suspicious" && (

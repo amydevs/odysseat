@@ -23,7 +23,7 @@ export function initAuth(options: {
     secret: options.secret,
     user: {
       deleteUser: {
-        enabled: true
+        enabled: true,
       },
       additionalFields: {
         role: {

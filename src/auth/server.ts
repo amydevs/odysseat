@@ -7,12 +7,14 @@ import { initAuth } from "~/server/auth";
 
 import { env } from "~/env";
 
-let baseUrl: string = "http://localhost:3000";
+let baseUrl = "http://localhost:3000";
 
 try {
   baseUrl = new URL(env.BASE_URL ?? "").href;
 } catch (error) {
-  console.error(`Invalid base URL: ${env.BASE_URL}, using default localhost URL instead.`);
+  console.error(
+    `Invalid base URL: ${env.BASE_URL}, using default localhost URL instead.`,
+  );
 }
 
 export const auth = initAuth({

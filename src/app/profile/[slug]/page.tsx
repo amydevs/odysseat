@@ -76,9 +76,6 @@ export default async function RecipesPage({
           );
         })}
       </div>
-      <div style={{ display: "block", textAlign: "center", textDecoration: "underline"}}>
-        <a href="/delete-account">Delete Account</a>
-      </div>
     </main>
   );
 }

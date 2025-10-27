@@ -55,6 +55,9 @@ export default function UserDropdown({ user }: { user?: User }) {
             >
               Logout
             </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={`/delete-account`}>Delete Account</Link>
+            </DropdownMenuItem>
           </>
         )}
 

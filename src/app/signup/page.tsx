@@ -55,9 +55,6 @@ export default function SignupPage() {
 
   return (
     <main className="h-screen-minus-navbar flex items-center justify-center">
-      <Button className="absolute top-1 right-1 m-[0.5vh] bg-red-600" asChild>
-        <Link href={"/"}>x</Link>
-      </Button>
       <Form {...form}>
         <form
           className="mx-auto w-full max-w-xs"

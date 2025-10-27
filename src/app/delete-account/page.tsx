@@ -23,7 +23,7 @@ const formSchema = z.object({
 
 export default function DeleteAccount() {
   const router = useRouter();
-  const form = useForm({ schema: formSchema });
+  const form = useForm({ schema: formSchema, defaultValues: {confirmPassword: ""} });
   const onSubmit = async (d: z.infer<typeof formSchema>) => {
     const { error } = await authClient.deleteUser({
       password: d.confirmPassword,

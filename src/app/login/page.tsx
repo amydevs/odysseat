@@ -51,9 +51,6 @@ export default function LoginPage() {
   }, []);
   return (
     <main className="h-screen-minus-navbar flex items-center justify-center">
-      <Button className={"absolute top-1 right-1 bg-red-600"} asChild>
-        <Link href={"/"}>x</Link>
-      </Button>
       <Form {...form}>
         <form
           className="relative mx-auto w-full max-w-xs"

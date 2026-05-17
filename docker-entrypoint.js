@@ -7,7 +7,7 @@ const env = { ...process.env };
 // If running the web server then prerender pages
 if (process.argv.slice(-2).join(" ") === "node server.js") {
   await exec(
-    "node_modules/.bin/next build --experimental-build-mode generate-env",
+    "node_modules/.bin/next build --experimental-build-mode generate-env --webpack",
   );
 }
 

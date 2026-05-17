@@ -89,6 +89,7 @@ stages:
         DOCKER_BUILDKIT: 1
     - task: Docker@2
       displayName: Push docker image to Azure
+      enabled: false
       inputs:
         command: push
         repository: $(imageRepository)

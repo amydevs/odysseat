@@ -8,7 +8,7 @@ import { PGlite } from "@electric-sql/pglite";
 
 export function createMemoryDbInstanceMock() {
   const client = new PGlite();
-  const db = drizzle(client, { relations });
+  const db = drizzle({ client, relations });
   return db;
 }
 
@@ -17,7 +17,7 @@ export async function pushDb(db: typeof serverDb) {
     await vi.importActual<typeof import("node:module")>("node:module");
   const require = createRequire(import.meta.url);
   const { pushSchema } =
-    require("drizzle-kit/api") as typeof import("drizzle-kit/api");
+    require("drizzle-kit/api-postgres") as typeof import("drizzle-kit/api-postgres");
   const { apply } = await pushSchema(schema, db);
   await apply();
 }

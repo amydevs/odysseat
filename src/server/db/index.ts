@@ -10,14 +10,15 @@ import { relations } from "./relations";
  * update.
  */
 const globalForDb = globalThis as unknown as {
-  conn: postgres.Sql | undefined;
+  client: postgres.Sql | undefined;
 };
 
-const conn = globalForDb.conn ?? postgres(env.DATABASE_URL);
-if (env.NODE_ENV !== "production") globalForDb.conn = conn;
+const client = globalForDb.client ?? postgres(env.DATABASE_URL);
+if (env.NODE_ENV !== "production") globalForDb.client = client;
 
 export const db:
-  | PostgresJsDatabase<Record<string, never>, typeof relations>
-  | PgliteDatabase<Record<string, never>, typeof relations> = drizzle(conn, {
+  | PostgresJsDatabase<typeof relations>
+  | PgliteDatabase<typeof relations> = drizzle({
+  client,
   relations,
 });

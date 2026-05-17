@@ -15,6 +15,7 @@ export function initAuth(options: {
   resendDomain?: string;
 }) {
   const config = {
+    experimental: { joins: false },
     database: drizzleAdapter(db, {
       provider: "pg",
       schema: authSchema,
